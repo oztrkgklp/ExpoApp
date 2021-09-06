@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "eJ3kC0fRSRq1LwkPzs0GH7I+pi+CZoaFK31MGrIg0ZpYoywY0KKEvfoRhiTtxYdTLcs67srq9aAXFjsMd+sdvQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\gokal\\Desktop\\projects\\ExpoApp\\backend\\ExpoAPI\\src\\ExpoAPI.Api\\ExpoAPI.Api.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\gokal\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "C:\\Users\\gokal\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\gokal\\.nuget\\packages\\swashbuckle.aspnetcore\\5.6.3\\swashbuckle.aspnetcore.5.6.3.nupkg.sha512",
+    "C:\\Users\\gokal\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\5.6.3\\swashbuckle.aspnetcore.swagger.5.6.3.nupkg.sha512",
+    "C:\\Users\\gokal\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\5.6.3\\swashbuckle.aspnetcore.swaggergen.5.6.3.nupkg.sha512",
+    "C:\\Users\\gokal\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\5.6.3\\swashbuckle.aspnetcore.swaggerui.5.6.3.nupkg.sha512"
+  ],
+  "logs": []
+}
