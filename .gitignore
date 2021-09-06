@@ -6,7 +6,9 @@
 
 bin/
 
-build
+build/
+
+obj/
 
 # OSX
 .DS_Store
