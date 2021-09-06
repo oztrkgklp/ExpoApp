@@ -9,6 +9,7 @@ bin/
 build/
 
 obj/
+obj
 
 # OSX
 .DS_Store
