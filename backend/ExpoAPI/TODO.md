@@ -1,6 +1,6 @@
 # Backend TODO List
 
-- [ ] Determining how many APIs that we need to create.
-- [ ] Apply structural concepts.
-  - [ ] Implement onion architecture.
+- [x] Determining how many APIs that we need to create.
+- [x] Apply structural concepts.
+  - [x] Implement onion architecture.
 - [ ] Implement APIs.
