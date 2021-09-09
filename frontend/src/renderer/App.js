@@ -25,20 +25,20 @@ export default function CenteredGrid() {
 
   return (
     <div className={classes.root}>
-      <Admin dataProvider={restProvider('http://localhost:3000')}>
-      <Resource
-        name='posts'
-        list={PostList}
-        create={PostCreate}
-        edit={PostEdit}
-      />
-      <Resource
-        name='users'
-        list={UserList}
-        create={UserCreate}
-        edit={UserEdit}
-      />
-    </Admin>
+      <Admin dataProvider={restProvider('http://localhost:5000')}>
+        <Resource
+          name='posts'
+          list={PostList}
+          create={PostCreate}
+          edit={PostEdit}
+        />
+        <Resource
+          name='users'
+          list={UserList}
+          create={UserCreate}
+          edit={UserEdit}
+        />
+      </Admin>
     </div>
   );
 }
