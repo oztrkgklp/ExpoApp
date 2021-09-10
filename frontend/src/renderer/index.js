@@ -1,9 +1,21 @@
 import React from 'react';
-import {render} from 'react-dom';
+import ReactDOM from 'react-dom';
+import { HashRouter } from "react-router-dom";
 
-import App from './App';
+// core styles
+import "./src/scss/volt.scss";
 
-render(
-  <App />,
-  document.getElementById('app')
+// vendor styles
+// import "@fortawesome/fontawesome-free/css/all.css";
+import "react-datetime/css/react-datetime.css";
+
+import HomePage from "./src/pages/HomePage";
+import ScrollToTop from "./src/components/ScrollToTop";
+
+ReactDOM.render(
+  <HashRouter>
+    <ScrollToTop />
+    <HomePage />
+  </HashRouter>,
+  document.getElementById("root")
 );
