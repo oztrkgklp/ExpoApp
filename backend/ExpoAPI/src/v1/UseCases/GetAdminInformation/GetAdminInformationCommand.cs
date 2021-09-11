@@ -1,0 +1,12 @@
+using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace ExpoAPI.UseCases
+{
+    public class GetAdminInformationCommand : IRequest<GetAdminInformationCommandResult>
+    {
+    }
+}
