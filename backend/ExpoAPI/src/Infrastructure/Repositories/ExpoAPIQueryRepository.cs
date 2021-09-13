@@ -5,7 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ExpoAPI.UseCases;
+using ExpoAPI.UseCases.Admin;
+using ExpoAPI.UseCases.Purchase;
 
 namespace ExpoAPI.Infrastructure.Repositories
 {
@@ -23,7 +24,7 @@ namespace ExpoAPI.Infrastructure.Repositories
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<AdminInformationContract> GetAdminInformationAsync(CancellationToken cancellationToken)
+        public async Task<AdminInformationContract?> GetAdminInformationAsync(CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
             queryBuilder.Append(@"SELECT TOP 1 * FROM ADMIN");
@@ -36,6 +37,22 @@ namespace ExpoAPI.Infrastructure.Repositories
                     return getAdminInformation.FirstOrDefault();
                 }
 
+                return null;
+            }
+        }
+
+        public async Task<PurchaseDBModel?> GetPurchaseByIdAsync(int purchaseID, CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT TOP 1 * FROM PURCHASES WHERE PurchaseID = ").Append(purchaseID);
+            using(Database)
+            {
+                var getPurchaseById = await _dapperPolly.QueryAsyncWithRetry<PurchaseDBModel>(Database, queryBuilder.ToString());
+
+                if (getPurchaseById.Any())
+                {
+                    return getPurchaseById.FirstOrDefault();
+                }
                 return null;
             }
         }

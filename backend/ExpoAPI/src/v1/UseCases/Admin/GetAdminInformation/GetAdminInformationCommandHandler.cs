@@ -3,20 +3,8 @@ using ExpoAPI.ErrorCodes;
 using ExpoAPI.Infrastructure.Adapters;
 using ExpoAPI.Infrastructure.Repositories;
 using MediatR;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 
-
-namespace ExpoAPI.UseCases
+namespace ExpoAPI.UseCases.Admin
 {
     public class GetAdminInformationCommandHandler : IRequestHandler<GetAdminInformationCommand, GetAdminInformationCommandResult>
     {
@@ -48,7 +36,7 @@ namespace ExpoAPI.UseCases
                         {
                             new MessageContract()
                             {
-                                Title = "Customer device not found",
+                                Title = "Admin info not found",
                                 Content = DomainErrorCodes.EDExpoAPI10000,
                                 Code = nameof(DomainErrorCodes.EDExpoAPI10000),
                                 Type = nameof(MessageType.Error)
