@@ -66,7 +66,7 @@ namespace ExpoAPI.UseCases.Purchase
                 {
                     ValidateState = ValidationState.Valid,
                     
-                    PurchaseContract = new PurchaseCommandResultContract()
+                    PurchaseContract = new PurchaseContract()
                     {
                         PurchaseID = getPurchaseById.PurchaseID,
                         Seller = JsonConvert.SerializeXmlNode(dbObject.Seller),
