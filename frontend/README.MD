@@ -3,9 +3,9 @@
 This is a light-weight template for creating Electron App within React. With it, you can easily create an application works on MacOS, Windows and Linux.
 
 <p align="center">
-  <img src="https://imgur.com/T1d6O6G"/>
-  <img src="https://imgur.com/lKP1g3k"/>
-  <img src="https://imgur.com/YACC1tZ"/>
+  <img src="https://i.imgur.com/T1d6O6G.png"/>
+  <img src="https://i.imgur.com/lKP1g3k.png"/>
+  <img src="https://i.imgur.com/YACC1tZ.png"/>
 </p>
 
 ## What's included
