@@ -1,6 +1,11 @@
+CREATE LOGIN expodb WITH PASSWORD = '123456';
+CREATE USER expodb FOR LOGIN expodb;
+
 CREATE DATABASE Expo;
 
-Use Expo;
+USE Expo;
+EXEC sp_addrolemember 'db_owner', 'expodb'
+
 
 CREATE TABLE ADMIN (
     UserName VARCHAR(50) NOT NULL,
