@@ -36,6 +36,8 @@ namespace ExpoAPI.Controllers
             
             return Ok(new GetPurchasesApiResponseContract
             {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getPurchases.Messages?.ToList(),
                 Result = getPurchases.PurchaseContracts,
                 ReturnPath = getPurchases.ReturnPath
             });
@@ -59,6 +61,8 @@ namespace ExpoAPI.Controllers
             
             return Ok(new GetPurchaseByIdApiResponseContract
             {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getPurchaseById.Messages?.ToList(),
                 Result = new PurchaseContract()
                 {
                     PurchaseID = getPurchaseById.PurchaseContract.PurchaseID,
@@ -89,6 +93,8 @@ namespace ExpoAPI.Controllers
             
             return Ok(new GetPurchasesBySellerIdResponseContract
             {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getPurchaseBySellerId.Messages?.ToList(),
                 Result = getPurchaseBySellerId.PurchaseContracts,
                 ReturnPath = getPurchaseBySellerId.ReturnPath
             });
@@ -99,21 +105,23 @@ namespace ExpoAPI.Controllers
         [ProducesResponseType(typeof(GetPurchasesByPurchaserIdResponseContract), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GetPurchasesByPurchaserIdResponseContract>> GetPurchasesByPurchaserId( [FromHeader] GetPurchasesByPurchaserIdRequestContract contract, CancellationToken cancellationToken)
         {
-            var getPurchaseBySellerId = await _mediator.Send(new GetPurchasesBySellerIdCommand(contract.PurchaserID), cancellationToken);
-            if (!getPurchaseBySellerId.Success)
+            var getPurchasesByPurchaserId = await _mediator.Send(new GetPurchasesBySellerIdCommand(contract.PurchaserID), cancellationToken);
+            if (!getPurchasesByPurchaserId.Success)
             {
                 return BadRequest(new GetPurchasesByPurchaserIdResponseContract()
                 {
                     Instance = Guid.NewGuid().ToString(),
-                    ReturnPath = getPurchaseBySellerId.ReturnPath,
-                    Messages = getPurchaseBySellerId.Messages?.ToList(),
+                    ReturnPath = getPurchasesByPurchaserId.ReturnPath,
+                    Messages = getPurchasesByPurchaserId.Messages?.ToList(),
                 });
             }
             
             return Ok(new GetPurchasesByPurchaserIdResponseContract
             {
-                Result = getPurchaseBySellerId.PurchaseContracts,
-                ReturnPath = getPurchaseBySellerId.ReturnPath
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getPurchasesByPurchaserId.Messages?.ToList(),
+                Result = getPurchasesByPurchaserId.PurchaseContracts,
+                ReturnPath = getPurchasesByPurchaserId.ReturnPath
             });
         }
 
@@ -142,6 +150,8 @@ namespace ExpoAPI.Controllers
             
             return Ok(new CreatePurchaseApiResponseContract
             {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = createPurchase.Messages?.ToList(),
                 ReturnPath = createPurchase.ReturnPath
             });
         }
@@ -151,7 +161,7 @@ namespace ExpoAPI.Controllers
         [ProducesResponseType(typeof(UpdatePurchaseByIdApiResponseContract), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<UpdatePurchaseByIdApiResponseContract>> UpdatePurchase( [FromQuery] UpdatePurchaseByIdApiRequestContract contract, CancellationToken cancellationToken)
         {
-            var createPurchase = await _mediator.Send(new UpdatePurchaseByIdCommand(new PurchaseContract()
+            var updatePurchaseById = await _mediator.Send(new UpdatePurchaseByIdCommand(new PurchaseContract()
                                                                                     {
                                                                                         PurchaseID = contract.PurchaseID,
                                                                                         SellerID = contract.SellerID,
@@ -159,19 +169,21 @@ namespace ExpoAPI.Controllers
                                                                                         PurchaseDate = DateTime.Now,
                                                                                         Amount = contract.Amount
                                                                                     }), cancellationToken);
-            if (!createPurchase.Success)
+            if (!updatePurchaseById.Success)
             {
                 return BadRequest(new UpdatePurchaseByIdApiResponseContract()
                 {
                     Instance = Guid.NewGuid().ToString(),
-                    ReturnPath = createPurchase.ReturnPath,
-                    Messages = createPurchase.Messages?.ToList(),
+                    ReturnPath = updatePurchaseById.ReturnPath,
+                    Messages = updatePurchaseById.Messages?.ToList(),
                 });
             }
             
             return Ok(new UpdatePurchaseByIdApiResponseContract
             {
-                ReturnPath = createPurchase.ReturnPath
+                Instance = Guid.NewGuid().ToString(),
+                Messages = updatePurchaseById.Messages?.ToList(),
+                ReturnPath = updatePurchaseById.ReturnPath
             });
         }
 
@@ -193,6 +205,8 @@ namespace ExpoAPI.Controllers
             
             return Ok(new DeletePurchaseByIdApiResponseContract
             {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = deletePurchaseById.Messages?.ToList(),
                 ReturnPath = deletePurchaseById.ReturnPath
             });
         }

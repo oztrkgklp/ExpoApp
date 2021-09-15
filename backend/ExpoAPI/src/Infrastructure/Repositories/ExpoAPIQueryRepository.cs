@@ -214,11 +214,11 @@ namespace ExpoAPI.Infrastructure.Repositories
             queryBuilder.Append(@"SELECT * FROM PURCHASE WHERE SellerID = ").Append(sellerID);
             using(Database)
             {
-                var deletePurchaseById = await _dapperPolly.QueryAsyncWithRetry<List<PurchaseContract?>?>(Database, queryBuilder.ToString());
+                var deletePurchaseById = await _dapperPolly.QueryAsyncWithRetry<PurchaseContract?>(Database, queryBuilder.ToString());
 
                 if (deletePurchaseById.Any())
                 {
-                    return deletePurchaseById.FirstOrDefault();
+                    return deletePurchaseById.ToList();
                 }
                 return null;
             }
@@ -230,11 +230,11 @@ namespace ExpoAPI.Infrastructure.Repositories
             queryBuilder.Append(@"SELECT * FROM PURCHASE WHERE PurchaserID = ").Append(purchaserID);
             using(Database)
             {
-                var deletePurchaseById = await _dapperPolly.QueryAsyncWithRetry<List<PurchaseContract?>?>(Database, queryBuilder.ToString());
+                var deletePurchaseById = await _dapperPolly.QueryAsyncWithRetry<PurchaseContract>(Database, queryBuilder.ToString());
 
                 if (deletePurchaseById.Any())
                 {
-                    return deletePurchaseById.FirstOrDefault();
+                    return deletePurchaseById.ToList();
                 }
                 return null;
             }

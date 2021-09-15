@@ -37,6 +37,8 @@ namespace ExpoAPI.Controllers
 
             return Ok(new GetCompaniesApiResponseContract
             {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getCompanies.Messages?.ToList(),
                 Result = getCompanies.CompanyContracts,
                 ReturnPath = getCompanies.ReturnPath
             });
@@ -61,6 +63,8 @@ namespace ExpoAPI.Controllers
 
             return Ok(new GetCompanyByIdApiResponseContract
             {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getCompanyById.Messages?.ToList(),
                 Result = getCompanyById.CompanyContract,
                 ReturnPath = getCompanyById.ReturnPath
             });
@@ -71,21 +75,23 @@ namespace ExpoAPI.Controllers
         [ProducesResponseType(typeof(DeleteCompanyByIdApiResponseContract), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<DeleteCompanyByIdApiResponseContract>> DeleteCompanyById( [FromHeader] DeleteCompanyByIdApiRequestContract contract, CancellationToken cancellationToken)
         {
-            var getCompanyById = await _mediator.Send(new DeleteCompanyByIdCommand(contract.CompanyID), cancellationToken);
+            var deleteCompanyById = await _mediator.Send(new DeleteCompanyByIdCommand(contract.CompanyID), cancellationToken);
 
-            if (!getCompanyById.Success)
+            if (!deleteCompanyById.Success)
             {
                 return BadRequest(new DeleteCompanyByIdApiResponseContract()
                 {
                     Instance = Guid.NewGuid().ToString(),
-                    ReturnPath = getCompanyById.ReturnPath,
-                    Messages = getCompanyById.Messages?.ToList(),
+                    ReturnPath = deleteCompanyById.ReturnPath,
+                    Messages = deleteCompanyById.Messages?.ToList(),
                 });
             }
 
             return Ok(new DeleteCompanyByIdApiResponseContract
             {
-                ReturnPath = getCompanyById.ReturnPath
+                Instance = Guid.NewGuid().ToString(),
+                Messages = deleteCompanyById.Messages?.ToList(),
+                ReturnPath = deleteCompanyById.ReturnPath
             });
         }
 
@@ -115,6 +121,8 @@ namespace ExpoAPI.Controllers
 
             return Ok(new CreateCompanyApiResponseContract
             {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = createCompany.Messages?.ToList(),
                 ReturnPath = createCompany.ReturnPath
             });
         }
@@ -146,6 +154,8 @@ namespace ExpoAPI.Controllers
 
             return Ok(new UpdateCompanyByIdApiResponseContract
             {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = updateCompanyById.Messages?.ToList(),
                 ReturnPath = updateCompanyById.ReturnPath
             });
         }
@@ -169,6 +179,8 @@ namespace ExpoAPI.Controllers
 
             return Ok(new GetCompanyIdByNameApiResponseContract
             {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getCompanyByIdByName.Messages?.ToList(),
                 Result = getCompanyByIdByName.CompanyID,
                 ReturnPath = getCompanyByIdByName.ReturnPath
             });
