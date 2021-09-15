@@ -1,10 +1,8 @@
-using System.Xml.Linq;
 using ExpoAPI.Contracts;
 using ExpoAPI.ErrorCodes;
 using ExpoAPI.Infrastructure.Adapters;
 using ExpoAPI.Infrastructure.Repositories;
 using MediatR;
-using Newtonsoft.Json;
 
 namespace ExpoAPI.UseCases.Purchase
 {
@@ -49,18 +47,6 @@ namespace ExpoAPI.UseCases.Purchase
                 }
 
                 _logger.LogInformation("The purchase with ID {@purchaseID} has been fetched.", command.PurchaseID);
-
-                // string userName = getPurchaseById.UserName;               
-                // var hashedUsername = _hashingAdapter.HashUser(userName);
-
-                var dbObject = new PurchaseDBModel()
-                {
-                    PurchaseID = getPurchaseById.PurchaseID,
-                    Seller = getPurchaseById.Seller,
-                    Purchaser = getPurchaseById.Purchaser,
-                    PurchaseDate = getPurchaseById.PurchaseDate,
-                    PurchaseInfo = getPurchaseById.PurchaseInfo
-                };
                 
                 return new GetPurchaseByIdCommandResult()
                 {
@@ -69,10 +55,10 @@ namespace ExpoAPI.UseCases.Purchase
                     PurchaseContract = new PurchaseContract()
                     {
                         PurchaseID = getPurchaseById.PurchaseID,
-                        Seller = JsonConvert.SerializeXmlNode(dbObject.Seller),
-                        Purchaser = JsonConvert.SerializeXmlNode(getPurchaseById.Purchaser),
+                        SellerID = getPurchaseById.SellerID,
+                        PurchaserID = getPurchaseById.PurchaserID,
                         PurchaseDate = getPurchaseById.PurchaseDate,
-                        PurchaseInfo = JsonConvert.SerializeXmlNode(getPurchaseById.PurchaseInfo)
+                        Amount = getPurchaseById.Amount
                     },
                     ReturnPath = $"/purchases/{command.PurchaseID}"
                 };

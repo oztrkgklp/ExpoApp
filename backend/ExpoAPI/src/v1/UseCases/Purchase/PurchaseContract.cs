@@ -4,9 +4,9 @@ namespace ExpoAPI.UseCases.Purchase
     public class PurchaseContract
     {
         public int PurchaseID { get; set; }
-        public string? Seller { get; set; }
-        public string? Purchaser { get; set; }
+        public int SellerID { get; set; }
+        public int PurchaserID { get; set; }
         public DateTime PurchaseDate { get; set; }
-        public string? PurchaseInfo { get; set; }
+        public decimal Amount { get; set; }
     }
 }
