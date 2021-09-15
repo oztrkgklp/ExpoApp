@@ -77,6 +77,10 @@
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.60",
+    "@mui/x-data-grid": "^4.0.0",
+    "@mui/x-data-grid-generator": "^4.0.0",
+    "@mui/x-data-grid-pro": "^4.0.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -85,6 +89,7 @@
     "react": "^16.8.5",
     "react-admin": "^3.18.1",
     "react-dom": "^16.14.0",
-    "recharts": "^2.1.2"
+    "recharts": "^2.1.2",
+    "swr": "^1.0.1"
   }
 }
