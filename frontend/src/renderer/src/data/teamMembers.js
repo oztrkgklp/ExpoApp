@@ -10,33 +10,33 @@ export default [
     {
         "id": 1,
         "image": Profile1,
-        "name": "Christopher Wood",
+        "name": "Ali Yavuz",
         "statusKey": "online",
         "icon": faCalendarCheck,
-        "btnText": "Invite"
+        "btnText": "Davet Et"
     },
     {
         "id": 2,
         "image": Profile2,
-        "name": "Jose Leos",
-        "statusKey": "inMeeting",
-        "icon": faComment,
-        "btnText": "Message"
+        "name": "Ahmet Yılmaz",
+        "statusKey": "offline",
+        "icon": faCalendarCheck,
+        "btnText": "DaVet Et"
     },
     {
         "id": 3,
         "image": Profile3,
-        "name": "Bonnie Green",
+        "name": "Cansu Bilir",
         "statusKey": "offline",
         "icon": faCalendarCheck,
-        "btnText": "Invite"
+        "btnText": "Davet Et"
     },
     {
         "id": 4,
         "image": Profile4,
-        "name": "Neil Sims",
+        "name": "Mehmet Arslan",
         "statusKey": "online",
-        "icon": faComment,
-        "btnText": "Message"
+        "icon": faCalendarCheck,
+        "btnText": "Davet Et"
     }
 ]

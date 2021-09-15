@@ -85,12 +85,12 @@ export const CounterWidget = (props) => {
               <h5>{category}</h5>
               <h3 className="mb-1">{title}</h3>
             </div>
-            <small>{period}, <FontAwesomeIcon icon={faGlobeEurope} size="xs" /> WorldWide</small>
+            <small>{period}, <FontAwesomeIcon icon={faGlobeEurope} size="xs" /> Tarihlerinde</small>
             <div className="small mt-2">
               <FontAwesomeIcon icon={percentageIcon} className={`${percentageColor} me-1`} />
               <span className={`${percentageColor} fw-bold`}>
                 {percentage}%
-              </span> Since last month
+              </span> Geçen Ay'dan Şimdiye
             </div>
           </Col>
         </Row>
@@ -127,8 +127,8 @@ export const CircleChartWidget = (props) => {
 };
 
 export const BarChartWidget = (props) => {
-  const { title, value, percentage, data = [] } = props;
-  const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const {value, percentage, data = [] } = props;
+  const labels = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
   const series = data.map(d => d.value);
   const percentageIcon = percentage < 0 ? faAngleDown : faAngleUp;
   const percentageColor = percentage < 0 ? "text-danger" : "text-success";
@@ -137,7 +137,7 @@ export const BarChartWidget = (props) => {
     <Card border="light" className="shadow-sm">
       <Card.Body className="d-flex flex-row align-items-center flex-0 border-bottom">
         <div className="d-block">
-          <h6 className="fw-normal text-gray mb-2">{title}</h6>
+          <h6 className="fw-normal text-gray mb-2">Günlük Satış</h6>
           <h3>{value}</h3>
           <small className="mt-2">
             <FontAwesomeIcon icon={percentageIcon} className={`${percentageColor} me-1`} />
@@ -166,9 +166,9 @@ export const TeamMembersWidget = () => {
   const TeamMember = (props) => {
     const { name, statusKey, image, icon, btnText } = props;
     const status = {
-      online: { color: "success", label: "Online" },
-      inMeeting: { color: "warning", label: "In a meeting" },
-      offline: { color: "danger", label: "Offline" }
+      online: { color: "success", label: "Aktif" },
+      inMeeting: { color: "warning", label: "Toplantıda" },
+      offline: { color: "danger", label: "Çevrim Dışı" }
     };
 
     const statusColor = status[statusKey] ? status[statusKey].color : 'danger'
@@ -202,8 +202,8 @@ export const TeamMembersWidget = () => {
   return (
     <Card border="light" className="shadow-sm">
       <Card.Header className="border-bottom border-light d-flex justify-content-between">
-        <h5 className="mb-0">Team members</h5>
-        <Button variant="secondary" size="sm">See all</Button>
+        <h5 className="mb-0">Adminler</h5>
+        <Button variant="secondary" size="sm">Hepsini Gör</Button>
       </Card.Header>
       <Card.Body>
         <ListGroup className="list-group-flush list my--3">
@@ -244,15 +244,15 @@ export const ProgressTrackWidget = () => {
   return (
     <Card border="light" className="shadow-sm">
       <Card.Header className="border-bottom border-light">
-        <h5 className="mb-0">Progress track</h5>
+        <h5 className="mb-0">Şirket Karları</h5>
       </Card.Header>
       <Card.Body>
 
-        <Progress title="Rocket - SaaS Template" color="purple" icon={faBootstrap} percentage={34} />
-        <Progress title="Pixel - Design System" color="danger" icon={faAngular} percentage={60} />
-        <Progress title="Spaces - Listings Template" color="tertiary" icon={faVuejs} percentage={45} />
-        <Progress title="Stellar - Dashboard" color="info" icon={faReact} percentage={35} />
-        <Progress last title="Volt - Dashboard" color="purple" icon={faBootstrap} percentage={34} />
+        <Progress title="1. Şirket" color="purple" icon={faBootstrap} percentage={34} />
+        <Progress title="2. Şirket" color="danger" icon={faAngular} percentage={60} />
+        <Progress title="3. Şirket" color="tertiary" icon={faVuejs} percentage={45} />
+        <Progress title="4. Şirket" color="info" icon={faReact} percentage={35} />
+        <Progress last title="5. Şirket" color="purple" icon={faBootstrap} percentage={34} />
       </Card.Body>
     </Card>
   );
@@ -317,7 +317,7 @@ export const SalesValueWidget = (props) => {
           </h5>
           <h3>${value}</h3>
           <small className="fw-bold mt-2">
-            <span className="me-2">Yesterday</span>
+            <span className="me-2">Dün</span>
             <FontAwesomeIcon icon={percentageIcon} className={`${percentageColor} me-1`} />
             <span className={percentageColor}>
               {percentage}%
@@ -325,8 +325,8 @@ export const SalesValueWidget = (props) => {
           </small>
         </div>
         <div className="d-flex ms-auto">
-          <Button variant="secondary" size="sm" className="me-2">Month</Button>
-          <Button variant="primary" size="sm" className="me-3">Week</Button>
+          <Button variant="secondary" size="sm" className="me-2">Ay</Button>
+          <Button variant="primary" size="sm" className="me-3">Hafta</Button>
         </div>
       </Card.Header>
       <Card.Body className="p-2">
@@ -350,7 +350,7 @@ export const SalesValueWidgetPhone = (props) => {
           </h5>
           <h3>${value}</h3>
           <small className="fw-bold mt-2">
-            <span className="me-2">Yesterday</span>
+            <span className="me-2">Dün</span>
             <FontAwesomeIcon icon={percentageIcon} className={`${percentageColor} me-1`} />
             <span className={percentageColor}>
               {percentage}%
@@ -358,8 +358,8 @@ export const SalesValueWidgetPhone = (props) => {
           </small>
         </div>
         <div className="d-flex ms-auto">
-          <Button variant="secondary" size="sm" className="me-2">Month</Button>
-          <Button variant="primary" size="sm" className="me-3">Week</Button>
+          <Button variant="secondary" size="sm" className="me-2">Ay</Button>
+          <Button variant="primary" size="sm" className="me-3">Hafta</Button>
         </div>
       </Card.Header>
       <Card.Body className="p-2">
