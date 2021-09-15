@@ -1,17 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
 using Dapper;
-using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
-using Microsoft.Extensions.Logging;
 using Polly;
-using Polly.Retry;
 using Polly.Timeout;
-using Polly.Wrap;
-using System.Linq;
 
 namespace ExpoAPI.Infrastructure.Repositories
 {
@@ -172,22 +163,15 @@ namespace ExpoAPI.Infrastructure.Repositories
                     .WithPolicyKey($"F6.SqlCircuitBreakerAsyncPolicy")
             };
 
-        private static void OnHalfOpen()
-        {
-            _logger.LogWarning("#Polly #CircuitBreakerAsync Half-open: Next call is a trial");
-        }
+        private static void OnHalfOpen() => _logger.LogWarning("#Polly #CircuitBreakerAsync Half-open: Next call is a trial");
 
-        private static void OnReset()
-        {
+        private static void OnReset() =>
             // on circuit closed
             _logger.LogWarning("#Polly #CircuitBreakerAsync Circuit breaker reset");
-        }
 
-        private static void OnBreak(Exception exception, TimeSpan duration)
-        {
+        private static void OnBreak(Exception exception, TimeSpan duration) =>
             // on circuit opened
             _logger.LogWarning("#Polly #CircuitBreakerAsync Circuit breaker opened", exception);
-        }
     }
 
     internal enum SqlHandledExceptions

@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace ExpoAPI.UseCases
+namespace ExpoAPI.UseCases.Admin
 {
     public class GetAdminInformationCommandResult : CommandResultBase
     {

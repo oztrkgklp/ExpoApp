@@ -1,4 +1,4 @@
-namespace ExpoAPI.UseCases
+namespace ExpoAPI.UseCases.Admin
 {
     public class AdminInformationContract
     {

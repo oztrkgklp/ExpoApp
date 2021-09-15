@@ -1,12 +1,8 @@
-using System;
-using System.Linq;
-using ExpoAPI.Contracts;
+using ExpoAPI.Contracts.Responses;
+using ExpoAPI.Contracts.Requests;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
-using System.Threading.Tasks;
-using ExpoAPI.UseCases;
+using ExpoAPI.UseCases.Admin;
 
 namespace ExpoAPI.Controllers
 {
@@ -25,7 +21,7 @@ namespace ExpoAPI.Controllers
         [HttpGet("admin")]
         [ProducesResponseType(typeof(GetAdminInformationApiResponseContract), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(GetAdminInformationApiResponseContract), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<GetAdminInformationApiResponseContract>> GetAdminInformation(CancellationToken cancellationToken)
+        public async Task<ActionResult<GetAdminInformationApiResponseContract>> GetAdminInformation( [FromForm] GetAdminInformationApiRequestContract contract, CancellationToken cancellationToken)
         {
             var getAdminInformation = await _mediator.Send(new GetAdminInformationCommand(), cancellationToken);
 

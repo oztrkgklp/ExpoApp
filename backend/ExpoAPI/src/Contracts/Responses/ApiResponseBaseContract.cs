@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace ExpoAPI.Contracts
+namespace ExpoAPI.Contracts.Responses
 {
     public abstract class ApiResponseBaseContract<TContract>
     {
