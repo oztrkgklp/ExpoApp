@@ -280,63 +280,64 @@ export const PageVisitsTable = () => {
   const [type, setType] = React.useState("Commodity");
   const [size, setSize] = React.useState(100);
 
-
-
   const columns = [
-
     {
-      field: 'satıcıFirma',
-      headerName: 'Satıcı Firma',
-      width: 150,
+      field: 'id',
+      headerName: 'ID',
+      width: 100,
+      editable: true,
+    },
+   
+    {
+      field: 'companyName',
+      headerName: 'Firma Adı',
+      width: 130,
       editable: true,
     },
     {
-      field: 'alıcıFirma',
-      headerName: 'Alıcı Firma',
-      width: 150,
+      field: 'phone',
+      headerName: 'Telefon Numarası',
+      width: 140,
       editable: true,
     },
     {
-      field: 'alıcıIletisim',
-      headerName: 'Alıcı İletişim',
-      width: 110,
-      editable: true,
-    },
-    {
-      field: 'fiyat',
-      headerName: 'Fiyat',
+      field: 'eMail',
+      headerName: 'E-Mail',
       description: 'This column has a value getter and is not sortable.',
       sortable: true,
-      width: 160,
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'endorsement',
+      headerName: 'Ciro',
+      width: 110,
+      sortable: true,
+    },
+    {
+      field: 'isEntered',
+      headerName: 'Katılım',
+      width: 130,
+      editable: true,
     },
   ];
-  const rows = result.map(c=>{
+  
+    const rows2 = [
+          { companyID: 1, companyName: 'Snow', phone: '+905417479982', eMail: "erenyldrm200@gmail.com",endorsement:100,isEntered:"evet" },
+          { companyID: 2, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"Hayır" },
+          { companyID: 3, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
+          { companyID: 4, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
+          { companyID: 5, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
+          { companyID: 6, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:300,isEntered:"evet" },
+          { companyID: 7, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
+          { companyID: 8, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
+          { companyID: 9, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
+          { companyID: 10, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
+    ] 
+const rows = rows2.map(c=>{
     const {companyID, companyName,phone,eMail,endorsement,isEntered}= c
     return {id: companyID , companyName,phone,eMail,endorsement,isEntered}
   })
-    console.log(rows)
-    // { id: 1, satıcıFirma: 'Snow', alıcıFirma: 'Jon', alıcıIletisim: 35,fiyat:100 },
-    // { id: 2, satıcıFirma: 'Lannister', alıcıFirma: 'Cersei', alıcıIletisim: 42,fiyat:100 },
-    // { id: 3, satıcıFirma: 'Lannister', alıcıFirma: 'Jaime', alıcıIletisim: 45,fiyat:100 },
-    // { id: 4, satıcıFirma: 'Stark', alıcıFirma: 'Arya', alıcıIletisim: 16 ,fiyat:100},
-    // { id: 5, satıcıFirma: 'Targaryen', alıcıFirma: 'Daenerys', alıcıIletisim: null ,fiyat:100},
-    // { id: 6, satıcıFirma: 'Melisandre', alıcıFirma: null, alıcıIletisim: 150 ,fiyat:100},
-    // { id: 7, satıcıFirma: 'Clifford', alıcıFirma: 'Ferrara', alıcıIletisim: 44 ,fiyat:100},
-    // { id: 8, satıcıFirma: 'Frances', alıcıFirma: 'Rossini', alıcıIletisim: 36 ,fiyat:100},
-    // { id: 9, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    // { id: 10, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    // { id: 11, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    // { id: 12, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    // { id: 13, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    // { id: 14, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    // { id: 15, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    // { id: 16, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    // { id: 17, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    // { id: 19, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    // { id: 20, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    // { id: 21, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    // { id: 22, satıcıFirma: 'Clifford', alıcıFirma: 'Ferrara', alıcıIletisim: 44 ,fiyat:100},
-
 
 const [pagination, setPagination] = React.useState({
     pagination: false,
@@ -408,7 +409,6 @@ const [pagination, setPagination] = React.useState({
         columns={columns}
         rowLength={10}
         localeText={trTR.props.MuiDataGrid.localeText}
-        id="companyID"
       />
     </div>
   );

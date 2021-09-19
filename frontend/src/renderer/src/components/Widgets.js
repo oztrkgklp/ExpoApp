@@ -263,7 +263,7 @@ export const ProgressTrackWidget = () => {
             <div className="progress-info">
               <h6 className="mb-0">{title}</h6>
               <small className="fw-bold text-dark">
-                <span>{percentage} %</span>
+                <span>{percentage} ₺</span>
               </small>
             </div>
             <ProgressBar variant={color} now={percentage} min={0} max={100} />
