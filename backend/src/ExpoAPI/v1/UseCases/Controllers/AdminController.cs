@@ -37,6 +37,8 @@ namespace ExpoAPI.Controllers
 
             return Ok(new GetAdminInformationApiResponseContract
             {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getAdminInformation.Messages?.ToList(),
                 Result = getAdminInformation.AdminInformationContract,
                 ReturnPath = getAdminInformation.ReturnPath
             });

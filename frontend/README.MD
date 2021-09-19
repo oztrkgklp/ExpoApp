@@ -3,7 +3,9 @@
 This is a light-weight template for creating Electron App within React. With it, you can easily create an application works on MacOS, Windows and Linux.
 
 <p align="center">
-  <img src="https://upload-images.jianshu.io/upload_images/1990133-feb14e48f94ef4bd.gif"/>
+  <img src="https://i.imgur.com/T1d6O6G.png"/>
+  <img src="https://i.imgur.com/lKP1g3k.png"/>
+  <img src="https://i.imgur.com/YACC1tZ.png"/>
 </p>
 
 ## What's included
@@ -18,7 +20,7 @@ This is a light-weight template for creating Electron App within React. With it,
 First, you should clone this repo to your local via git like this: 
 
 ```bash
-git clone --depth 1 --single-branch --branch master https://github.com/SmallStoneSK/electron-react-template.git your-app
+git clone --depth 1 --single-branch --branch master https://github.com/oztrkgklp/ExpoApp.git your-app
 ```
 
 Then, you should install the dependencies like this:
