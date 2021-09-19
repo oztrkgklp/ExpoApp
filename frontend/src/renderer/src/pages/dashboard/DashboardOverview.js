@@ -1,25 +1,15 @@
 
 import React from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCashRegister, faChartLine, faCloudUploadAlt, faPlus, faRocket, faTasks, faUserShield } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-bootstrap';
+import { faCashRegister, faChartLine } from '@fortawesome/free-solid-svg-icons';
+import { Col, Row, } from '@themesberg/react-bootstrap';
 
-import { CounterWidget, CircleChartWidget, BarChartWidget, TeamMembersWidget, ProgressTrackWidget, RankingWidget, SalesValueWidget, SalesValueWidgetPhone, AcquisitionWidget } from "../../components/Widgets";
+import { CounterWidget, CircleChartWidget, BarChartWidget, TeamMembersWidget, ProgressTrackWidget, SalesValueWidget, SalesValueWidgetPhone } from "../../components/Widgets";
 import { PageVisitsTable } from "../../components/Tables";
 import { trafficShares, totalOrders } from "../../data/charts";
 
 export default () => {
   return (
     <>
-      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
-        
-
-        <ButtonGroup>
-          <Button variant="outline-primary" size="sm">Paylaş</Button>
-          <Button variant="outline-primary" size="sm">Dışarı Aktar</Button>
-        </ButtonGroup>
-      </div>
-
       <Row className="justify-content-md-center">
         <Col xs={12} className="mb-4 d-none d-sm-block">
           <SalesValueWidget
@@ -49,7 +39,7 @@ export default () => {
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
             category="Gelir"
-            title="$43,594"
+            title="₺43,594"
             period="5 Ekim - 8 Ekim"
             percentage={28.4}
             icon={faCashRegister}
@@ -78,7 +68,12 @@ export default () => {
                 </Col>
 
                 <Col xs={12} lg={6} className="mb-4">
-                  <ProgressTrackWidget />
+                <BarChartWidget
+                    title="Total orders"
+                    value={452}
+                    percentage={18.2}
+                    data={totalOrders} />
+                  
                 </Col>
               </Row>
             </Col>
@@ -86,11 +81,7 @@ export default () => {
             <Col xs={12} xl={4}>
               <Row>
                 <Col xs={12} className="mb-4">
-                  <BarChartWidget
-                    title="Total orders"
-                    value={452}
-                    percentage={18.2}
-                    data={totalOrders} />
+                  <ProgressTrackWidget />
                 </Col>
               </Row>
             </Col>
