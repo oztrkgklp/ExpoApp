@@ -1,5 +1,6 @@
 import * as React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { domain } from "../assets/domain";
 import {
   faAngleDown,
   faAngleUp,
@@ -239,10 +240,9 @@ handleApplyChanges()
           onChange={handlePaginationChange}
         >
           <MenuItem value={-1}>kapalı</MenuItem>
-          <MenuItem value={0}>auto</MenuItem>
+          <MenuItem value={0}>oto</MenuItem>
           <MenuItem value={10}>10</MenuItem>
           <MenuItem value={100}>100</MenuItem>
-          <MenuItem value={1000}>{Number(1000).toLocaleString()}</MenuItem>
         </Select>
       </FormControl>
       
@@ -257,13 +257,22 @@ SettingsPanel.propTypes = {
   type: PropTypes.oneOf(["Commodity", "Employee"]).isRequired,
 };
 
-const companies=()=>{
-  axios.get('https://a64a-85-105-8-222.ngrok.io/api/v1/companies')
+var result = [];
+
+axios.get(domain)
   .then(function ({data}) {
     // handle success
-    return data
+    result = data.result;
+    console.log(result)
   })
-}
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+  .then(function () {
+    // always executed
+  });
+
 export const PageVisitsTable = () => {
   const classes = useStyles();
   const antDesignClasses = useStylesAntDesign();
@@ -274,6 +283,7 @@ export const PageVisitsTable = () => {
 
 
   const columns = [
+
     {
       field: 'satıcıFirma',
       headerName: 'Satıcı Firma',
@@ -300,33 +310,33 @@ export const PageVisitsTable = () => {
       width: 160,
     },
   ];
-  
-  const rows = [
-    { id: 1, satıcıFirma: 'Snow', alıcıFirma: 'Jon', alıcıIletisim: 35,fiyat:100 },
-    { id: 2, satıcıFirma: 'Lannister', alıcıFirma: 'Cersei', alıcıIletisim: 42,fiyat:100 },
-    { id: 3, satıcıFirma: 'Lannister', alıcıFirma: 'Jaime', alıcıIletisim: 45,fiyat:100 },
-    { id: 4, satıcıFirma: 'Stark', alıcıFirma: 'Arya', alıcıIletisim: 16 ,fiyat:100},
-    { id: 5, satıcıFirma: 'Targaryen', alıcıFirma: 'Daenerys', alıcıIletisim: null ,fiyat:100},
-    { id: 6, satıcıFirma: 'Melisandre', alıcıFirma: null, alıcıIletisim: 150 ,fiyat:100},
-    { id: 7, satıcıFirma: 'Clifford', alıcıFirma: 'Ferrara', alıcıIletisim: 44 ,fiyat:100},
-    { id: 8, satıcıFirma: 'Frances', alıcıFirma: 'Rossini', alıcıIletisim: 36 ,fiyat:100},
-    { id: 9, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    { id: 10, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    { id: 11, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    { id: 12, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    { id: 13, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    { id: 14, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    { id: 15, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    { id: 16, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    { id: 17, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    { id: 19, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    { id: 20, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    { id: 21, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
-    { id: 22, satıcıFirma: 'Clifford', alıcıFirma: 'Ferrara', alıcıIletisim: 44 ,fiyat:100},
+  const rows = result.map(c=>{
+    const {companyID, companyName,phone,eMail,endorsement,isEntered}= c
+    return {id: companyID , companyName,phone,eMail,endorsement,isEntered}
+  })
+    console.log(rows)
+    // { id: 1, satıcıFirma: 'Snow', alıcıFirma: 'Jon', alıcıIletisim: 35,fiyat:100 },
+    // { id: 2, satıcıFirma: 'Lannister', alıcıFirma: 'Cersei', alıcıIletisim: 42,fiyat:100 },
+    // { id: 3, satıcıFirma: 'Lannister', alıcıFirma: 'Jaime', alıcıIletisim: 45,fiyat:100 },
+    // { id: 4, satıcıFirma: 'Stark', alıcıFirma: 'Arya', alıcıIletisim: 16 ,fiyat:100},
+    // { id: 5, satıcıFirma: 'Targaryen', alıcıFirma: 'Daenerys', alıcıIletisim: null ,fiyat:100},
+    // { id: 6, satıcıFirma: 'Melisandre', alıcıFirma: null, alıcıIletisim: 150 ,fiyat:100},
+    // { id: 7, satıcıFirma: 'Clifford', alıcıFirma: 'Ferrara', alıcıIletisim: 44 ,fiyat:100},
+    // { id: 8, satıcıFirma: 'Frances', alıcıFirma: 'Rossini', alıcıIletisim: 36 ,fiyat:100},
+    // { id: 9, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    // { id: 10, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    // { id: 11, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    // { id: 12, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    // { id: 13, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    // { id: 14, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    // { id: 15, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    // { id: 16, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    // { id: 17, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    // { id: 19, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    // { id: 20, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    // { id: 21, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    // { id: 22, satıcıFirma: 'Clifford', alıcıFirma: 'Ferrara', alıcıIletisim: 44 ,fiyat:100},
 
-
-
-  ];
 
 const [pagination, setPagination] = React.useState({
     pagination: false,
@@ -398,7 +408,7 @@ const [pagination, setPagination] = React.useState({
         columns={columns}
         rowLength={10}
         localeText={trTR.props.MuiDataGrid.localeText}
-
+        id="companyID"
       />
     </div>
   );

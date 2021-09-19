@@ -32,6 +32,7 @@ import Profile1 from "../assets/img/team/profile-picture-1.jpg";
 import ProfileCover from "../assets/img/profile-cover.jpg";
 
 import teamMembers from "../data/teamMembers";
+import axios from 'axios'
 
 export const ProfileCardWidget = () => {
   return (
@@ -232,12 +233,24 @@ export const TeamMembersWidget = () => {
     </Card>
   );
 };
+var result = [];
+axios.get('https://83f4-85-105-8-222.ngrok.io/api/v1/companies')
+  .then(function ({data}) {
+    // handle success
+    result = data.result;
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+  .then(function () {
+    // always executed
+  });
 
 export const ProgressTrackWidget = () => {
   const Progress = (props) => {
     const { title, percentage, icon, color, last = false } = props;
     const extraClassName = last ? "" : "mb-2";
-
     return (
       <Row className={`align-items-center ${extraClassName}`}>
         <Col xs="auto">
@@ -266,37 +279,14 @@ export const ProgressTrackWidget = () => {
         <h5 className="mb-0">Şirket Karları</h5>
       </Card.Header>
       <Card.Body>
-        <Progress
-          title="1. Şirket"
-          color="purple"
+        {result.map((r,i)=>(
+          <Progress
+          title={r.companyName}
+          color="blue"
           icon={faBootstrap}
-          percentage={34}
+          percentage={r.endorsement}
         />
-        <Progress
-          title="2. Şirket"
-          color="danger"
-          icon={faAngular}
-          percentage={60}
-        />
-        <Progress
-          title="3. Şirket"
-          color="tertiary"
-          icon={faVuejs}
-          percentage={45}
-        />
-        <Progress
-          title="4. Şirket"
-          color="info"
-          icon={faReact}
-          percentage={35}
-        />
-        <Progress
-          last
-          title="5. Şirket"
-          color="purple"
-          icon={faBootstrap}
-          percentage={34}
-        />
+        ))}
       </Card.Body>
     </Card>
   );
