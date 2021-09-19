@@ -29,6 +29,10 @@ namespace ExpoAPI
             });
             services.AddMvc().AddMvcOptions((opt) => opt.EnableEndpointRouting=false);
             services.AddScoped<IExpoAPIQueryRepository, ExpoAPIQueryRepository>();
+            services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
+            {
+                builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
+            }));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "ExpoAPI", Version = "v1.0"});
@@ -44,7 +48,7 @@ namespace ExpoAPI
         {            
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "ExpoAPI v1"); });
-
+            app.UseCors("ApiCorsPolicy");
             app.UseHttpsRedirection();
             app.UseMiddleware<SecurityHeadersMiddleware>();
             app.UseRouting();

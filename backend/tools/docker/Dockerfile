@@ -1,26 +1,23 @@
 # https://hub.docker.com/_/microsoft-dotnet
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /source
+FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
+WORKDIR /ExpoAPI
 
 # copy csproj and restore as distinct layers
-COPY *.sln ./
-COPY ./backend/src/ExpoAPI /backend/src/ExpoAPI
-COPY ./db /db
-
-# # DB
-# FROM mcr.microsoft.com/mssql/server:2019-latest
-# CMD sqlcmd 
+COPY ./backend/src/ExpoAPI/* ./
+# COPY ./db /ExpoAPI/db
 
 # build app
-WORKDIR /backend/src/ExpoAPI
+WORKDIR /ExpoAPI
 RUN dotnet restore
-RUN dotnet publish -c release -o /backend/src/ExpoAPI
+RUN rm /ExpoAPI/Release/net6.0/ExpoAPI.AssemblyInfo.cs
+RUN rm /ExpoAPI/Release/net6.0/.NETCoreApp,Version=v6.0.AssemblyAttributes.cs
+RUN dotnet publish -c Release -o /ExpoAPI
 
 # final stage/image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
-WORKDIR /backend/src/ExpoAPI
-COPY --from=build /backend/src/ExpoAPI ./
-EXPOSE 80/tcp
-ENV ASPNETCORE_URLS http://*:80
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal
+WORKDIR /ExpoAPI
+COPY --from=build /ExpoAPI ./
+EXPOSE 5009/tcp
+ENV ASPNETCORE_URLS http://*:5009
 ENTRYPOINT ["dotnet", "ExpoAPI.dll"]
