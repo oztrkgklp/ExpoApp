@@ -41,7 +41,7 @@ import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import useSWR from 'swr'
+import axios from "axios"
 const defaultTheme = createTheme();
 const useStylesAntDesign = makeStyles(
   (theme) => ({
@@ -227,6 +227,8 @@ function SettingsPanel(props) {
     });
   }, [sizeState, typeState, selectedPaginationValue, activeTheme, onApply]);
 
+
+  
   return (
     <FormGroup className="MuiFormGroup-options" row>
       <FormControl variant="standard">
@@ -284,25 +286,71 @@ SettingsPanel.propTypes = {
   type: PropTypes.oneOf(["Commodity", "Employee"]).isRequired,
 };
 
+const companies=()=>{
+  axios.get('https://3f01-31-223-43-45.ngrok.io/api/v1/companies')
+  .then(function ({data}) {
+    // handle success
+    return data
+  })
+}
 export const PageVisitsTable = () => {
-//   const fetcher = (...args) => fetch(...args).then(res => res.json())
-//   const { result, error } = useSWR('169.254.27.196:5009/api/v1/companies', fetcher)
-// console.log(result)
-//   if (error) return <div>failed to load</div>
-//   if (!result) return <div>loading...</div>
   const classes = useStyles();
   const antDesignClasses = useStylesAntDesign();
   const [isAntDesign, setIsAntDesign] = React.useState(false);
   const [type, setType] = React.useState("Commodity");
   const [size, setSize] = React.useState(100);
-  const { loading, data, setRowLength, loadNewData } = useDemoData({
-    dataSet: type,
-    rowLength: size,
-    maxColumns: 50,
-    editable: true,
-  });
+  const [ loading, setRowLength] = React.useState([])
+  const [ data, loadNewData] = React.useState([])
 
-  const [pagination, setPagination] = React.useState({
+
+
+  const columns = [
+    { field: 'id', headerName: 'ID', width: 90 },
+    {
+      field: 'firstName',
+      headerName: 'First name',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'lastName',
+      headerName: 'Last name',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'age',
+      headerName: 'Age',
+      type: 'number',
+      width: 110,
+      editable: true,
+    },
+    {
+      field: 'fullName',
+      headerName: 'Full name',
+      description: 'This column has a value getter and is not sortable.',
+      sortable: false,
+      width: 160,
+      valueGetter: (params) =>
+        `${params.getValue(params.id, 'firstName') || ''} ${
+          params.getValue(params.id, 'lastName') || ''
+        }`,
+    },
+  ];
+  
+  const rows = [
+    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
+    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
+    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
+    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
+    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
+    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
+    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
+    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
+    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+  ];
+
+const [pagination, setPagination] = React.useState({
     pagination: false,
     autoPageSize: false,
     pageSize: undefined,
@@ -360,7 +408,6 @@ export const PageVisitsTable = () => {
       />
       <DataGrid
         className={isAntDesign ? antDesignClasses.root : undefined}
-        {...data}
         components={{
           Toolbar: GridToolbar,
         }}
@@ -368,6 +415,8 @@ export const PageVisitsTable = () => {
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
+        rows={rows}
+        columns={columns}
       />
     </div>
   );

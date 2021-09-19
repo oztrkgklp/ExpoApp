@@ -15,7 +15,6 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Preloader from "../components/Preloader";
-
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
 
@@ -47,7 +46,7 @@ const RouteWithSidebar = ({ component: Component, ...rest }) => {
     setShowSettings(!showSettings);
     localStorage.setItem('settingsVisible', !showSettings);
   }
-
+ 
   return (
     <Route {...rest} render={props => (
       <>
@@ -66,6 +65,7 @@ const RouteWithSidebar = ({ component: Component, ...rest }) => {
 };
 
 export default () => (
+  
   <Switch>
     <RouteWithLoader exact path={Routes.Presentation.path} component={Signin} />
     <RouteWithLoader exact path={Routes.Lock.path} component={Lock} />

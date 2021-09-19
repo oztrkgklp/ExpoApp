@@ -63,17 +63,10 @@ export default () => {
                   <PageVisitsTable />
                 </Col>
 
-                <Col xs={12} lg={6} className="mb-4">
-                  <TeamMembersWidget />
-                </Col>
+               
 
                 <Col xs={12} lg={6} className="mb-4">
-                <BarChartWidget
-                    title="Total orders"
-                    value={452}
-                    percentage={18.2}
-                    data={totalOrders} />
-                  
+                
                 </Col>
               </Row>
             </Col>
