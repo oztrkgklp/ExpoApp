@@ -30,7 +30,7 @@ import { pageVisits, pageTraffic, pageRanking } from "../data/tables";
 import transactions from "../data/transactions";
 import commands from "../data/commands";
 import PropTypes from "prop-types";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar ,trTR} from "@mui/x-data-grid";
 import { useDemoData } from "@mui/x-data-grid-generator";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import { makeStyles } from "@material-ui/styles";
@@ -199,7 +199,7 @@ function SettingsPanel(props) {
   const [sizeState, setSize] = React.useState(size);
   const [typeState, setType] = React.useState(type);
   const [selectedPaginationValue, setSelectedPaginationValue] =
-    React.useState(-1);
+    React.useState(10);
   const [activeTheme, setActiveTheme] = React.useState(theme);
 
   const handleSizeChange = React.useCallback((event) => {
@@ -227,26 +227,11 @@ function SettingsPanel(props) {
     });
   }, [sizeState, typeState, selectedPaginationValue, activeTheme, onApply]);
 
-
+handleApplyChanges()
   
   return (
     <FormGroup className="MuiFormGroup-options" row>
-      <FormControl variant="standard">
-        <InputLabel>Veri Tipi</InputLabel>
-        <Select value={typeState} onChange={handleDatasetChange}>
-          <MenuItem value="Employee">Employee</MenuItem>
-          <MenuItem value="Commodity">Commodity</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControl variant="standard">
-        <InputLabel>Satır</InputLabel>
-        <Select value={sizeState} onChange={handleSizeChange}>
-          <MenuItem value={100}>100</MenuItem>
-          <MenuItem value={1000}>{Number(1000).toLocaleString()}</MenuItem>
-          <MenuItem value={10000}>{Number(10000).toLocaleString()}</MenuItem>
-          <MenuItem value={100000}>{Number(100000).toLocaleString()}</MenuItem>
-        </Select>
-      </FormControl>
+      
       <FormControl variant="standard">
         <InputLabel>Sayfa Boyutu</InputLabel>
         <Select
@@ -255,26 +240,12 @@ function SettingsPanel(props) {
         >
           <MenuItem value={-1}>kapalı</MenuItem>
           <MenuItem value={0}>auto</MenuItem>
-          <MenuItem value={25}>25</MenuItem>
+          <MenuItem value={10}>10</MenuItem>
           <MenuItem value={100}>100</MenuItem>
           <MenuItem value={1000}>{Number(1000).toLocaleString()}</MenuItem>
         </Select>
       </FormControl>
-      <FormControl variant="standard">
-        <InputLabel>Tema</InputLabel>
-        <Select value={activeTheme} onChange={handleThemeChange}>
-          <MenuItem value="default">Varsayılan</MenuItem>
-          <MenuItem value="ant">Ant</MenuItem>
-        </Select>
-      </FormControl>
-      <Button
-        size="small"
-        variant="outlined"
-        color="primary"
-        onClick={handleApplyChanges}
-      >
-        <KeyboardArrowRightIcon fontSize="small" /> Uygula
-      </Button>
+      
     </FormGroup>
   );
 }
@@ -287,7 +258,7 @@ SettingsPanel.propTypes = {
 };
 
 const companies=()=>{
-  axios.get('https://3f01-31-223-43-45.ngrok.io/api/v1/companies')
+  axios.get('https://a64a-85-105-8-222.ngrok.io/api/v1/companies')
   .then(function ({data}) {
     // handle success
     return data
@@ -299,55 +270,62 @@ export const PageVisitsTable = () => {
   const [isAntDesign, setIsAntDesign] = React.useState(false);
   const [type, setType] = React.useState("Commodity");
   const [size, setSize] = React.useState(100);
-  const [ loading, setRowLength] = React.useState([])
-  const [ data, loadNewData] = React.useState([])
 
 
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 90 },
     {
-      field: 'firstName',
-      headerName: 'First name',
+      field: 'satıcıFirma',
+      headerName: 'Satıcı Firma',
       width: 150,
       editable: true,
     },
     {
-      field: 'lastName',
-      headerName: 'Last name',
+      field: 'alıcıFirma',
+      headerName: 'Alıcı Firma',
       width: 150,
       editable: true,
     },
     {
-      field: 'age',
-      headerName: 'Age',
-      type: 'number',
+      field: 'alıcıIletisim',
+      headerName: 'Alıcı İletişim',
       width: 110,
       editable: true,
     },
     {
-      field: 'fullName',
-      headerName: 'Full name',
+      field: 'fiyat',
+      headerName: 'Fiyat',
       description: 'This column has a value getter and is not sortable.',
-      sortable: false,
+      sortable: true,
       width: 160,
-      valueGetter: (params) =>
-        `${params.getValue(params.id, 'firstName') || ''} ${
-          params.getValue(params.id, 'lastName') || ''
-        }`,
     },
   ];
   
   const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+    { id: 1, satıcıFirma: 'Snow', alıcıFirma: 'Jon', alıcıIletisim: 35,fiyat:100 },
+    { id: 2, satıcıFirma: 'Lannister', alıcıFirma: 'Cersei', alıcıIletisim: 42,fiyat:100 },
+    { id: 3, satıcıFirma: 'Lannister', alıcıFirma: 'Jaime', alıcıIletisim: 45,fiyat:100 },
+    { id: 4, satıcıFirma: 'Stark', alıcıFirma: 'Arya', alıcıIletisim: 16 ,fiyat:100},
+    { id: 5, satıcıFirma: 'Targaryen', alıcıFirma: 'Daenerys', alıcıIletisim: null ,fiyat:100},
+    { id: 6, satıcıFirma: 'Melisandre', alıcıFirma: null, alıcıIletisim: 150 ,fiyat:100},
+    { id: 7, satıcıFirma: 'Clifford', alıcıFirma: 'Ferrara', alıcıIletisim: 44 ,fiyat:100},
+    { id: 8, satıcıFirma: 'Frances', alıcıFirma: 'Rossini', alıcıIletisim: 36 ,fiyat:100},
+    { id: 9, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    { id: 10, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    { id: 11, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    { id: 12, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    { id: 13, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    { id: 14, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    { id: 15, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    { id: 16, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    { id: 17, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    { id: 19, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    { id: 20, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    { id: 21, satıcıFirma: 'Roxie', alıcıFirma: 'Harvey', alıcıIletisim: 65 ,fiyat:900},
+    { id: 22, satıcıFirma: 'Clifford', alıcıFirma: 'Ferrara', alıcıIletisim: 44 ,fiyat:100},
+
+
+
   ];
 
 const [pagination, setPagination] = React.useState({
@@ -405,18 +383,22 @@ const [pagination, setPagination] = React.useState({
         size={size}
         type={type}
         theme={getActiveTheme()}
+
+
       />
-      <DataGrid
+      <DataGrid 
         className={isAntDesign ? antDesignClasses.root : undefined}
         components={{
           Toolbar: GridToolbar,
         }}
-        loading={loading}
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
         rows={rows}
         columns={columns}
+        rowLength={10}
+        localeText={trTR.props.MuiDataGrid.localeText}
+
       />
     </div>
   );
