@@ -1,4 +1,4 @@
-# Electron React Template
+# Expo App
 
 This is a light-weight template for creating Electron App within React. With it, you can easily create an application works on MacOS, Windows and Linux.
 
