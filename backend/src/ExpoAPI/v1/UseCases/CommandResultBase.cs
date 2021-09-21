@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ExpoAPI.Contracts;
 
 namespace ExpoAPI.UseCases
