@@ -1,11 +1,9 @@
 # https://hub.docker.com/_/microsoft-dotnet
-
 FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
 WORKDIR /ExpoAPI
 
 # copy csproj and restore as distinct layers
 COPY ./backend/src/ExpoAPI/* ./
-# COPY ./db /ExpoAPI/db
 
 # build app
 WORKDIR /ExpoAPI
