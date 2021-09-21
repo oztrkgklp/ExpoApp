@@ -1,6 +1,9 @@
 using ExpoAPI.UseCases.Admin;
 using ExpoAPI.UseCases.Purchase;
 using ExpoAPI.UseCases.Company;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Collections.Generic;
 
 namespace ExpoAPI.Infrastructure.Repositories
 {

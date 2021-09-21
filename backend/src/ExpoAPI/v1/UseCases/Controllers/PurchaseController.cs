@@ -3,6 +3,11 @@ using ExpoAPI.Contracts.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ExpoAPI.UseCases.Purchase;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System.Threading;
+using System;
+using System.Linq;
 
 namespace ExpoAPI.Controllers
 {

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace ExpoAPI.UseCases.Purchase
 {
     public class GetPurchasesBySellerIdCommandResult : CommandResultBase

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace ExpoAPI.UseCases.Company
 {
     public class GetCompaniesCommandResult : CommandResultBase
