@@ -1,16 +1,24 @@
-
 import React from "react";
-import { faCashRegister, faChartLine } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, } from '@themesberg/react-bootstrap';
+import { faCashRegister, faChartLine } from "@fortawesome/free-solid-svg-icons";
+import { Col, Row } from "@themesberg/react-bootstrap";
 
-import { CounterWidget, CircleChartWidget, BarChartWidget, TeamMembersWidget, ProgressTrackWidget, SalesValueWidget, SalesValueWidgetPhone } from "../../components/Widgets";
+import {
+  CounterWidget,
+  CircleChartWidget,
+  BarChartWidget,
+  TeamMembersWidget,
+  ProgressTrackWidget,
+  SalesValueWidget,
+  SalesValueWidgetPhone,
+} from "../../components/Widgets";
 import { PageVisitsTable } from "../../components/Tables";
 import { trafficShares, totalOrders } from "../../data/charts";
 import axios from "axios";
 
 var result = [];
-axios.get('https://83f4-85-105-8-222.ngrok.io/api/v1/companies')
-  .then(function ({data}) {
+axios
+  .get("https://83f4-85-105-8-222.ngrok.io/api/v1/companies")
+  .then(function ({ data }) {
     // handle success
     result = data.result;
   })
@@ -28,14 +36,14 @@ export default () => {
       <Row className="justify-content-md-center">
         <Col xs={12} className="mb-4 d-none d-sm-block">
           <SalesValueWidget
-            title="Satış Grafiği"
+            title="Satışlar"
             value="10,567"
             percentage={10.57}
           />
         </Col>
         <Col xs={12} className="mb-4 d-sm-none">
           <SalesValueWidgetPhone
-            title="Satış Grafiği"
+            title="SatışLar"
             value="10,567"
             percentage={10.57}
           />
@@ -51,9 +59,8 @@ export default () => {
         </Col>
 
         <Col xs={12} sm={6} xl={4} className="mb-4">
-          
           <CounterWidget
-            category="Gelir"
+            category="Ciro"
             title={result.endorsement}
             period="5 Ekim - 8 Ekim"
             percentage={28.4}
@@ -63,9 +70,7 @@ export default () => {
         </Col>
 
         <Col xs={12} sm={6} xl={4} className="mb-4">
-          <CircleChartWidget
-            title="Gelir Grafiği"
-            data={trafficShares} />
+          <CircleChartWidget title="Gelir Grafiği" data={trafficShares} />
         </Col>
       </Row>
 
@@ -78,11 +83,7 @@ export default () => {
                   <PageVisitsTable />
                 </Col>
 
-               
-
-                <Col xs={12} lg={6} className="mb-4">
-                
-                </Col>
+                <Col xs={12} lg={6} className="mb-4"></Col>
               </Row>
             </Col>
 

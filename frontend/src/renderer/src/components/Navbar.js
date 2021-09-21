@@ -41,7 +41,6 @@ export default (props) => {
   const Notification = (props) => {
     const { link, sender, image, time, message, read = false } = props;
     const readClassName = read ? "" : "text-danger";
-
     return (
       <ListGroup.Item action href={link} className="border-bottom border-light">
         <Row className="align-items-center">
@@ -66,7 +65,7 @@ export default (props) => {
       </ListGroup.Item>
     );
   };
-
+  const userName = "Garanti Kongre"
   return (
     <Navbar variant="dark" expanded className="ps-0 pe-2 pb-0">
       <Container fluid className="px-0">
@@ -82,12 +81,12 @@ export default (props) => {
                   />
                   <div className="media-body ms-2 text-dark align-items-center d-none d-lg-block">
                     <span className="mb-0 font-small fw-bold">
-                      Bonnie Green
+                      {userName}
                     </span>
                   </div>
                 </div>
               </Dropdown.Toggle>
-              <Dropdown.Menu className="user-dropdown dropdown-menu-right mt-2">
+              {/* <Dropdown.Menu className="user-dropdown dropdown-menu-right mt-2">
                 <Dropdown.Item className="fw-bold">
                   <FontAwesomeIcon icon={faUserCircle} className="me-2" /> My
                   Profile
@@ -113,7 +112,7 @@ export default (props) => {
                   />{" "}
                   Logout
                 </Dropdown.Item>
-              </Dropdown.Menu>
+              </Dropdown.Menu> */}
             </Dropdown>
           </Nav>
         </div>

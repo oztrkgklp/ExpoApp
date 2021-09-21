@@ -3,13 +3,26 @@ import Chartist from "react-chartist";
 import ChartistTooltip from "chartist-plugin-tooltips-updated";
 
 export const SalesValueChart = () => {
-  const data = {
+  var data = {
     labels: ["Pt", "Sa", "Ça", "Pe", "Cu", "Cmt", "Pa"],
-    series: [[15, 12, 12, 13, 13, 14, 13]],
+    series: [[21, 12, 13, 14, 15, 16, 20]],
   };
 
+  var enkucuk = data.series[0];
+  var enbuyuk = data.series[0];
+
+  for (var i = 0; i < data.series.length; i++) {
+    if (data.series[i] > enbuyuk) {
+      enbuyuk = data.series[i];
+    }
+
+    if (data.series[i] < enkucuk) {
+      enkucuk = data.series[i];
+    }
+  }
+
   const options = {
-    low: 10,
+    low: enkucuk,
     showArea: true,
     fullWidth: true,
     axisX: {
@@ -37,15 +50,28 @@ export const SalesValueChart = () => {
 };
 
 export const SalesValueChartphone = () => {
-  const data = {
+  var data = {
     labels: ["Pt", "Sa", "Ça", "Pe", "Cu", "Cmt", "Pa"],
-    series: [[1, 2, 2, 3, 3, 4, 3]],
+    series: [[21, 12, 13, 14, 15, 16, 20]],
   };
 
+  var enkucuk = data.series[0];
+  var enbuyuk = data.series[0];
+
+  for (var i = 0; i < data.series.length; i++) {
+    if (data.series[i] > enbuyuk) {
+      enbuyuk = data.series[i];
+    }
+
+    if (data.series[i] < enkucuk) {
+      enkucuk = data.series[i];
+    }
+  }
+
   const options = {
-    low: 0,
+    low: enkucuk,
     showArea: true,
-    fullWidth: false,
+    fullWidth: true,
     axisX: {
       position: "end",
       showGrid: true,
@@ -65,7 +91,7 @@ export const SalesValueChartphone = () => {
       data={data}
       options={{ ...options, plugins }}
       type="Line"
-      className="ct-series-g ct-major-tenth"
+      className="ct-series-g ct-double-octave"
     />
   );
 };

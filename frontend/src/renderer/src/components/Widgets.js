@@ -32,7 +32,7 @@ import Profile1 from "../assets/img/team/profile-picture-1.jpg";
 import ProfileCover from "../assets/img/profile-cover.jpg";
 
 import teamMembers from "../data/teamMembers";
-import axios from 'axios'
+import axios from "axios";
 
 export const ProfileCardWidget = () => {
   return (
@@ -90,8 +90,6 @@ export const CounterWidget = (props) => {
               <h5>{category}</h5>
               <h3 className="mb-1">{title}</h3>
             </div>
-            
-            
           </Col>
         </Row>
       </Card.Body>
@@ -157,7 +155,6 @@ export const BarChartWidget = (props) => {
         <div className="d-block">
           <h6 className="fw-normal text-gray mb-2">Günlük Satış</h6>
           <h3>{value}</h3>
-          
         </div>
         <div className="d-block ms-auto">
           {data.map((d) => (
@@ -234,8 +231,9 @@ export const TeamMembersWidget = () => {
   );
 };
 var result = [];
-axios.get('https://83f4-85-105-8-222.ngrok.io/api/v1/companies')
-  .then(function ({data}) {
+axios
+  .get("https://83f4-85-105-8-222.ngrok.io/api/v1/companies")
+  .then(function ({ data }) {
     // handle success
     result = data.result;
   })
@@ -279,13 +277,13 @@ export const ProgressTrackWidget = () => {
         <h5 className="mb-0">Şirket Karları</h5>
       </Card.Header>
       <Card.Body>
-        {result.map((r,i)=>(
+        {result.map((r, i) => (
           <Progress
-          title={r.companyName}
-          color="blue"
-          icon={faBootstrap}
-          percentage={r.endorsement}
-        />
+            title={r.companyName}
+            color="blue"
+            icon={faBootstrap}
+            percentage={r.endorsement}
+          />
         ))}
       </Card.Body>
     </Card>

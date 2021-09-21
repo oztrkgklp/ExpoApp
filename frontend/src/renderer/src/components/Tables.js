@@ -285,7 +285,7 @@ export const PageVisitsTable = () => {
       field: 'id',
       headerName: 'ID',
       width: 100,
-      editable: true,
+      editable: false,
     },
    
     {
