@@ -6,7 +6,8 @@ CREATE DATABASE Expo;
 GO
 
 USE Expo;
-EXEC sp_addrolemember 'db_owner', 'expodb'
+GO
+EXEC [Expo].[dbo].[sp_changedbowner] 'expodb', 'true'
 GO
 
 CREATE TABLE ADMIN (
