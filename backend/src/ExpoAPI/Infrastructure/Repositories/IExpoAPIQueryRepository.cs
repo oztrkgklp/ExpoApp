@@ -26,6 +26,7 @@ namespace ExpoAPI.Infrastructure.Repositories
         Task<List<PurchaseContract?>?> GetPurchasesBySellerIdAsync(int sellerID, CancellationToken cancellationToken);
         Task<List<PurchaseContract?>?> GetPurchasesByPurchaserIdAsync(int PurchaserID, CancellationToken cancellationToken);
         Task<int?> GetCompanyIdByNameAsync(string? name, CancellationToken cancellationToken);        
+        Task<string?> GetCompanyNameByIdAsync(int companyID, CancellationToken cancellationToken);        
 
     }
 }

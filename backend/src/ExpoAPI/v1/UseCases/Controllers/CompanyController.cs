@@ -190,5 +190,31 @@ namespace ExpoAPI.Controllers
                 ReturnPath = getCompanyByIdByName.ReturnPath
             });
         }
+
+        [HttpGet("companies/id")]
+        [ProducesResponseType(typeof(GetCompanyNameByIdApiResponseContract), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetCompanyNameByIdApiResponseContract), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetCompanyNameByIdApiResponseContract>> GetCompanyIdByName( [FromQuery] GetCompanyNameByIdApiRequestContract contract, CancellationToken cancellationToken)
+        {
+            var getCompanyNameById = await _mediator.Send(new GetCompanyNameByIdCommand(contract.CompanyID), cancellationToken);
+
+            if (!getCompanyNameById.Success)
+            {
+                return BadRequest(new GetCompanyNameByIdApiResponseContract()
+                {
+                    Instance = Guid.NewGuid().ToString(),
+                    ReturnPath = getCompanyNameById.ReturnPath,
+                    Messages = getCompanyNameById.Messages?.ToList(),
+                });
+            }
+
+            return Ok(new GetCompanyNameByIdApiResponseContract
+            {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getCompanyNameById.Messages?.ToList(),
+                Result = getCompanyNameById.CompanyName,
+                ReturnPath = getCompanyNameById.ReturnPath
+            });
+        }
     }
 }
