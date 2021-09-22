@@ -11,39 +11,39 @@ using Microsoft.Extensions.Logging;
 
 namespace ExpoAPI.UseCases.Company
 {
-    public class GetCompanyIdByNameCommandHandler : IRequestHandler<GetCompanyIdByNameCommand, GetCompanyIdByNameCommandResult>
+    public class GetCompanyNameByIdCommandHandler : IRequestHandler<GetCompanyNameByIdCommand, GetCompanyNameByIdCommandResult>
     {
-        private readonly ILogger<GetCompanyIdByNameCommandHandler> _logger;
+        private readonly ILogger<GetCompanyNameByIdCommandHandler> _logger;
         private readonly IExpoAPIQueryRepository _expoAPIQueryRepository;
         private readonly IHashingAdapter _hashingAdapter;
 
-        public GetCompanyIdByNameCommandHandler(ILogger<GetCompanyIdByNameCommandHandler> logger, IExpoAPIQueryRepository expoAPIQueryRepository,IHashingAdapter hashingAdapter)
+        public GetCompanyNameByIdCommandHandler(ILogger<GetCompanyNameByIdCommandHandler> logger, IExpoAPIQueryRepository expoAPIQueryRepository,IHashingAdapter hashingAdapter)
         {
             _expoAPIQueryRepository = expoAPIQueryRepository;
             _logger = logger;
             _hashingAdapter = hashingAdapter;
         }
 
-        public async Task<GetCompanyIdByNameCommandResult> Handle(GetCompanyIdByNameCommand command, CancellationToken cancellationToken)
+        public async Task<GetCompanyNameByIdCommandResult> Handle(GetCompanyNameByIdCommand command, CancellationToken cancellationToken)
         {
             try
             {
-                var getCompanies = await _expoAPIQueryRepository.GetCompanyIdByNameAsync(command.CompanyName, cancellationToken);
+                var getCompanyNameById = await _expoAPIQueryRepository.GetCompanyNameByIdAsync(command.CompanyID, cancellationToken);
 
-                _logger.LogInformation("The id of company with name {@name} has been fetched.",command.CompanyName);
+                _logger.LogInformation("The name of company with id {@name} has been fetched.",command.CompanyID);
 
-                return new GetCompanyIdByNameCommandResult()
+                return new GetCompanyNameByIdCommandResult()
                 {
                     ValidateState = ValidationState.Valid,
-                    CompanyID = getCompanies,
-                    ReturnPath = $"/companies?name={command.CompanyName}"
+                    CompanyName = getCompanyNameById,
+                    ReturnPath = $"/companies/id?companyId={command.CompanyID}"
                 };
             }
             catch (Exception ex)
             {
                 _logger.LogError("Something went wrong : @{Message} ", ex.Message);
 
-                return new GetCompanyIdByNameCommandResult()
+                return new GetCompanyNameByIdCommandResult()
                 {
                     ValidateState = ValidationState.NotAcceptable,
                     Messages = new List<MessageContract>()
@@ -56,7 +56,7 @@ namespace ExpoAPI.UseCases.Company
                             Type = nameof(MessageType.Error)
                         }
                     },
-                    ReturnPath = $"/companies?name={command.CompanyName}"
+                    ReturnPath = $"/companies/id?companyId={command.CompanyID}"
                 };
             }
         }

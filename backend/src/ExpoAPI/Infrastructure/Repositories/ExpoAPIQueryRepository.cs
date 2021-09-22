@@ -1,7 +1,12 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using ExpoAPI.UseCases.Admin;
 using ExpoAPI.UseCases.Company;
 using ExpoAPI.UseCases.Purchase;
+using Microsoft.Extensions.Configuration;
 
 namespace ExpoAPI.Infrastructure.Repositories
 {
@@ -243,10 +248,26 @@ namespace ExpoAPI.Infrastructure.Repositories
         public async Task<int?> GetCompanyIdByNameAsync(string? name, CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.Append(@"SELECT DISTINCT * FROM COMPANY WHERE CompanyName = ").Append(name);
+            queryBuilder.Append(@"SELECT DISTINCT CompanyID FROM COMPANY WHERE CompanyName = ").Append(name);
             using(Database)
             {
                 var deletePurchaseById = await _dapperPolly.QueryAsyncWithRetry<int?>(Database, queryBuilder.ToString());
+
+                if (deletePurchaseById.Any())
+                {
+                    return deletePurchaseById.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<string?> GetCompanyNameByIdAsync(int companyID, CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT DISTINCT CompanyName FROM COMPANY WHERE CompanyID = ").Append(companyID);
+            using(Database)
+            {
+                var deletePurchaseById = await _dapperPolly.QueryAsyncWithRetry<string?>(Database, queryBuilder.ToString());
 
                 if (deletePurchaseById.Any())
                 {

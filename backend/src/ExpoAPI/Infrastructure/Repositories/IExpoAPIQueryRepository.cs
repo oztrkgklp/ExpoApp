@@ -1,6 +1,9 @@
 using ExpoAPI.UseCases.Admin;
 using ExpoAPI.UseCases.Purchase;
 using ExpoAPI.UseCases.Company;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Collections.Generic;
 
 namespace ExpoAPI.Infrastructure.Repositories
 {
@@ -23,6 +26,7 @@ namespace ExpoAPI.Infrastructure.Repositories
         Task<List<PurchaseContract?>?> GetPurchasesBySellerIdAsync(int sellerID, CancellationToken cancellationToken);
         Task<List<PurchaseContract?>?> GetPurchasesByPurchaserIdAsync(int PurchaserID, CancellationToken cancellationToken);
         Task<int?> GetCompanyIdByNameAsync(string? name, CancellationToken cancellationToken);        
+        Task<string?> GetCompanyNameByIdAsync(int companyID, CancellationToken cancellationToken);        
 
     }
 }

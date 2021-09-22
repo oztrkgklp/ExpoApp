@@ -3,6 +3,11 @@ using ExpoAPI.Contracts.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ExpoAPI.UseCases.Company;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using System.Threading;
+using System;
+using System.Linq;
 
 namespace ExpoAPI.Controllers
 {
@@ -183,6 +188,32 @@ namespace ExpoAPI.Controllers
                 Messages = getCompanyByIdByName.Messages?.ToList(),
                 Result = getCompanyByIdByName.CompanyID,
                 ReturnPath = getCompanyByIdByName.ReturnPath
+            });
+        }
+
+        [HttpGet("companies/id")]
+        [ProducesResponseType(typeof(GetCompanyNameByIdApiResponseContract), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetCompanyNameByIdApiResponseContract), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetCompanyNameByIdApiResponseContract>> GetCompanyIdByName( [FromQuery] GetCompanyNameByIdApiRequestContract contract, CancellationToken cancellationToken)
+        {
+            var getCompanyNameById = await _mediator.Send(new GetCompanyNameByIdCommand(contract.CompanyID), cancellationToken);
+
+            if (!getCompanyNameById.Success)
+            {
+                return BadRequest(new GetCompanyNameByIdApiResponseContract()
+                {
+                    Instance = Guid.NewGuid().ToString(),
+                    ReturnPath = getCompanyNameById.ReturnPath,
+                    Messages = getCompanyNameById.Messages?.ToList(),
+                });
+            }
+
+            return Ok(new GetCompanyNameByIdApiResponseContract
+            {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getCompanyNameById.Messages?.ToList(),
+                Result = getCompanyNameById.CompanyName,
+                ReturnPath = getCompanyNameById.ReturnPath
             });
         }
     }
