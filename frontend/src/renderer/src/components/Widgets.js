@@ -3,11 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleDown,
   faAngleUp,
-  faGlobeEurope,
   faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import {
-  faAngular,
   faBootstrap,
   faReact,
   faVuejs,
@@ -27,12 +25,12 @@ import {
   SalesValueChart,
   SalesValueChartphone,
 } from "./Charts";
-
 import Profile1 from "../assets/img/team/profile-picture-1.jpg";
 import ProfileCover from "../assets/img/profile-cover.jpg";
 
 import teamMembers from "../data/teamMembers";
 import axios from "axios";
+import { domain } from "../assets/domain";
 
 export const ProfileCardWidget = () => {
   return (
@@ -232,7 +230,7 @@ export const TeamMembersWidget = () => {
 };
 var result = [];
 axios
-  .get("https://83f4-85-105-8-222.ngrok.io/api/v1/companies")
+  .get(domain + "companies")
   .then(function ({ data }) {
     // handle success
     result = data.result;

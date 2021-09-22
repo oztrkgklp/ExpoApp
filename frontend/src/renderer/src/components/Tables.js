@@ -2,10 +2,6 @@ import * as React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { domain } from "../assets/domain";
 import {
-  faAngleDown,
-  faAngleUp,
-  faArrowDown,
-  faArrowUp,
   faEdit,
   faEllipsisH,
   faExternalLinkAlt,
@@ -27,12 +23,11 @@ import {
 import { Link } from "react-router-dom";
 
 import { Routes } from "../routes";
-import { pageVisits, pageTraffic, pageRanking } from "../data/tables";
+import { pageTraffic, pageRanking } from "../data/tables";
 import transactions from "../data/transactions";
 import commands from "../data/commands";
 import PropTypes from "prop-types";
 import { DataGrid, GridToolbar ,trTR} from "@mui/x-data-grid";
-import { useDemoData } from "@mui/x-data-grid-generator";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import { makeStyles } from "@material-ui/styles";
 import { createTheme } from "@material-ui/core/styles";
@@ -257,13 +252,16 @@ SettingsPanel.propTypes = {
   type: PropTypes.oneOf(["Commodity", "Employee"]).isRequired,
 };
 
-var result = [];
 
-axios.get(domain)
+
+var company = [];
+var purchases = []
+
+axios.get(domain + "purchases")
   .then(function ({data}) {
     // handle success
-    result = data.result;
-    console.log(result)
+    purchases = data.result;
+    console.log(purchases)
   })
   .catch(function (error) {
     // handle error
@@ -272,6 +270,50 @@ axios.get(domain)
   .then(function () {
     // always executed
   });
+
+axios.get(domain + "companies")
+  .then(function ({data}) {
+    // handle success
+    company = data.result;
+    console.log(company)
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+  .then(function () {
+    // always executed
+  });
+ 
+   
+    var sellerNames = []
+    var purchaserNames = []
+    const getNames = (array, idType) => {
+      for(var i = 0 ; i < purchases.length; i++)
+      {
+        axios.get(domain + "companies/id?companyID="+idType===0?purchases[i].sellerID:purchases[i].purchaserID)
+        .then(function ({data}) {
+          // handle success
+         array.push(data.result);
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+        .then(function () {
+          // always executed
+        });
+      }
+    }
+    getNames(sellerNames,0)
+    getNames(purchaserNames,1)
+    var purchasesByName = []
+    
+    purchases.map((r,i)=>{
+             purchasesByName.push({purchaseID:r.purchaseID ,sellerName:sellerNames[i] ,purchaserName:purchaserNames[i],amount:r.amount, purchaseDate:r.purchaseDate})}) 
+             
+             
+             console.log(purchasesByName)
 
 export const PageVisitsTable = () => {
   const classes = useStyles();
@@ -282,62 +324,55 @@ export const PageVisitsTable = () => {
 
   const columns = [
     {
-      field: 'id',
+      field: 'purchaseID',
       headerName: 'ID',
       width: 100,
       editable: false,
     },
    
     {
-      field: 'companyName',
-      headerName: 'Firma Adı',
-      width: 130,
+      field: 'sellerName',
+      headerName: 'Satıcı Firma ',
+      width: 160,
       editable: true,
     },
     {
-      field: 'phone',
-      headerName: 'Telefon Numarası',
-      width: 140,
+      field: 'purchaserName',
+      headerName: 'Alıcı Firma ',
+      width: 160,
       editable: true,
     },
     {
-      field: 'eMail',
-      headerName: 'E-Mail',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: true,
-      width: 150,
-      editable: true,
-    },
-    {
-      field: 'endorsement',
-      headerName: 'Ciro',
+      field: 'amount',
+      headerName: 'Satış Fiyatı',
       width: 110,
       sortable: true,
     },
     {
-      field: 'isEntered',
-      headerName: 'Katılım',
+      field: 'purchaseDate',
+      headerName: 'Tarihi',
       width: 130,
       editable: true,
     },
   ];
   
-    const rows2 = [
-          { companyID: 1, companyName: 'Snow', phone: '+905417479982', eMail: "erenyldrm200@gmail.com",endorsement:100,isEntered:"evet" },
-          { companyID: 2, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"Hayır" },
-          { companyID: 3, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-          { companyID: 4, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-          { companyID: 5, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-          { companyID: 6, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:300,isEntered:"evet" },
-          { companyID: 7, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-          { companyID: 8, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-          { companyID: 9, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-          { companyID: 10, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-    ] 
-const rows = rows2.map(c=>{
-    const {companyID, companyName,phone,eMail,endorsement,isEntered}= c
-    return {id: companyID , companyName,phone,eMail,endorsement,isEntered}
-  })
+    const rows2 = purchasesByName
+    // [
+    //       { companyID: 1, companyName: 'Snow', phone: '+905417479982', eMail: "erenyldrm200@gmail.com",endorsement:100,isEntered:"evet" },
+    //       { companyID: 2, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"Hayır" },
+    //       { companyID: 3, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
+    //       { companyID: 4, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
+    //       { companyID: 5, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
+    //       { companyID: 6, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:300,isEntered:"evet" },
+    //       { companyID: 7, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
+    //       { companyID: 8, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
+    //       { companyID: 9, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
+    //       { companyID: 10, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
+    // ] 
+// const rows = rows2.map(c=>{
+//     const {companyID, companyName,phone,eMail,endorsement,isEntered}= c
+//     return {id: companyID , companyName,phone,eMail,endorsement,isEntered}
+//   })
 
 const [pagination, setPagination] = React.useState({
     pagination: false,
@@ -405,7 +440,7 @@ const [pagination, setPagination] = React.useState({
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
-        rows={rows}
+        rows={purchasesByName}
         columns={columns}
         rowLength={10}
         localeText={trTR.props.MuiDataGrid.localeText}

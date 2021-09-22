@@ -9,6 +9,7 @@ import Signin from "./examples/Signin";
 import Lock from "./examples/Lock";
 import NotFoundPage from "./examples/NotFound";
 import ServerError from "./examples/ServerError";
+import Signup from "./examples/Signup";
 
 // components
 import Sidebar from "../components/Sidebar";
@@ -75,6 +76,7 @@ export default () => (
     {/* pages */}
     <RouteWithSidebar exact path={Routes.DashboardOverview.path} component={DashboardOverview} />
     <RouteWithSidebar exact path={Routes.BootstrapTables.path} component={BootstrapTables} />
+    <RouteWithSidebar exact path={Routes.NewCompany.path} component={Signup} />
     <Redirect to={Routes.NotFound.path} />
   </Switch>
 );
