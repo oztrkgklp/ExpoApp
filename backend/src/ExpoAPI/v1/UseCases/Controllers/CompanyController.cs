@@ -49,6 +49,32 @@ namespace ExpoAPI.Controllers
             });
         }
 
+        [HttpGet("companies/endorsement")]
+        [ProducesResponseType(typeof(GetTotalEndorsementApiResponseContract), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetTotalEndorsementApiResponseContract), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetTotalEndorsementApiResponseContract>> GetCompanies( [FromQuery] GetTotalEndorsementApiRequestContract contract, CancellationToken cancellationToken)
+        {
+            var getTotalEndorsement = await _mediator.Send(new GetTotalEndorsementCommand(), cancellationToken);
+
+            if (!getTotalEndorsement.Success)
+            {
+                return BadRequest(new GetTotalEndorsementApiResponseContract()
+                {
+                    Instance = Guid.NewGuid().ToString(),
+                    ReturnPath = getTotalEndorsement.ReturnPath,
+                    Messages = getTotalEndorsement.Messages?.ToList(),
+                });
+            }
+
+            return Ok(new GetTotalEndorsementApiResponseContract
+            {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getTotalEndorsement.Messages?.ToList(),
+                Result = getTotalEndorsement.TotalEndorsement,
+                ReturnPath = getTotalEndorsement.ReturnPath
+            });
+        }
+
         [HttpGet("companies/{companyId}")]
         [ProducesResponseType(typeof(GetCompanyByIdApiResponseContract), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(GetCompanyByIdApiResponseContract), StatusCodes.Status400BadRequest)]

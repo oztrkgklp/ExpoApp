@@ -124,6 +124,24 @@ namespace ExpoAPI.Infrastructure.Repositories
             }
         }
 
+        public async Task<IEnumerable<PurchaseWithNamesContract?>?> GetPurchasesWithCompanyNamesAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT PurchaseID, C2.CompanyName AS SellerName, C1.CompanyName AS PurchaserName,Amount,PurchaseDate FROM PURCHASE P
+                                    INNER JOIN COMPANY C1 ON C1.CompanyID = P.PurchaserID
+                                    INNER JOIN COMPANY C2 ON C2.CompanyID = P.SellerID");
+            using(Database)
+            {
+                var getPurchases = await _dapperPolly.QueryAsyncWithRetry<PurchaseWithNamesContract>(Database, queryBuilder.ToString());
+
+                if (getPurchases.Any())
+                {
+                    return getPurchases.ToList();
+                }
+                return null;
+            }
+        }
+
         public async Task<CompanyContract?> GetCompanyByIdAsync(int companyID, CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
@@ -272,6 +290,22 @@ namespace ExpoAPI.Infrastructure.Repositories
                 if (deletePurchaseById.Any())
                 {
                     return deletePurchaseById.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<decimal?> GetTotalEndorsementAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"select SUM(CAST(Endorsement AS decimal(19,4))) from COMPANY");
+            using(Database)
+            {
+                var getTotalEndorsement = await _dapperPolly.QueryAsyncWithRetry<decimal?>(Database, queryBuilder.ToString());
+
+                if (getTotalEndorsement.Any())
+                {
+                    return getTotalEndorsement.FirstOrDefault();
                 }
                 return null;
             }
