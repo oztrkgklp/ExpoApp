@@ -1,5 +1,5 @@
 import React from "react";
-import { faCashRegister, faChartLine } from "@fortawesome/free-solid-svg-icons";
+import { faCashRegister, faChartLine,faBed } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row } from "@themesberg/react-bootstrap";
 
 import {
@@ -18,7 +18,7 @@ import useSWR from "swr";
 var result = [];
 
 axios
-  .get(domain + "companies")
+  .get(domain + "companies/count")
   .then(function ({ data }) {
     // handle success
     result = data.result;
@@ -55,8 +55,8 @@ export default () => {
         </Col>
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
-            category={"Müşteriler"}
-            title={result.length}
+            category={"Misafirler "}
+            title={result}
             percentage={18.2}
             icon={faChartLine}
             iconColor="shape-secondary"
@@ -73,6 +73,37 @@ export default () => {
             iconColor="shape-tertiary"
           />
         </Col>
+        <Col xs={12} sm={6} xl={4} className="mb-4">
+          <CounterWidget
+            category="Konaklayan"
+            title={290}
+            period="5 Ekim - 8 Ekim"
+            percentage={28.4}
+            icon={faBed}
+            iconColor="shape-tertiary"
+          />
+        </Col>
+        <Col xs={12} sm={6} xl={4} className="mb-4">
+          <CounterWidget
+            category="Katılan Firma"
+            title={185}
+            period="5 Ekim - 8 Ekim"
+            percentage={28.4}
+            icon={faCashRegister}
+            iconColor="shape-tertiary"
+          />
+        </Col>
+        <Col xs={12} sm={6} xl={4} className="mb-4">
+          <CounterWidget
+            category="Katılmayan Firma"
+            title={98}
+            period="5 Ekim - 8 Ekim"
+            percentage={28.4}
+            icon={faCashRegister}
+            iconColor="shape-tertiary"
+          />
+        </Col>
+        
 
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CircleChartWidget title="Ciro Dağılımı" data={trafficShares} />

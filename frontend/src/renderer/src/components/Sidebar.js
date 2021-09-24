@@ -100,13 +100,14 @@ export default (props = {}) => {
               <NavItem title="Garanti Kongre" link={Routes.Presentation.path} image={ReactHero} />
 
               <NavItem title="Gösterge Paneli" link={Routes.DashboardOverview.path} icon={faChartPie} />
-              <NavItem title="Şirketler" link={Routes.NewCompany.path} icon={faTable} />
+              <NavItem title="Misafirler" link={Routes.NewCompany.path} icon={faTable} />
+              <NavItem title="Konaklama" link={Routes.Acconmodation.path} icon={faTable} />
+
               {/* <NavItem title="Ayarlar" icon={faCog} link={Routes.Settings.path} />
 
               <CollapsableNavItem eventKey="tables/" title="Tablolar" icon={faTable}>
                 <NavItem title="Bootstrap Table" link={Routes.BootstrapTables.path} />
               </CollapsableNavItem> */}
-
               {/* <CollapsableNavItem eventKey="examples/" title="Page Examples" icon={faFileAlt}>
                 <NavItem title="Sign In" link={Routes.Signin.path} />
                 <NavItem title="Sign Up" link={Routes.Signup.path} />

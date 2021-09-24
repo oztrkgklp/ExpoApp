@@ -77,6 +77,8 @@ export default () => (
     <RouteWithSidebar exact path={Routes.DashboardOverview.path} component={DashboardOverview} />
     <RouteWithSidebar exact path={Routes.BootstrapTables.path} component={BootstrapTables} />
     <RouteWithSidebar exact path={Routes.NewCompany.path} component={Signup} />
+    <RouteWithSidebar exact path={Routes.Acconmodation.path} component={NotFoundPage} />
+
     <Redirect to={Routes.NotFound.path} />
   </Switch>
 );

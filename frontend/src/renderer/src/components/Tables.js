@@ -778,3 +778,152 @@ export const CommandsTable = () => {
     </Card>
   );
 };
+
+export const UnderFormTable = () => {
+  const classes = useStyles();
+  const antDesignClasses = useStylesAntDesign();
+  const [isAntDesign, setIsAntDesign] = React.useState(false);
+  const [type, setType] = React.useState("Commodity");
+  const [size, setSize] = React.useState(100);
+
+  const columns = [
+    {
+      field: "id",
+      headerName: "ID",
+      width: 100,
+      editable: false,
+    },
+
+    {
+      field: "sellerName",
+      headerName: "Satıcı Firma ",
+      width: 160,
+      editable: true,
+    },
+    {
+      field: "purchaserName",
+      headerName: "Alıcı Firma ",
+      width: 160,
+      editable: true,
+    },
+    {
+      field: "purchaseDate",
+      headerName: "Satış Tarihi",
+      width: 160,
+      editable: true,
+    },
+    {
+      field: "amount",
+      headerName: "Satış Fiyatı",
+      width: 150,
+      sortable: true,
+    },
+  ];
+ var result = []
+  var promise = axios
+    .get(domain + "companies")
+    .then(function ({ data }) {
+      // handle success
+      result= data.result 
+      console.log(result)
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
+    .then(function () {
+      // always executed
+    });
+    const mock= 
+    [
+            { purchaseID: "1", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100, },
+            {  purchaseID: "2", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+            {  purchaseID: "3", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+            {  purchaseID: "4", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+            {  purchaseID: "5", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+
+            {  purchaseID: "6", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+
+            {  purchaseID: "7", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+
+            {  purchaseID: "8", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+            {  purchaseID: "9", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+      ] 
+    
+
+  var rows = mock.map(p => {
+    const { purchaseID, sellerName, purchaserName, purchaseDate, amount } = p;
+    return {id: purchaseID, sellerName: sellerName, purchaserName: purchaserName, purchaseDate: purchaseDate, amount: amount};
+  });
+  const [pagination, setPagination] = React.useState({
+    pagination: false,
+    autoPageSize: false,
+    pageSize: undefined,
+  });
+
+  const getActiveTheme = () => {
+    return isAntDesign ? "ant" : "default";
+  };
+
+  const handleApplyClick = (settings) => {
+    if (size !== settings.size) {
+      setSize(settings.size);
+    }
+
+    if (type !== settings.type) {
+      setType(settings.type);
+    }
+
+    if (getActiveTheme() !== settings.theme) {
+      setIsAntDesign(!isAntDesign);
+    }
+
+    if (size !== settings.size || type !== settings.type) {
+      setRowLength(settings.size);
+      loadNewData();
+    }
+
+    const newPaginationSettings = {
+      pagination: settings.pagesize !== -1,
+      autoPageSize: settings.pagesize === 0,
+      pageSize: settings.pagesize > 0 ? settings.pagesize : undefined,
+    };
+
+    setPagination((currentPaginationSettings) => {
+      if (
+        currentPaginationSettings.pagination ===
+          newPaginationSettings.pagination &&
+        currentPaginationSettings.autoPageSize ===
+          newPaginationSettings.autoPageSize &&
+        currentPaginationSettings.pageSize === newPaginationSettings.pageSize
+      ) {
+        return currentPaginationSettings;
+      }
+      return newPaginationSettings;
+    });
+  };
+
+  return (
+    <div className={classes.root}>
+      <SettingsPanel
+        onApply={handleApplyClick}
+        size={size}
+        type={type}
+        theme={getActiveTheme()}
+      />
+      <DataGrid
+        className={isAntDesign ? antDesignClasses.root : undefined}
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        checkboxSelection
+        disableSelectionOnClick
+        {...pagination}
+        rows={rows}
+        columns={columns}
+        rowLength={10}
+        localeText={trTR.props.MuiDataGrid.localeText}
+      />
+    </div>
+  );
+};

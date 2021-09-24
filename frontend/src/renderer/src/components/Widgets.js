@@ -27,10 +27,11 @@ import {
 } from "./Charts";
 import Profile1 from "../assets/img/team/profile-picture-1.jpg";
 import ProfileCover from "../assets/img/profile-cover.jpg";
-
 import teamMembers from "../data/teamMembers";
 import axios from "axios";
 import { domain } from "../assets/domain";
+import { Link } from "react-router-dom";
+import { Routes } from "../routes";
 
 export const ProfileCardWidget = () => {
   return (
@@ -275,14 +276,16 @@ export const ProgressTrackWidget = () => {
         <h5 className="mb-0">Şirket Karları</h5>
       </Card.Header>
       <Card.Body>
-        {result.map((r, i) => (
+        {result.slice(0,5).map((r, i) => (
           <Progress
             title={r.companyName}
             color="blue"
             icon={faBootstrap}
             percentage={r.endorsement}
           />
+          
         ))}
+        <Button as={Link} to={Routes.NewCompany.path} style={{backgroundColor:"blue"}}>Daha Fazla</Button>
       </Card.Body>
     </Card>
   );
