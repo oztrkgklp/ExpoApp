@@ -52,7 +52,7 @@ namespace ExpoAPI.Controllers
         [HttpGet("companies/endorsement")]
         [ProducesResponseType(typeof(GetTotalEndorsementApiResponseContract), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(GetTotalEndorsementApiResponseContract), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<GetTotalEndorsementApiResponseContract>> GetCompanies( [FromQuery] GetTotalEndorsementApiRequestContract contract, CancellationToken cancellationToken)
+        public async Task<ActionResult<GetTotalEndorsementApiResponseContract>> GetTotalEndorsement( [FromQuery] GetTotalEndorsementApiRequestContract contract, CancellationToken cancellationToken)
         {
             var getTotalEndorsement = await _mediator.Send(new GetTotalEndorsementCommand(), cancellationToken);
 
@@ -72,6 +72,58 @@ namespace ExpoAPI.Controllers
                 Messages = getTotalEndorsement.Messages?.ToList(),
                 Result = getTotalEndorsement.TotalEndorsement,
                 ReturnPath = getTotalEndorsement.ReturnPath
+            });
+        }
+
+        [HttpGet("companies/count")]
+        [ProducesResponseType(typeof(GetNumberOfCompaniesApiResponseContract), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetNumberOfCompaniesApiResponseContract), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetNumberOfCompaniesApiResponseContract>> GetNumberOfCompanies( [FromQuery] GetNumberOfCompaniesApiRequestContract contract, CancellationToken cancellationToken)
+        {
+            var getNumberOfCompanies = await _mediator.Send(new GetNumberOfCompaniesCommand(), cancellationToken);
+
+            if (!getNumberOfCompanies.Success)
+            {
+                return BadRequest(new GetNumberOfCompaniesApiResponseContract()
+                {
+                    Instance = Guid.NewGuid().ToString(),
+                    ReturnPath = getNumberOfCompanies.ReturnPath,
+                    Messages = getNumberOfCompanies.Messages?.ToList(),
+                });
+            }
+
+            return Ok(new GetNumberOfCompaniesApiResponseContract
+            {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getNumberOfCompanies.Messages?.ToList(),
+                Result = getNumberOfCompanies.NumberOfCompanies,
+                ReturnPath = getNumberOfCompanies.ReturnPath
+            });
+        }
+
+        [HttpGet("company-names")]
+        [ProducesResponseType(typeof(GetCompanyNamesApiResponseContract), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetCompanyNamesApiResponseContract), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetCompanyNamesApiResponseContract>> GetCompanyNames( [FromQuery] GetCompanyNamesApiRequestContract contract, CancellationToken cancellationToken)
+        {
+            var getCompanyNames = await _mediator.Send(new GetCompanyNamesCommand(), cancellationToken);
+
+            if (!getCompanyNames.Success)
+            {
+                return BadRequest(new GetCompanyNamesApiResponseContract()
+                {
+                    Instance = Guid.NewGuid().ToString(),
+                    ReturnPath = getCompanyNames.ReturnPath,
+                    Messages = getCompanyNames.Messages?.ToList(),
+                });
+            }
+
+            return Ok(new GetCompanyNamesApiResponseContract
+            {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getCompanyNames.Messages?.ToList(),
+                Result = getCompanyNames.CompanyNames,
+                ReturnPath = getCompanyNames.ReturnPath
             });
         }
 

@@ -73,6 +73,31 @@ namespace ExpoAPI.Controllers
             });
         }
 
+        [HttpGet("purchases/count")]
+        [ProducesResponseType(typeof(GetNumberOfPurchasesApiResponseContract), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetNumberOfPurchasesApiResponseContract), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetNumberOfPurchasesApiResponseContract>> GetNumberOfPurchases( [FromForm] GetNumberOfPurchasesApiRequestContract contract, CancellationToken cancellationToken)
+        {
+            var getNumberOfPurchases = await _mediator.Send(new GetNumberOfPurchasesCommand(), cancellationToken);
+            if (!getNumberOfPurchases.Success)
+            {
+                return BadRequest(new GetNumberOfPurchasesApiResponseContract()
+                {
+                    Instance = Guid.NewGuid().ToString(),
+                    ReturnPath = getNumberOfPurchases.ReturnPath,
+                    Messages = getNumberOfPurchases.Messages?.ToList(),
+                });
+            }
+            
+            return Ok(new GetNumberOfPurchasesApiResponseContract
+            {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getNumberOfPurchases.Messages?.ToList(),
+                Result = getNumberOfPurchases.NumberOfPurchases,
+                ReturnPath = getNumberOfPurchases.ReturnPath
+            });
+        }
+
         [HttpGet("purchases/{purchaseId}")]
         [ProducesResponseType(typeof(GetPurchaseByIdApiResponseContract), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(GetPurchaseByIdApiResponseContract), StatusCodes.Status400BadRequest)]

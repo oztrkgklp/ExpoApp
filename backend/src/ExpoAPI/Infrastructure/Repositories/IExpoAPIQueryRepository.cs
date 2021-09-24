@@ -13,6 +13,7 @@ namespace ExpoAPI.Infrastructure.Repositories
 
         Task<PurchaseContract?> GetPurchaseByIdAsync(int purchaseID, CancellationToken cancellationToken);
         Task<IEnumerable<PurchaseContract?>?> GetPurchasesAsync(CancellationToken cancellationToken);
+        Task<int?> GetNumberOfPurchasesAsync(CancellationToken cancellationToken);
         Task<IEnumerable<PurchaseWithNamesContract?>?> GetPurchasesWithCompanyNamesAsync(CancellationToken cancellationToken);
         Task<object?> UpdatePurchaseByIdAsync(PurchaseContract? contract, CancellationToken cancellationToken);
         Task<object?> DeletePurchaseByIdAsync(int purchaseID, CancellationToken cancellationToken);
@@ -20,6 +21,8 @@ namespace ExpoAPI.Infrastructure.Repositories
 
         Task<CompanyContract?> GetCompanyByIdAsync(int companyID, CancellationToken cancellationToken);
         Task<IEnumerable<CompanyContract?>?> GetCompaniesAsync(CancellationToken cancellationToken);
+        Task<int?> GetNumberOfCompaniesAsync(CancellationToken cancellationToken);
+        Task<IEnumerable<string?>?> GetCompanyNamesAsync(CancellationToken cancellationToken);
         Task<object?> UpdateCompanyByIdAsync(CompanyContract? contract, CancellationToken cancellationToken);
         Task<object?> DeleteCompanyByIdAsync(int companyID, CancellationToken cancellationToken);
         Task<object?> CreateCompanyAsync(CompanyContract? contract, CancellationToken cancellationToken);
