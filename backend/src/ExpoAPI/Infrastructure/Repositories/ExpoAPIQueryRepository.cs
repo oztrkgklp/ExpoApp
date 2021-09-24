@@ -124,6 +124,39 @@ namespace ExpoAPI.Infrastructure.Repositories
             }
         }
 
+        public async Task<int?> GetNumberOfPurchasesAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT COUNT(PurchaseID) FROM PURCHASE");
+            using(Database)
+            {
+                var getNumberOfPurchases = await _dapperPolly.QueryAsyncWithRetry<int?>(Database, queryBuilder.ToString());
+                if (getNumberOfPurchases.Any())
+                {
+                    return getNumberOfPurchases.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<PurchaseWithNamesContract?>?> GetPurchasesWithCompanyNamesAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT PurchaseID, C2.CompanyName AS SellerName, C1.CompanyName AS PurchaserName,Amount,PurchaseDate FROM PURCHASE P
+                                    INNER JOIN COMPANY C1 ON C1.CompanyID = P.PurchaserID
+                                    INNER JOIN COMPANY C2 ON C2.CompanyID = P.SellerID");
+            using(Database)
+            {
+                var getPurchases = await _dapperPolly.QueryAsyncWithRetry<PurchaseWithNamesContract>(Database, queryBuilder.ToString());
+
+                if (getPurchases.Any())
+                {
+                    return getPurchases.ToList();
+                }
+                return null;
+            }
+        }
+
         public async Task<CompanyContract?> GetCompanyByIdAsync(int companyID, CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
@@ -150,6 +183,36 @@ namespace ExpoAPI.Infrastructure.Repositories
                 if (getCompanies.Any())
                 {
                     return getCompanies.ToList();
+                }
+                return null;
+            }
+        }
+
+        public async Task<int?> GetNumberOfCompaniesAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT COUNT(CompanyID) FROM COMPANY");
+            using(Database)
+            {
+                var getNumberOfCompanies = await _dapperPolly.QueryAsyncWithRetry<int?>(Database, queryBuilder.ToString());
+                if (getNumberOfCompanies.Any())
+                {
+                    return getNumberOfCompanies.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<string?>?> GetCompanyNamesAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT CompanyName FROM COMPANY");
+            using(Database)
+            {
+                var getCompanyNames = await _dapperPolly.QueryAsyncWithRetry<string?>(Database, queryBuilder.ToString());
+                if (getCompanyNames.Any())
+                {
+                    return getCompanyNames.ToList();
                 }
                 return null;
             }
@@ -272,6 +335,22 @@ namespace ExpoAPI.Infrastructure.Repositories
                 if (deletePurchaseById.Any())
                 {
                     return deletePurchaseById.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<decimal?> GetTotalEndorsementAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"select SUM(CAST(Endorsement AS decimal(19,4))) from COMPANY");
+            using(Database)
+            {
+                var getTotalEndorsement = await _dapperPolly.QueryAsyncWithRetry<decimal?>(Database, queryBuilder.ToString());
+
+                if (getTotalEndorsement.Any())
+                {
+                    return getTotalEndorsement.FirstOrDefault();
                 }
                 return null;
             }

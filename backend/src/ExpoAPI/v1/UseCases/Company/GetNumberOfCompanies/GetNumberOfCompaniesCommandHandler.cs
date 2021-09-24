@@ -12,39 +12,39 @@ using Microsoft.Extensions.Logging;
 
 namespace ExpoAPI.UseCases.Company
 {
-    public class GetCompaniesCommandHandler : IRequestHandler<GetCompaniesCommand, GetCompaniesCommandResult>
+    public class GetNumberOfCompaniesCommandHandler : IRequestHandler<GetNumberOfCompaniesCommand, GetNumberOfCompaniesCommandResult>
     {
-        private readonly ILogger<GetCompaniesCommandHandler> _logger;
+        private readonly ILogger<GetNumberOfCompaniesCommandHandler> _logger;
         private readonly IExpoAPIQueryRepository _expoAPIQueryRepository;
         private readonly IHashingAdapter _hashingAdapter;
 
-        public GetCompaniesCommandHandler(ILogger<GetCompaniesCommandHandler> logger, IExpoAPIQueryRepository expoAPIQueryRepository,IHashingAdapter hashingAdapter)
+        public GetNumberOfCompaniesCommandHandler(ILogger<GetNumberOfCompaniesCommandHandler> logger, IExpoAPIQueryRepository expoAPIQueryRepository,IHashingAdapter hashingAdapter)
         {
             _expoAPIQueryRepository = expoAPIQueryRepository;
             _logger = logger;
             _hashingAdapter = hashingAdapter;
         }
 
-        public async Task<GetCompaniesCommandResult> Handle(GetCompaniesCommand command, CancellationToken cancellationToken)
+        public async Task<GetNumberOfCompaniesCommandResult> Handle(GetNumberOfCompaniesCommand command, CancellationToken cancellationToken)
         {
             try
             {
-                var getCompanies = await _expoAPIQueryRepository.GetCompaniesAsync(cancellationToken);
+                var getNumberOfCompanies = await _expoAPIQueryRepository.GetNumberOfCompaniesAsync(cancellationToken);
 
-                _logger.LogInformation("The company data has been fetched.");
+                _logger.LogInformation("The number of companies information has been fetched.");
 
-                return new GetCompaniesCommandResult()
+                return new GetNumberOfCompaniesCommandResult()
                 {
                     ValidateState = ValidationState.Valid,
-                    CompanyContracts = getCompanies.ToList(),
-                    ReturnPath = $"/companies"
+                    NumberOfCompanies = getNumberOfCompanies,
+                    ReturnPath = $"/companies/count"
                 };
             }
             catch (Exception ex)
             {
                 _logger.LogError("Something went wrong : @{Message} ", ex.Message);
 
-                return new GetCompaniesCommandResult()
+                return new GetNumberOfCompaniesCommandResult()
                 {
                     ValidateState = ValidationState.NotAcceptable,
                     Messages = new List<MessageContract>()
@@ -57,7 +57,7 @@ namespace ExpoAPI.UseCases.Company
                             Type = nameof(MessageType.Error)
                         }
                     },
-                    ReturnPath = $"/companies"
+                    ReturnPath = $"/companies/count"
                 };
             }
         }

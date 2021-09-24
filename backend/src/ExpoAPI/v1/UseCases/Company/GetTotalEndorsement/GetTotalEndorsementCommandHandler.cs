@@ -12,39 +12,39 @@ using Microsoft.Extensions.Logging;
 
 namespace ExpoAPI.UseCases.Company
 {
-    public class GetCompaniesCommandHandler : IRequestHandler<GetCompaniesCommand, GetCompaniesCommandResult>
+    public class GetTotalEndorsementCommandHandler : IRequestHandler<GetTotalEndorsementCommand, GetTotalEndorsementCommandResult>
     {
-        private readonly ILogger<GetCompaniesCommandHandler> _logger;
+        private readonly ILogger<GetTotalEndorsementCommandHandler> _logger;
         private readonly IExpoAPIQueryRepository _expoAPIQueryRepository;
         private readonly IHashingAdapter _hashingAdapter;
 
-        public GetCompaniesCommandHandler(ILogger<GetCompaniesCommandHandler> logger, IExpoAPIQueryRepository expoAPIQueryRepository,IHashingAdapter hashingAdapter)
+        public GetTotalEndorsementCommandHandler(ILogger<GetTotalEndorsementCommandHandler> logger, IExpoAPIQueryRepository expoAPIQueryRepository,IHashingAdapter hashingAdapter)
         {
             _expoAPIQueryRepository = expoAPIQueryRepository;
             _logger = logger;
             _hashingAdapter = hashingAdapter;
         }
 
-        public async Task<GetCompaniesCommandResult> Handle(GetCompaniesCommand command, CancellationToken cancellationToken)
+        public async Task<GetTotalEndorsementCommandResult> Handle(GetTotalEndorsementCommand command, CancellationToken cancellationToken)
         {
             try
             {
-                var getCompanies = await _expoAPIQueryRepository.GetCompaniesAsync(cancellationToken);
+                var getTotalEndorsement = await _expoAPIQueryRepository.GetTotalEndorsementAsync(cancellationToken);
 
-                _logger.LogInformation("The company data has been fetched.");
+                _logger.LogInformation("The total endorsement has been fetched.");
 
-                return new GetCompaniesCommandResult()
+                return new GetTotalEndorsementCommandResult()
                 {
                     ValidateState = ValidationState.Valid,
-                    CompanyContracts = getCompanies.ToList(),
-                    ReturnPath = $"/companies"
+                    TotalEndorsement = getTotalEndorsement,
+                    ReturnPath = $"/companies/endorsement"
                 };
             }
             catch (Exception ex)
             {
                 _logger.LogError("Something went wrong : @{Message} ", ex.Message);
 
-                return new GetCompaniesCommandResult()
+                return new GetTotalEndorsementCommandResult()
                 {
                     ValidateState = ValidationState.NotAcceptable,
                     Messages = new List<MessageContract>()
@@ -57,7 +57,7 @@ namespace ExpoAPI.UseCases.Company
                             Type = nameof(MessageType.Error)
                         }
                     },
-                    ReturnPath = $"/companies"
+                    ReturnPath = $"/companies/endorsement"
                 };
             }
         }

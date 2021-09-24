@@ -2,20 +2,31 @@ version: '3'
 
 services:
   db:
-    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    image: "db"
+    container_name: expoapp_db
     environment:
-        SA_PASSWORD: "Expo123456"
-        ACCEPT_EULA: "Y"
+        SA_PASSWORD: Expo123456
+        ACCEPT_EULA: Y
+    build:
+      context: .
+      dockerfile: db/tools/docker/Dockerfile
+    volumes:
+      - mssqldata:/var/opt/mssql
     ports:
-    - '1401:1401'
+      - '1401:1401'
   api:
+    image: "api"
+    container_name: expoapp_api
     build:
       context: .
       dockerfile: backend/tools/docker/Dockerfile
     ports:
       - "5009:5009"
+    restart: always
     environment:
       ASPNETCORE_ENVIRONMENT: "prod"
     depends_on: 
       - db
+volumes:
+  mssqldata:
   
