@@ -4,7 +4,7 @@ import SimpleBar from 'simplebar-react';
 import { useLocation } from "react-router-dom";
 import { CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBook, faBoxOpen, faChartPie, faCog, faFileAlt, faHandHoldingUsd, faSignOutAlt, faTable, faTimes, faCalendarAlt, faMapPin, faInbox, faRocket } from "@fortawesome/free-solid-svg-icons";
+import { faUsers, faBed, faChartPie, faCog, faFileAlt, faHandHoldingUsd, faSignOutAlt, faTable, faTimes, faCalendarAlt, faMapPin, faInbox, faRocket } from "@fortawesome/free-solid-svg-icons";
 import { Nav, Badge, Image, Button, Dropdown, Accordion, Navbar } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 
@@ -100,8 +100,8 @@ export default (props = {}) => {
               <NavItem title="Garanti Kongre" link={Routes.Presentation.path} image={ReactHero} />
 
               <NavItem title="Gösterge Paneli" link={Routes.DashboardOverview.path} icon={faChartPie} />
-              <NavItem title="Misafirler" link={Routes.NewCompany.path} icon={faTable} />
-              <NavItem title="Konaklama" link={Routes.Acconmodation.path} icon={faTable} />
+              <NavItem title="Misafirler" link={Routes.NewCompany.path} icon={faUsers} />
+              <NavItem title="Konaklama" link={Routes.Acconmodation.path} icon={faBed} />
 
               {/* <NavItem title="Ayarlar" icon={faCog} link={Routes.Settings.path} />
 

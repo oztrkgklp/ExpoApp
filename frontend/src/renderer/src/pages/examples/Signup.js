@@ -7,9 +7,21 @@ import { Link } from 'react-router-dom';
 import { Routes } from "../../routes";
 import BgImage from "../../assets/img/illustrations/signin.svg";
 import { faAngry } from "@fortawesome/free-regular-svg-icons";
-import { UnderFormTable } from "../../components/Tables";
+import { CompanyTable,AttendTable,NotAttendTable } from "../../components/Tables";
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+
+const Item = styled(Paper)(({ theme }) => ({
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
 
 const select = () => {
+  
   return (
     <main>
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
@@ -19,7 +31,22 @@ const select = () => {
               <FontAwesomeIcon icon={faAngleLeft} className="me-2" /> Ana Sayfaya Dön
             </Card.Link>
           </p>
-          <UnderFormTable/>
+          <Box sx={{ flexGrow: 1 }}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Item><CompanyTable/></Item>
+        </Grid>
+        <Grid item xs={6}>
+          <Item><AttendTable/></Item>
+        </Grid>
+        <Grid item xs={6}>
+          <Item><NotAttendTable/></Item>
+        </Grid>
+      </Grid>
+    </Box>
+          
+         
+
           {/* <Row className="justify-content-center form-bg-image" style={{ backgroundImage: `url(${BgImage})` }}>
             <Col xs={12} className="d-flex align-items-center justify-content-center">
               <div className="mb-4 mb-lg-0 bg-white shadow-soft border rounded border-light p-4 p-lg-5 w-100 fmxw-500">
