@@ -13,6 +13,8 @@ import { PageVisitsTable } from "../../components/Tables";
 import { trafficShares } from "../../data/charts";
 import axios from "axios";
 import { domain } from "../../assets/domain";
+import useSWR from "swr";
+
 var result = [];
 
 axios
@@ -20,7 +22,6 @@ axios
   .then(function ({ data }) {
     // handle success
     result = data.result;
-    console.log(result)
   })
   .catch(function (error) {
     // handle error
@@ -29,10 +30,12 @@ axios
   .then(function () {
     // always executed
   });
-  console.log(result)
-  var endorsement 
-    result.map(r=>( endorsement+=r.endorsement))
+
 export default () => {
+  const fetcher = (...args) => fetch(...args).then((res) => res.json());
+  const { data, error } = useSWR(domain + "companies/endorsement", fetcher);
+  if (error) return <div>failed to load</div>;
+  if (!data) return <div>loading...</div>;
   return (
     <>
       <Row className="justify-content-md-center">
@@ -63,7 +66,7 @@ export default () => {
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
             category="Ciro"
-            title={endorsement}
+            title={data.result + "₺"}
             period="5 Ekim - 8 Ekim"
             percentage={28.4}
             icon={faCashRegister}
@@ -72,7 +75,7 @@ export default () => {
         </Col>
 
         <Col xs={12} sm={6} xl={4} className="mb-4">
-          <CircleChartWidget title="Gelir Grafiği" data={trafficShares} />
+          <CircleChartWidget title="Ciro Dağılımı" data={trafficShares} />
         </Col>
       </Row>
       <Row>

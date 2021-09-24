@@ -9,7 +9,6 @@ export const SalesValueChart = () => {
   .then(function ({data}) {
     // handle success
     result = data.result;
-    console.log(result)
   })
   .catch(function (error) {
     // handle error

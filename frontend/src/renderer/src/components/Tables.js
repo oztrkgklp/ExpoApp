@@ -27,7 +27,7 @@ import { pageTraffic, pageRanking } from "../data/tables";
 import transactions from "../data/transactions";
 import commands from "../data/commands";
 import PropTypes from "prop-types";
-import { DataGrid, GridToolbar ,trTR} from "@mui/x-data-grid";
+import { DataGrid, GridToolbar, trTR } from "@mui/x-data-grid";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import { makeStyles } from "@material-ui/styles";
 import { createTheme } from "@material-ui/core/styles";
@@ -37,7 +37,7 @@ import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import axios from "axios"
+import axios from "axios";
 const defaultTheme = createTheme();
 const useStylesAntDesign = makeStyles(
   (theme) => ({
@@ -223,11 +223,10 @@ function SettingsPanel(props) {
     });
   }, [sizeState, typeState, selectedPaginationValue, activeTheme, onApply]);
 
-handleApplyChanges()
-  
+  handleApplyChanges();
+
   return (
     <FormGroup className="MuiFormGroup-options" row>
-      
       <FormControl variant="standard">
         <InputLabel>Sayfa Boyutu</InputLabel>
         <Select
@@ -240,7 +239,6 @@ handleApplyChanges()
           <MenuItem value={100}>100</MenuItem>
         </Select>
       </FormControl>
-      
     </FormGroup>
   );
 }
@@ -252,68 +250,58 @@ SettingsPanel.propTypes = {
   type: PropTypes.oneOf(["Commodity", "Employee"]).isRequired,
 };
 
-
-
 var company = [];
-var purchases = []
+var purchases = [];
 
-axios.get(domain + "purchases")
-  .then(function ({data}) {
+axios
+  .get(domain + "purchases")
+  .then(function ({ data }) {
     // handle success
     purchases = data.result;
-    console.log(purchases)
   })
   .catch(function (error) {
     // handle error
-    console.log(error);
   })
   .then(function () {
     // always executed
   });
 
-axios.get(domain + "companies")
-  .then(function ({data}) {
+axios
+  .get(domain + "companies")
+  .then(function ({ data }) {
     // handle success
     company = data.result;
-    console.log(company)
   })
   .catch(function (error) {
     // handle error
-    console.log(error);
   })
   .then(function () {
     // always executed
   });
- 
-   
-    var sellerNames = []
-    var purchaserNames = []
-    const getNames = (array, idType) => {
-      for(var i = 0 ; i < purchases.length; i++)
-      {
-        axios.get(domain + "companies/id?companyID="+idType===0?purchases[i].sellerID:purchases[i].purchaserID)
-        .then(function ({data}) {
-          // handle success
-         array.push(data.result);
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        })
-        .then(function () {
-          // always executed
-        });
-      }
-    }
-    getNames(sellerNames,0)
-    getNames(purchaserNames,1)
-    var purchasesByName = []
-    
-    purchases.map((r,i)=>{
-             purchasesByName.push({purchaseID:r.purchaseID ,sellerName:sellerNames[i] ,purchaserName:purchaserNames[i],amount:r.amount, purchaseDate:r.purchaseDate})}) 
-             
-             
-             console.log(purchasesByName)
+var sellerNames = [];
+var purchaserNames = [];
+var getNames = (array, idType) => {
+  array = purchases.map((p) => {
+    axios
+      .get(
+        domain + "companies/id?companyID=" + idType === 0
+          ? p.sellerID
+          : p.purchaserID
+      )
+      .then(function ({ data }) {
+        // handle success
+        return data;
+      })
+      .catch(function (error) {
+        // handle error
+      })
+      .then(function () {
+        // always executed
+      });
+  });
+};
+getNames(sellerNames, 0);
+getNames(purchaserNames, 1);
 
 export const PageVisitsTable = () => {
   const classes = useStyles();
@@ -324,57 +312,77 @@ export const PageVisitsTable = () => {
 
   const columns = [
     {
-      field: 'purchaseID',
-      headerName: 'ID',
+      field: "id",
+      headerName: "ID",
       width: 100,
       editable: false,
     },
-   
+
     {
-      field: 'sellerName',
-      headerName: 'Satıcı Firma ',
+      field: "sellerName",
+      headerName: "Satıcı Firma ",
       width: 160,
       editable: true,
     },
     {
-      field: 'purchaserName',
-      headerName: 'Alıcı Firma ',
+      field: "purchaserName",
+      headerName: "Alıcı Firma ",
       width: 160,
       editable: true,
     },
     {
-      field: 'amount',
-      headerName: 'Satış Fiyatı',
-      width: 110,
+      field: "purchaseDate",
+      headerName: "Satış Tarihi",
+      width: 160,
+      editable: true,
+    },
+    {
+      field: "amount",
+      headerName: "Satış Fiyatı",
+      width: 150,
       sortable: true,
     },
-    {
-      field: 'purchaseDate',
-      headerName: 'Tarihi',
-      width: 130,
-      editable: true,
-    },
   ];
-  
-    const rows2 = purchasesByName
-    // [
-    //       { companyID: 1, companyName: 'Snow', phone: '+905417479982', eMail: "erenyldrm200@gmail.com",endorsement:100,isEntered:"evet" },
-    //       { companyID: 2, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"Hayır" },
-    //       { companyID: 3, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-    //       { companyID: 4, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-    //       { companyID: 5, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-    //       { companyID: 6, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:300,isEntered:"evet" },
-    //       { companyID: 7, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-    //       { companyID: 8, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-    //       { companyID: 9, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-    //       { companyID: 10, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-    // ] 
-// const rows = rows2.map(c=>{
-//     const {companyID, companyName,phone,eMail,endorsement,isEntered}= c
-//     return {id: companyID , companyName,phone,eMail,endorsement,isEntered}
-//   })
+ var result = []
+  var promise = axios
+    .get(domain + "purchases/with-name")
+    .then(function ({ data }) {
+      // handle success
+      result= data.result.map(r=>{
+        return r
+      })  
+      console.log(result)
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
+    .then(function () {
+      // always executed
+    });
+    const mock= 
+    [
+            { purchaseID: "1", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100, },
+            {  purchaseID: "2", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+            {  purchaseID: "3", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+            {  purchaseID: "4", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+            {  purchaseID: "5", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
 
-const [pagination, setPagination] = React.useState({
+            {  purchaseID: "6", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+
+            {  purchaseID: "7", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+
+            {  purchaseID: "8", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+            {  purchaseID: "9", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+      ] 
+    
+
+  var rows = mock.map(p => {
+    const { purchaseID, sellerName, purchaserName, purchaseDate, amount } = p;
+    return {id: purchaseID, sellerName: sellerName, purchaserName: purchaserName, purchaseDate: purchaseDate, amount: amount};
+  });
+  console.log(rows)
+  const [pagination, setPagination] = React.useState({
     pagination: false,
     autoPageSize: false,
     pageSize: undefined,
@@ -429,10 +437,8 @@ const [pagination, setPagination] = React.useState({
         size={size}
         type={type}
         theme={getActiveTheme()}
-
-
       />
-      <DataGrid 
+      <DataGrid
         className={isAntDesign ? antDesignClasses.root : undefined}
         components={{
           Toolbar: GridToolbar,
@@ -440,7 +446,7 @@ const [pagination, setPagination] = React.useState({
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
-        rows={purchasesByName}
+        rows={rows}
         columns={columns}
         rowLength={10}
         localeText={trTR.props.MuiDataGrid.localeText}
