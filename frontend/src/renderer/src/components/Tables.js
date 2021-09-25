@@ -37,7 +37,10 @@ import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import Stack from "@mui/material/Stack";
 import axios from "axios";
+import { useSwitch } from "@mui/core";
+import useSWR from "swr";
 const defaultTheme = createTheme();
 const useStylesAntDesign = makeStyles(
   (theme) => ({
@@ -322,19 +325,19 @@ export const PageVisitsTable = () => {
       field: "sellerName",
       headerName: "Satıcı Firma ",
       width: 160,
-      editable: true,
+      editable: false,
     },
     {
       field: "purchaserName",
       headerName: "Alıcı Firma ",
       width: 160,
-      editable: true,
+      editable: false,
     },
     {
       field: "purchaseDate",
       headerName: "Satış Tarihi",
       width: 160,
-      editable: true,
+      editable: false,
     },
     {
       field: "amount",
@@ -343,45 +346,100 @@ export const PageVisitsTable = () => {
       sortable: true,
     },
   ];
- var result = []
+  var result = [];
   var promise = axios
     .get(domain + "purchases/with-name")
     .then(function ({ data }) {
       // handle success
-      result= data.result.map(r=>{
-        return r
-      })  
-      console.log(result)
+      result = data.result.map((r) => {
+        return r;
+      });
     })
     .catch(function (error) {
       // handle error
-      console.log(error);
     })
     .then(function () {
       // always executed
     });
-    const mock= 
-    [
-            { purchaseID: "1", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100, },
-            {  purchaseID: "2", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-            {  purchaseID: "3", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-            {  purchaseID: "4", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-            {  purchaseID: "5", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+  const mock = [
+    {
+      purchaseID: "1",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "2",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "3",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "4",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "5",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
 
-            {  purchaseID: "6", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+    {
+      purchaseID: "6",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
 
-            {  purchaseID: "7", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+    {
+      purchaseID: "7",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
 
-            {  purchaseID: "8", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-            {  purchaseID: "9", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-      ] 
-    
+    {
+      purchaseID: "8",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "9",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+  ];
 
-  var rows = mock.map(p => {
+  var rows = mock.map((p) => {
     const { purchaseID, sellerName, purchaserName, purchaseDate, amount } = p;
-    return {id: purchaseID, sellerName: sellerName, purchaserName: purchaserName, purchaseDate: purchaseDate, amount: amount};
+    return {
+      id: purchaseID,
+      sellerName: sellerName,
+      purchaserName: purchaserName,
+      purchaseDate: purchaseDate,
+      amount: amount,
+    };
   });
-  console.log(rows)
   const [pagination, setPagination] = React.useState({
     pagination: false,
     autoPageSize: false,
@@ -788,72 +846,131 @@ export const CompanyTable = () => {
 
   const columns = [
     {
-      field: "id",
+      field: "companyID",
       headerName: "ID",
       width: 100,
       editable: false,
     },
 
     {
-      field: "sellerName",
-      headerName: "Satıcı Firma ",
-      width: 160,
-      editable: true,
-    },
-    {
-      field: "purchaserName",
-      headerName: "Alıcı Firma ",
-      width: 160,
-      editable: true,
-    },
-    {
-      field: "purchaseDate",
-      headerName: "Satış Tarihi",
-      width: 160,
-      editable: true,
-    },
-    {
-      field: "amount",
-      headerName: "Satış Fiyatı",
+      field: "companyName",
+      headerName: "Firma Adı",
       width: 150,
+      editable: false,
+    },
+    {
+      field: "phone",
+      headerName: "Telefon Numarası",
+      width: 200,
+      editable: false,
+    },
+    {
+      field: "eMail",
+      headerName: "E-Mail",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      width: 130,
+      editable: false,
+    },
+    {
+      field: "endorsement",
+      headerName: "Ciro",
+      width: 110,
       sortable: true,
     },
+    {
+      field: "isEntered",
+      headerName: "Katılım",
+      width: 130,
+      editable: false,
+    },
   ];
- var result = []
-  var promise = axios
-    .get(domain + "companies")
-    .then(function ({ data }) {
-      // handle success
-      result= data.result 
-      console.log(result)
-    })
-    .catch(function (error) {
-      // handle error
-      console.log(error);
-    })
-    .then(function () {
-      // always executed
-    });
-    const mock= 
-    [
-            { purchaseID: "1", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100, },
-            {  purchaseID: "2", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-            {  purchaseID: "3", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-            {  purchaseID: "4", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-            {  purchaseID: "5", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
 
-            {  purchaseID: "6", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-
-            {  purchaseID: "7", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-
-            {  purchaseID: "8", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-            {  purchaseID: "9", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-      ] 
-    
-
-  var rows = mock.map(p => {
-    const { purchaseID, sellerName, purchaserName, purchaseDate, amount } = p;
-    return {id: purchaseID, sellerName: sellerName, purchaserName: purchaserName, purchaseDate: purchaseDate, amount: amount};
+  const rows2 = [
+    {
+      companyID: 1,
+      companyName: "Snow",
+      phone: "+905417479982",
+      eMail: "erenyldrm200@gmail.com",
+      endorsement: 100,
+      isEntered: "evet",
+    },
+    {
+      companyID: 2,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 100,
+      isEntered: "Hayır",
+    },
+    {
+      companyID: 3,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 100,
+      isEntered: "evet",
+    },
+    {
+      companyID: 4,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 100,
+      isEntered: "evet",
+    },
+    {
+      companyID: 5,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 100,
+      isEntered: "evet",
+    },
+    {
+      companyID: 6,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 300,
+      isEntered: "evet",
+    },
+    {
+      companyID: 7,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 100,
+      isEntered: "evet",
+    },
+    {
+      companyID: 8,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 100,
+      isEntered: "evet",
+    },
+    {
+      companyID: 9,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 100,
+      isEntered: "evet",
+    },
+    {
+      companyID: 10,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 100,
+      isEntered: "evet",
+    },
+  ];
+  const rows = rows2.map((c) => {
+    const { companyID, companyName, phone, eMail, endorsement, isEntered } = c;
+    return { id: companyID, companyName, phone, eMail, endorsement, isEntered };
   });
   const [pagination, setPagination] = React.useState({
     pagination: false,
@@ -905,12 +1022,17 @@ export const CompanyTable = () => {
 
   return (
     <div className={classes.root}>
-      <FormGroup className="MuiFormGroup-options" row style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
-      <FormControl variant="standard" >
-        <InputLabel style={{textJustify:"right"}}>Tüm Şirketler</InputLabel>
-        
-      </FormControl>
-    </FormGroup>
+      <Stack
+        direction="row"
+        spacing={2}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Button style={{ backgroundColor: "#7389F7" }}>TÜM MİSAFİRLER</Button>
+      </Stack>
       <SettingsPanel
         onApply={handleApplyClick}
         size={size}
@@ -953,19 +1075,19 @@ export const AttendTable = () => {
       field: "sellerName",
       headerName: "Satıcı Firma ",
       width: 160,
-      editable: true,
+      editable: false,
     },
     {
       field: "purchaserName",
       headerName: "Alıcı Firma ",
       width: 160,
-      editable: true,
+      editable: false,
     },
     {
       field: "purchaseDate",
       headerName: "Satış Tarihi",
       width: 160,
-      editable: true,
+      editable: false,
     },
     {
       field: "amount",
@@ -974,41 +1096,97 @@ export const AttendTable = () => {
       sortable: true,
     },
   ];
- var result = []
+  var result = [];
   var promise = axios
     .get(domain + "companies")
     .then(function ({ data }) {
       // handle success
-      result= data.result 
-      console.log(result)
+      result = data.result;
     })
     .catch(function (error) {
       // handle error
-      console.log(error);
     })
     .then(function () {
       // always executed
     });
-    const mock= 
-    [
-            { purchaseID: "1", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100, },
-            {  purchaseID: "2", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-            {  purchaseID: "3", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-            {  purchaseID: "4", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-            {  purchaseID: "5", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+  const mock = [
+    {
+      purchaseID: "1",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "2",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "3",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "4",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "5",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
 
-            {  purchaseID: "6", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+    {
+      purchaseID: "6",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
 
-            {  purchaseID: "7", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+    {
+      purchaseID: "7",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
 
-            {  purchaseID: "8", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-            {  purchaseID: "9", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-      ] 
-    
+    {
+      purchaseID: "8",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "9",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+  ];
 
-  var rows = mock.map(p => {
+  var rows = mock.map((p) => {
     const { purchaseID, sellerName, purchaserName, purchaseDate, amount } = p;
-    return {id: purchaseID, sellerName: sellerName, purchaserName: purchaserName, purchaseDate: purchaseDate, amount: amount};
+    return {
+      id: purchaseID,
+      sellerName: sellerName,
+      purchaserName: purchaserName,
+      purchaseDate: purchaseDate,
+      amount: amount,
+    };
   });
   const [pagination, setPagination] = React.useState({
     pagination: false,
@@ -1060,11 +1238,19 @@ export const AttendTable = () => {
 
   return (
     <div className={classes.root}>
-      <FormGroup className="MuiFormGroup-options"  style={{justifyContent:'center', alignItems:'center'}}>
-      <FormControl variant="standard" >
-        <InputLabel>Fuara Katılıp Bir Şey Almayanlar</InputLabel>
-      </FormControl>
-    </FormGroup>
+      <Stack
+        direction="row"
+        spacing={2}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Button style={{ backgroundColor: "#7389F7" }}>
+          FUARA KATILIP HARCAMA YAPMAYANLAR
+        </Button>
+      </Stack>
       <SettingsPanel
         onApply={handleApplyClick}
         size={size}
@@ -1088,16 +1274,13 @@ export const AttendTable = () => {
   );
 };
 
-
 export const NotAttendTable = () => {
   const classes = useStyles();
   const antDesignClasses = useStylesAntDesign();
   const [isAntDesign, setIsAntDesign] = React.useState(false);
   const [type, setType] = React.useState("Commodity");
   const [size, setSize] = React.useState(100);
- 
-    
- 
+
   const columns = [
     {
       field: "id",
@@ -1110,62 +1293,118 @@ export const NotAttendTable = () => {
       field: "sellerName",
       headerName: "Satıcı Firma ",
       width: 160,
-      editable: true,
+      editable: false,
     },
     {
       field: "purchaserName",
       headerName: "Alıcı Firma ",
       width: 160,
-      editable: true,
+      editable: false,
     },
     {
       field: "purchaseDate",
       headerName: "Satış Tarihi",
       width: 160,
-      editable: true,
+      editable: false,
     },
     {
       field: "amount",
       headerName: "Satış Fiyatı",
       width: 150,
-      sortable: true,
+      sortable: false,
     },
   ];
- var result = []
+  var result = [];
   var promise = axios
     .get(domain + "companies")
     .then(function ({ data }) {
       // handle success
-      result= data.result 
-      console.log(result)
+      result = data.result;
     })
     .catch(function (error) {
       // handle error
-      console.log(error);
     })
     .then(function () {
       // always executed
     });
-    const mock= 
-    [
-            { purchaseID: "1", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100, },
-            {  purchaseID: "2", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-            {  purchaseID: "3", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-            {  purchaseID: "4", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-            {  purchaseID: "5", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+  const mock = [
+    {
+      purchaseID: "1",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "2",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "3",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "4",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "5",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
 
-            {  purchaseID: "6", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+    {
+      purchaseID: "6",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
 
-            {  purchaseID: "7", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
+    {
+      purchaseID: "7",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
 
-            {  purchaseID: "8", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-            {  purchaseID: "9", sellerName: 'Snow', purchaserName: '+905417479982', purchaseDate: "2021-09-23T00:27:43",amount:100 },
-      ] 
-    
+    {
+      purchaseID: "8",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "9",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+  ];
 
-  var rows = mock.map(p => {
+  var rows = mock.map((p) => {
     const { purchaseID, sellerName, purchaserName, purchaseDate, amount } = p;
-    return {id: purchaseID, sellerName: sellerName, purchaserName: purchaserName, purchaseDate: purchaseDate, amount: amount};
+    return {
+      id: purchaseID,
+      sellerName: sellerName,
+      purchaserName: purchaserName,
+      purchaseDate: purchaseDate,
+      amount: amount,
+    };
   });
   const [pagination, setPagination] = React.useState({
     pagination: false,
@@ -1216,21 +1455,27 @@ export const NotAttendTable = () => {
   };
 
   return (
-    
     <div className={classes.root}>
-      <FormGroup className="MuiFormGroup-options" row style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
-      <FormControl variant="standard" >
-        <InputLabel style={{textJustify:"right"}}>Fuara Katılmayanlar</InputLabel>
-        
-      </FormControl>
-    </FormGroup>
+      <Stack
+        direction="row"
+        spacing={2}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Button style={{ backgroundColor: "#7389F7" }}>
+          FUARA KATILMAYANLAR
+        </Button>
+      </Stack>
       <SettingsPanel
         onApply={handleApplyClick}
         size={size}
         type={type}
         theme={getActiveTheme()}
       />
-      
+
       <DataGrid
         className={isAntDesign ? antDesignClasses.root : undefined}
         components={{
@@ -1247,4 +1492,3 @@ export const NotAttendTable = () => {
     </div>
   );
 };
-

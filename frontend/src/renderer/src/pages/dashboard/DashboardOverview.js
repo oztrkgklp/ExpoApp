@@ -1,5 +1,9 @@
 import React from "react";
-import { faCashRegister, faChartLine,faBed } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCashRegister,
+  faChartLine,
+  faBed,
+} from "@fortawesome/free-solid-svg-icons";
 import { Col, Row } from "@themesberg/react-bootstrap";
 
 import {
@@ -11,31 +15,33 @@ import {
 } from "../../components/Widgets";
 import { PageVisitsTable } from "../../components/Tables";
 import { trafficShares } from "../../data/charts";
-import axios from "axios";
 import { domain } from "../../assets/domain";
 import useSWR from "swr";
+import axios from "axios";
 
-var result = [];
+var companiesEndorsement 
+var companiesCount
+var accommodationsCount
 
-axios
-  .get(domain + "companies/count")
-  .then(function ({ data }) {
+
+axios.get(domain + "companies/endorsement")
+  .then(function ({data}) {
     // handle success
-    result = data.result;
+    companiesEndorsement = data.result
   })
-  .catch(function (error) {
-    // handle error
-    console.log(error);
+  axios.get(domain + "companies/count")
+  .then(function ({data}) {
+    companiesCount=data.result
+    // handle success
   })
-  .then(function () {
-    // always executed
-  });
+  axios.get(domain + "accommodations/count")
+  .then(function ({data}) {
+    accommodationsCount=data.result
+    // handle success
+  })
 
 export default () => {
-  const fetcher = (...args) => fetch(...args).then((res) => res.json());
-  const { data, error } = useSWR(domain + "companies/endorsement", fetcher);
-  if (error) return <div>failed to load</div>;
-  if (!data) return <div>loading...</div>;
+  
   return (
     <>
       <Row className="justify-content-md-center">
@@ -56,7 +62,7 @@ export default () => {
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
             category={"Misafirler "}
-            title={result}
+            title={companiesCount }
             percentage={18.2}
             icon={faChartLine}
             iconColor="shape-secondary"
@@ -66,7 +72,7 @@ export default () => {
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
             category="Ciro"
-            title={data.result + "₺"}
+            title={companiesEndorsement + "₺"}
             period="5 Ekim - 8 Ekim"
             percentage={28.4}
             icon={faCashRegister}
@@ -76,7 +82,7 @@ export default () => {
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
             category="Konaklayan"
-            title={290}
+            title={accommodationsCount}
             period="5 Ekim - 8 Ekim"
             percentage={28.4}
             icon={faBed}
@@ -103,7 +109,6 @@ export default () => {
             iconColor="shape-tertiary"
           />
         </Col>
-        
 
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CircleChartWidget title="Ciro Dağılımı" data={trafficShares} />
