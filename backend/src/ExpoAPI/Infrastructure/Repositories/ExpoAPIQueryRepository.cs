@@ -190,6 +190,106 @@ namespace ExpoAPI.Infrastructure.Repositories
             }
         }
 
+        public async Task<IEnumerable<CompanyContract?>?> GetEnteredCompaniesAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT * FROM COMPANY WHERE IsEntered = 1");
+            using(Database)
+            {
+                var getCompanies = await _dapperPolly.QueryAsyncWithRetry<CompanyContract>(Database, queryBuilder.ToString());
+                if (getCompanies.Any())
+                {
+                    return getCompanies.ToList();
+                }
+                return null;
+            }
+        }
+
+        public async Task<int?> GetNumberOfEnteredCompaniesAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT COUNT(CompanyID) FROM COMPANY WHERE IsEntered = 1");
+            using(Database)
+            {
+                var getCompanies = await _dapperPolly.QueryAsyncWithRetry<int>(Database, queryBuilder.ToString());
+                if (getCompanies.Any())
+                {
+                    return getCompanies.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<CompanyContract?>?> GetEnteredCompaniesWithoutPurchaseAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"select C.CompanyID,C.CompanyName,C.Phone,C.EMail,C.Endorsement,C.IsEntered from COMPANY C
+                                    INNER JOIN (select DISTINCT C.CompanyID from COMPANY C
+                                                except
+                                                select DISTINCT C.CompanyID AS ID from COMPANY C	
+                                                    INNER JOIN (select P.PurchaserID, P.Amount from PURCHASE P) P ON P.PurchaserID = C.CompanyID
+                                                    WHERE C.CompanyID = P.PurchaserID) I ON I.CompanyID = C.CompanyID");
+            using(Database)
+            {
+                var getCompanies = await _dapperPolly.QueryAsyncWithRetry<CompanyContract>(Database, queryBuilder.ToString());
+                if (getCompanies.Any())
+                {
+                    return getCompanies.ToList();
+                }
+                return null;
+            }
+        }
+
+        public async Task<int?> GetNumberOfEnteredCompaniesWithoutPurchaseAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"select COUNT(C.CompanyID) from (select C.CompanyID,C.CompanyName,C.Phone,C.EMail,C.Endorsement,C.IsEntered from COMPANY C
+                                    INNER JOIN (select DISTINCT C.CompanyID from COMPANY C
+                                                except
+                                                select DISTINCT C.CompanyID AS ID from COMPANY C	
+                                                    INNER JOIN (select P.PurchaserID, P.Amount from PURCHASE P) P ON P.PurchaserID = C.CompanyID
+                                                    WHERE C.CompanyID = P.PurchaserID) I ON I.CompanyID = C.CompanyID) C");
+            using(Database)
+            {
+                var getCompanies = await _dapperPolly.QueryAsyncWithRetry<int>(Database, queryBuilder.ToString());
+                if (getCompanies.Any())
+                {
+                    return getCompanies.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<CompanyContract?>?> GetNotEnteredCompaniesAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT * FROM COMPANY WHERE IsEntered = 0");
+            using(Database)
+            {
+                var getCompanies = await _dapperPolly.QueryAsyncWithRetry<CompanyContract>(Database, queryBuilder.ToString());
+                if (getCompanies.Any())
+                {
+                    return getCompanies.ToList();
+                }
+                return null;
+            }
+        }
+
+        public async Task<int?> GetNumberOfNotEnteredCompaniesAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT COUNT(CompanyID) FROM COMPANY WHERE IsEntered = 0");
+            using(Database)
+            {
+                var getCompanies = await _dapperPolly.QueryAsyncWithRetry<int?>(Database, queryBuilder.ToString());
+                if (getCompanies.Any())
+                {
+                    return getCompanies.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
         public async Task<int?> GetNumberOfCompaniesAsync(CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();

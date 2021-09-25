@@ -49,6 +49,162 @@ namespace ExpoAPI.Controllers
             });
         }
 
+        [HttpGet("companies/entered")]
+        [ProducesResponseType(typeof(GetEnteredCompaniesApiResponseContract), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetEnteredCompaniesApiResponseContract), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetEnteredCompaniesApiResponseContract>> GetEnteredCompanies( [FromQuery] GetEnteredCompaniesApiRequestContract contract, CancellationToken cancellationToken)
+        {
+            var getCompanies = await _mediator.Send(new GetEnteredCompaniesCommand(), cancellationToken);
+
+            if (!getCompanies.Success)
+            {
+                return BadRequest(new GetEnteredCompaniesApiResponseContract()
+                {
+                    Instance = Guid.NewGuid().ToString(),
+                    ReturnPath = getCompanies.ReturnPath,
+                    Messages = getCompanies.Messages?.ToList(),
+                });
+            }
+
+            return Ok(new GetEnteredCompaniesApiResponseContract
+            {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getCompanies.Messages?.ToList(),
+                Result = getCompanies.CompanyContracts,
+                ReturnPath = getCompanies.ReturnPath
+            });
+        }
+
+        [HttpGet("companies/entered/count")]
+        [ProducesResponseType(typeof(GetNumberOfEnteredCompaniesApiResponseContract), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetNumberOfEnteredCompaniesApiResponseContract), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetNumberOfEnteredCompaniesApiResponseContract>> GetNumberOfEnteredCompanies( [FromQuery] GetNumberOfEnteredCompaniesApiRequestContract contract, CancellationToken cancellationToken)
+        {
+            var getCompanies = await _mediator.Send(new GetNumberOfEnteredCompaniesCommand(), cancellationToken);
+
+            if (!getCompanies.Success)
+            {
+                return BadRequest(new GetNumberOfEnteredCompaniesApiResponseContract()
+                {
+                    Instance = Guid.NewGuid().ToString(),
+                    ReturnPath = getCompanies.ReturnPath,
+                    Messages = getCompanies.Messages?.ToList(),
+                });
+            }
+
+            return Ok(new GetNumberOfEnteredCompaniesApiResponseContract
+            {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getCompanies.Messages?.ToList(),
+                Result = getCompanies.NumberOfEnteredCompanies,
+                ReturnPath = getCompanies.ReturnPath
+            });
+        }
+
+        [HttpGet("companies/entered/no-purchase")]
+        [ProducesResponseType(typeof(GetEnteredCompaniesWithoutPurchaseApiResponseContract), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetEnteredCompaniesWithoutPurchaseApiResponseContract), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetEnteredCompaniesWithoutPurchaseApiResponseContract>> GetEnteredWithoutPurchaseCompanies( [FromQuery] GetEnteredCompaniesWithoutPurchaseApiRequestContract contract, CancellationToken cancellationToken)
+        {
+            var getCompanies = await _mediator.Send(new GetEnteredCompaniesWithoutPurchaseCommand(), cancellationToken);
+
+            if (!getCompanies.Success)
+            {
+                return BadRequest(new GetEnteredCompaniesWithoutPurchaseApiResponseContract()
+                {
+                    Instance = Guid.NewGuid().ToString(),
+                    ReturnPath = getCompanies.ReturnPath,
+                    Messages = getCompanies.Messages?.ToList(),
+                });
+            }
+
+            return Ok(new GetEnteredCompaniesWithoutPurchaseApiResponseContract
+            {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getCompanies.Messages?.ToList(),
+                Result = getCompanies.CompanyContracts,
+                ReturnPath = getCompanies.ReturnPath
+            });
+        }
+
+        [HttpGet("companies/entered/no-purchase/count")]
+        [ProducesResponseType(typeof(GetNumberOfEnteredCompaniesWithoutPurchaseApiResponseContract), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetNumberOfEnteredCompaniesWithoutPurchaseApiResponseContract), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetNumberOfEnteredCompaniesWithoutPurchaseApiResponseContract>> GetNumberOfEnteredWithoutPurchaseCompanies( [FromQuery] GetNumberOfEnteredCompaniesWithoutPurchaseApiRequestContract contract, CancellationToken cancellationToken)
+        {
+            var getCompanies = await _mediator.Send(new GetNumberOfEnteredCompaniesWithoutPurchaseCommand(), cancellationToken);
+
+            if (!getCompanies.Success)
+            {
+                return BadRequest(new GetNumberOfEnteredCompaniesWithoutPurchaseApiResponseContract()
+                {
+                    Instance = Guid.NewGuid().ToString(),
+                    ReturnPath = getCompanies.ReturnPath,
+                    Messages = getCompanies.Messages?.ToList(),
+                });
+            }
+
+            return Ok(new GetNumberOfEnteredCompaniesWithoutPurchaseApiResponseContract
+            {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getCompanies.Messages?.ToList(),
+                Result = getCompanies.NumberOfEnteredCompaniesWithoutPurchase,
+                ReturnPath = getCompanies.ReturnPath
+            });
+        }
+
+        [HttpGet("companies/not-entered")]
+        [ProducesResponseType(typeof(GetNotEnteredCompaniesApiResponseContract), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetNotEnteredCompaniesApiResponseContract), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetNotEnteredCompaniesApiResponseContract>> GetNotEnteredCompanies( [FromQuery] GetNotEnteredCompaniesApiRequestContract contract, CancellationToken cancellationToken)
+        {
+            var getCompanies = await _mediator.Send(new GetNotEnteredCompaniesCommand(), cancellationToken);
+
+            if (!getCompanies.Success)
+            {
+                return BadRequest(new GetNotEnteredCompaniesApiResponseContract()
+                {
+                    Instance = Guid.NewGuid().ToString(),
+                    ReturnPath = getCompanies.ReturnPath,
+                    Messages = getCompanies.Messages?.ToList(),
+                });
+            }
+
+            return Ok(new GetNotEnteredCompaniesApiResponseContract
+            {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getCompanies.Messages?.ToList(),
+                Result = getCompanies.CompanyContracts,
+                ReturnPath = getCompanies.ReturnPath
+            });
+        }
+
+        [HttpGet("companies/not-entered/count")]
+        [ProducesResponseType(typeof(GetNumberOfNotEnteredCompaniesApiResponseContract), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetNumberOfNotEnteredCompaniesApiResponseContract), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetNumberOfNotEnteredCompaniesApiResponseContract>> GetNumberOfNotEnteredCompanies( [FromQuery] GetNumberOfNotEnteredCompaniesApiRequestContract contract, CancellationToken cancellationToken)
+        {
+            var getCompanies = await _mediator.Send(new GetNumberOfNotEnteredCompaniesCommand(), cancellationToken);
+
+            if (!getCompanies.Success)
+            {
+                return BadRequest(new GetNumberOfNotEnteredCompaniesApiResponseContract()
+                {
+                    Instance = Guid.NewGuid().ToString(),
+                    ReturnPath = getCompanies.ReturnPath,
+                    Messages = getCompanies.Messages?.ToList(),
+                });
+            }
+
+            return Ok(new GetNumberOfNotEnteredCompaniesApiResponseContract
+            {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getCompanies.Messages?.ToList(),
+                Result = getCompanies.NumberOfNotEnteredCompanies,
+                ReturnPath = getCompanies.ReturnPath
+            });
+        }
+
         [HttpGet("companies/endorsement")]
         [ProducesResponseType(typeof(GetTotalEndorsementApiResponseContract), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(GetTotalEndorsementApiResponseContract), StatusCodes.Status400BadRequest)]
