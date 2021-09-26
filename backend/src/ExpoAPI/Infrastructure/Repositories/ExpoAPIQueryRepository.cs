@@ -224,7 +224,7 @@ namespace ExpoAPI.Infrastructure.Repositories
         {
             StringBuilder queryBuilder = new StringBuilder();
             queryBuilder.Append(@"select C.CompanyID,C.CompanyName,C.Phone,C.EMail,C.Endorsement,C.IsEntered from COMPANY C
-                                    INNER JOIN (select DISTINCT C.CompanyID from COMPANY C
+                                    INNER JOIN (select DISTINCT C.CompanyID from COMPANY C WHERE C.IsEntered = 1
                                                 except
                                                 select DISTINCT C.CompanyID AS ID from COMPANY C	
                                                     INNER JOIN (select P.PurchaserID, P.Amount from PURCHASE P) P ON P.PurchaserID = C.CompanyID
@@ -244,7 +244,7 @@ namespace ExpoAPI.Infrastructure.Repositories
         {
             StringBuilder queryBuilder = new StringBuilder();
             queryBuilder.Append(@"select COUNT(C.CompanyID) from (select C.CompanyID,C.CompanyName,C.Phone,C.EMail,C.Endorsement,C.IsEntered from COMPANY C
-                                    INNER JOIN (select DISTINCT C.CompanyID from COMPANY C
+                                    INNER JOIN (select DISTINCT C.CompanyID from COMPANY C WHERE C.IsEntered = 1
                                                 except
                                                 select DISTINCT C.CompanyID AS ID from COMPANY C	
                                                     INNER JOIN (select P.PurchaserID, P.Amount from PURCHASE P) P ON P.PurchaserID = C.CompanyID
