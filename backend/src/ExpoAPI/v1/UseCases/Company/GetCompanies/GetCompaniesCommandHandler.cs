@@ -31,7 +31,7 @@ namespace ExpoAPI.UseCases.Company
             {
                 var getCompanies = await _expoAPIQueryRepository.GetCompaniesAsync(cancellationToken);
 
-                _logger.LogInformation("The company has been deleted.");
+                _logger.LogInformation("The company data has been fetched.");
 
                 return new GetCompaniesCommandResult()
                 {

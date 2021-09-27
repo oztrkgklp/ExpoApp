@@ -6,7 +6,8 @@ CREATE DATABASE Expo;
 GO
 
 USE Expo;
-EXEC sp_addrolemember 'db_owner', 'expodb'
+GO
+EXEC [Expo].[dbo].[sp_changedbowner] 'expodb', 'true'
 GO
 
 CREATE TABLE ADMIN (
@@ -36,5 +37,35 @@ CREATE TABLE PURCHASE (
     Amount decimal(19,4) not null,
 	SellerID int not null,
 	PurchaserID int not null
+);
+
+CREATE TABLE ACCOMMODATION (
+    AccommodationID int IDENTITY(1,1) PRIMARY KEY,
+    CompanyName varchar(255) not null,
+    Hotel varchar(255) not null,
+	CheckInDate date not null,
+	CheckInTime time not null,
+    FirstGuest varchar(255) not null,
+    SecondGuest varchar(255),
+    ThirdGuest varchar(255),
+    GuestCompanyName varchar(255),
+    Phone varchar(255),
+    SNG varchar(50),
+    DBL varchar(50),
+    TRPL varchar(50),
+    QUAT varchar(50),
+    SNGCHD varchar(50),
+    DBLCHD varchar(50),
+    TRPLCHD varchar(50),
+    CheckOutDate date not null,
+	CheckOutTime time not null,
+    _SNG varchar(50),
+    _DBL varchar(50),
+    _TRPL varchar(50),
+    _QUAT varchar(50),
+    _SNGCHD varchar(50),
+    _DBLCHD varchar(50),
+    _TRPLCHD varchar(50),
+    Description varchar(2000)
 );
 GO

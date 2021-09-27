@@ -16,6 +16,7 @@ obj/
 # Dependency directory
 node_modules/
 
-release-builds/
-
+# build artifacts
 dist/
+
+release-builds/
