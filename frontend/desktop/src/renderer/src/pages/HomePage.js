@@ -6,10 +6,11 @@ import { Routes } from "../routes";
 import DashboardOverview from "./dashboard/DashboardOverview";
 import BootstrapTables from "./tables/BootstrapTables";
 import Signin from "./examples/Signin";
-import Lock from "./examples/Lock";
+import Lock from "../components/Lock";
 import NotFoundPage from "./examples/NotFound";
 import ServerError from "./examples/ServerError";
 import Signup from "./examples/Signup";
+// import {AccomomdationTable} from "../components/AccomomdationTable"
 
 // components
 import Sidebar from "../components/Sidebar";
@@ -77,7 +78,7 @@ export default () => (
     <RouteWithSidebar exact path={Routes.DashboardOverview.path} component={DashboardOverview} />
     <RouteWithSidebar exact path={Routes.BootstrapTables.path} component={BootstrapTables} />
     <RouteWithSidebar exact path={Routes.NewCompany.path} component={Signup} />
-    <RouteWithSidebar exact path={Routes.Acconmodation.path} component={NotFoundPage} />
+    <RouteWithSidebar exact path={Routes.Acconmodation.path} component={Lock} />
 
     <Redirect to={Routes.NotFound.path} />
   </Switch>
