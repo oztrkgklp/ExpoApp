@@ -1,11 +1,7 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { domain } from "../assets/domain";
 import {
-  faAngleDown,
-  faAngleUp,
-  faArrowDown,
-  faArrowUp,
   faEdit,
   faEllipsisH,
   faExternalLinkAlt,
@@ -27,12 +23,11 @@ import {
 import { Link } from "react-router-dom";
 
 import { Routes } from "../routes";
-import { pageVisits, pageTraffic, pageRanking } from "../data/tables";
+import { pageTraffic, pageRanking } from "../data/tables";
 import transactions from "../data/transactions";
 import commands from "../data/commands";
 import PropTypes from "prop-types";
-import { DataGrid, GridToolbar ,trTR} from "@mui/x-data-grid";
-import { useDemoData } from "@mui/x-data-grid-generator";
+import { DataGrid, GridToolbar, trTR } from "@mui/x-data-grid";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import { makeStyles } from "@material-ui/styles";
 import { createTheme } from "@material-ui/core/styles";
@@ -42,7 +37,13 @@ import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import axios from "axios"
+import Stack from "@mui/material/Stack";
+import axios from "axios";
+import { useSwitch } from "@mui/core";
+import { purchases } from "./FetchData";
+
+import useSWR from "swr";
+// import { fetchData } from "./FetchData";
 const defaultTheme = createTheme();
 const useStylesAntDesign = makeStyles(
   (theme) => ({
@@ -228,11 +229,10 @@ function SettingsPanel(props) {
     });
   }, [sizeState, typeState, selectedPaginationValue, activeTheme, onApply]);
 
-handleApplyChanges()
-  
+  handleApplyChanges();
+
   return (
     <FormGroup className="MuiFormGroup-options" row>
-      
       <FormControl variant="standard">
         <InputLabel>Sayfa Boyutu</InputLabel>
         <Select
@@ -245,7 +245,6 @@ handleApplyChanges()
           <MenuItem value={100}>100</MenuItem>
         </Select>
       </FormControl>
-      
     </FormGroup>
   );
 }
@@ -257,89 +256,135 @@ SettingsPanel.propTypes = {
   type: PropTypes.oneOf(["Commodity", "Employee"]).isRequired,
 };
 
-var result = [];
-
-axios.get(domain)
-  .then(function ({data}) {
-    // handle success
-    result = data.result;
-    console.log(result)
-  })
-  .catch(function (error) {
-    // handle error
-    console.log(error);
-  })
-  .then(function () {
-    // always executed
-  });
-
 export const PageVisitsTable = () => {
   const classes = useStyles();
   const antDesignClasses = useStylesAntDesign();
   const [isAntDesign, setIsAntDesign] = React.useState(false);
   const [type, setType] = React.useState("Commodity");
   const [size, setSize] = React.useState(100);
+  const [countryWeather, setWeather] = React.useState([]);
+  React.useEffect(() => {
+    const weather = async () => {
+      const weathers =  await purchases();
+      setWeather(weathers.result);
+    };
+
+    weather();
+  },[]);
 
   const columns = [
     {
-      field: 'id',
-      headerName: 'ID',
+      field: "id",
+      headerName: "ID",
       width: 100,
       editable: false,
     },
-   
+
     {
-      field: 'companyName',
-      headerName: 'Firma Adı',
-      width: 130,
-      editable: true,
+      field: "sellerName",
+      headerName: "Satıcı Firma ",
+      width: 160,
+      editable: false,
     },
     {
-      field: 'phone',
-      headerName: 'Telefon Numarası',
-      width: 140,
-      editable: true,
+      field: "purchaserName",
+      headerName: "Alıcı Firma ",
+      width: 160,
+      editable: false,
     },
     {
-      field: 'eMail',
-      headerName: 'E-Mail',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: true,
+      field: "purchaseDate",
+      headerName: "Satış Tarihi",
+      width: 160,
+      editable: false,
+    },
+    {
+      field: "amount",
+      headerName: "Satış Fiyatı",
       width: 150,
-      editable: true,
-    },
-    {
-      field: 'endorsement',
-      headerName: 'Ciro',
-      width: 110,
       sortable: true,
-    },
-    {
-      field: 'isEntered',
-      headerName: 'Katılım',
-      width: 130,
-      editable: true,
     },
   ];
-  
-    const rows2 = [
-          { companyID: 1, companyName: 'Snow', phone: '+905417479982', eMail: "erenyldrm200@gmail.com",endorsement:100,isEntered:"evet" },
-          { companyID: 2, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"Hayır" },
-          { companyID: 3, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-          { companyID: 4, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-          { companyID: 5, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-          { companyID: 6, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:300,isEntered:"evet" },
-          { companyID: 7, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-          { companyID: 8, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-          { companyID: 9, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-          { companyID: 10, companyName: 'Snow', phone: 'Jon', eMail: 35,endorsement:100,isEntered:"evet" },
-    ] 
-const rows = rows2.map(c=>{
-    const {companyID, companyName,phone,eMail,endorsement,isEntered}= c
-    return {id: companyID , companyName,phone,eMail,endorsement,isEntered}
-  })
 
-const [pagination, setPagination] = React.useState({
+  // const mock = [
+  //   {
+  //     purchaseID: "1",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
+  //   {
+  //     purchaseID: "2",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
+  //   {
+  //     purchaseID: "3",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
+  //   {
+  //     purchaseID: "4",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
+  //   {
+  //     purchaseID: "5",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
+
+  //   {
+  //     purchaseID: "6",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
+
+  //   {
+  //     purchaseID: "7",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
+
+  //   {
+  //     purchaseID: "8",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
+  //   {
+  //     purchaseID: "9",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
+  // ];
+  var rows = countryWeather.map((p) => {
+    const { purchaseID, sellerName, purchaserName, purchaseDate, amount } = p;
+    return {
+      id: purchaseID,
+      sellerName: sellerName,
+      purchaserName: purchaserName,
+      purchaseDate: purchaseDate,
+      amount: amount,
+    };
+  });
+  const [pagination, setPagination] = React.useState({
     pagination: false,
     autoPageSize: false,
     pageSize: undefined,
@@ -394,10 +439,8 @@ const [pagination, setPagination] = React.useState({
         size={size}
         type={type}
         theme={getActiveTheme()}
-
-
       />
-      <DataGrid 
+      <DataGrid
         className={isAntDesign ? antDesignClasses.root : undefined}
         components={{
           Toolbar: GridToolbar,
@@ -735,5 +778,661 @@ export const CommandsTable = () => {
         </Table>
       </Card.Body>
     </Card>
+  );
+};
+
+export const CompanyTable = () => {
+  const classes = useStyles();
+  const antDesignClasses = useStylesAntDesign();
+  const [isAntDesign, setIsAntDesign] = React.useState(false);
+  const [type, setType] = React.useState("Commodity");
+  const [size, setSize] = React.useState(100);
+
+  const columns = [
+    {
+      field: "companyID",
+      headerName: "ID",
+      width: 100,
+      editable: false,
+    },
+
+    {
+      field: "companyName",
+      headerName: "Firma Adı",
+      width: 150,
+      editable: false,
+    },
+    {
+      field: "phone",
+      headerName: "Telefon Numarası",
+      width: 200,
+      editable: false,
+    },
+    {
+      field: "eMail",
+      headerName: "E-Mail",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      width: 130,
+      editable: false,
+    },
+    {
+      field: "endorsement",
+      headerName: "Ciro",
+      width: 110,
+      sortable: true,
+    },
+    {
+      field: "isEntered",
+      headerName: "Katılım",
+      width: 130,
+      editable: false,
+    },
+  ];
+
+  const rows2 = [
+    {
+      companyID: 1,
+      companyName: "Snow",
+      phone: "+905417479982",
+      eMail: "erenyldrm200@gmail.com",
+      endorsement: 100,
+      isEntered: "evet",
+    },
+    {
+      companyID: 2,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 100,
+      isEntered: "Hayır",
+    },
+    {
+      companyID: 3,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 100,
+      isEntered: "evet",
+    },
+    {
+      companyID: 4,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 100,
+      isEntered: "evet",
+    },
+    {
+      companyID: 5,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 100,
+      isEntered: "evet",
+    },
+    {
+      companyID: 6,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 300,
+      isEntered: "evet",
+    },
+    {
+      companyID: 7,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 100,
+      isEntered: "evet",
+    },
+    {
+      companyID: 8,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 100,
+      isEntered: "evet",
+    },
+    {
+      companyID: 9,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 100,
+      isEntered: "evet",
+    },
+    {
+      companyID: 10,
+      companyName: "Snow",
+      phone: "Jon",
+      eMail: 35,
+      endorsement: 100,
+      isEntered: "evet",
+    },
+  ];
+  const rows = rows2.map((c) => {
+    const { companyID, companyName, phone, eMail, endorsement, isEntered } = c;
+    return { id: companyID, companyName, phone, eMail, endorsement, isEntered };
+  });
+  const [pagination, setPagination] = React.useState({
+    pagination: false,
+    autoPageSize: false,
+    pageSize: undefined,
+  });
+
+  const getActiveTheme = () => {
+    return isAntDesign ? "ant" : "default";
+  };
+
+  const handleApplyClick = (settings) => {
+    if (size !== settings.size) {
+      setSize(settings.size);
+    }
+
+    if (type !== settings.type) {
+      setType(settings.type);
+    }
+
+    if (getActiveTheme() !== settings.theme) {
+      setIsAntDesign(!isAntDesign);
+    }
+
+    if (size !== settings.size || type !== settings.type) {
+      setRowLength(settings.size);
+      loadNewData();
+    }
+
+    const newPaginationSettings = {
+      pagination: settings.pagesize !== -1,
+      autoPageSize: settings.pagesize === 0,
+      pageSize: settings.pagesize > 0 ? settings.pagesize : undefined,
+    };
+
+    setPagination((currentPaginationSettings) => {
+      if (
+        currentPaginationSettings.pagination ===
+          newPaginationSettings.pagination &&
+        currentPaginationSettings.autoPageSize ===
+          newPaginationSettings.autoPageSize &&
+        currentPaginationSettings.pageSize === newPaginationSettings.pageSize
+      ) {
+        return currentPaginationSettings;
+      }
+      return newPaginationSettings;
+    });
+  };
+
+  return (
+    <div className={classes.root}>
+      <Stack
+        direction="row"
+        spacing={2}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Button style={{ backgroundColor: "#7389F7" }}>TÜM MİSAFİRLER</Button>
+      </Stack>
+      <SettingsPanel
+        onApply={handleApplyClick}
+        size={size}
+        type={type}
+        theme={getActiveTheme()}
+      />
+      <DataGrid
+        className={isAntDesign ? antDesignClasses.root : undefined}
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        checkboxSelection
+        disableSelectionOnClick
+        {...pagination}
+        rows={rows}
+        columns={columns}
+        rowLength={10}
+        localeText={trTR.props.MuiDataGrid.localeText}
+      />
+    </div>
+  );
+};
+
+export const AttendTable = () => {
+  const classes = useStyles();
+  const antDesignClasses = useStylesAntDesign();
+  const [isAntDesign, setIsAntDesign] = React.useState(false);
+  const [type, setType] = React.useState("Commodity");
+  const [size, setSize] = React.useState(100);
+
+  const columns = [
+    {
+      field: "id",
+      headerName: "ID",
+      width: 100,
+      editable: false,
+    },
+
+    {
+      field: "sellerName",
+      headerName: "Satıcı Firma ",
+      width: 160,
+      editable: false,
+    },
+    {
+      field: "purchaserName",
+      headerName: "Alıcı Firma ",
+      width: 160,
+      editable: false,
+    },
+    {
+      field: "purchaseDate",
+      headerName: "Satış Tarihi",
+      width: 160,
+      editable: false,
+    },
+    {
+      field: "amount",
+      headerName: "Satış Fiyatı",
+      width: 150,
+      sortable: true,
+    },
+  ];
+  var result = [];
+  var promise = axios
+    .get(domain + "companies")
+    .then(function ({ data }) {
+      // handle success
+      result = data.result;
+    })
+    .catch(function (error) {
+      // handle error
+    })
+    .then(function () {
+      // always executed
+    });
+  const mock = [
+    {
+      purchaseID: "1",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "2",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "3",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "4",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "5",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+
+    {
+      purchaseID: "6",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+
+    {
+      purchaseID: "7",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+
+    {
+      purchaseID: "8",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "9",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+  ];
+
+  var rows = mock.map((p) => {
+    const { purchaseID, sellerName, purchaserName, purchaseDate, amount } = p;
+    return {
+      id: purchaseID,
+      sellerName: sellerName,
+      purchaserName: purchaserName,
+      purchaseDate: purchaseDate,
+      amount: amount,
+    };
+  });
+  const [pagination, setPagination] = React.useState({
+    pagination: false,
+    autoPageSize: false,
+    pageSize: undefined,
+  });
+
+  const getActiveTheme = () => {
+    return isAntDesign ? "ant" : "default";
+  };
+
+  const handleApplyClick = (settings) => {
+    if (size !== settings.size) {
+      setSize(settings.size);
+    }
+
+    if (type !== settings.type) {
+      setType(settings.type);
+    }
+
+    if (getActiveTheme() !== settings.theme) {
+      setIsAntDesign(!isAntDesign);
+    }
+
+    if (size !== settings.size || type !== settings.type) {
+      setRowLength(settings.size);
+      loadNewData();
+    }
+
+    const newPaginationSettings = {
+      pagination: settings.pagesize !== -1,
+      autoPageSize: settings.pagesize === 0,
+      pageSize: settings.pagesize > 0 ? settings.pagesize : undefined,
+    };
+
+    setPagination((currentPaginationSettings) => {
+      if (
+        currentPaginationSettings.pagination ===
+          newPaginationSettings.pagination &&
+        currentPaginationSettings.autoPageSize ===
+          newPaginationSettings.autoPageSize &&
+        currentPaginationSettings.pageSize === newPaginationSettings.pageSize
+      ) {
+        return currentPaginationSettings;
+      }
+      return newPaginationSettings;
+    });
+  };
+
+  return (
+    <div className={classes.root}>
+      <Stack
+        direction="row"
+        spacing={2}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Button style={{ backgroundColor: "#7389F7" }}>
+          FUARA KATILIP HARCAMA YAPMAYANLAR
+        </Button>
+      </Stack>
+      <SettingsPanel
+        onApply={handleApplyClick}
+        size={size}
+        type={type}
+        theme={getActiveTheme()}
+      />
+      <DataGrid
+        className={isAntDesign ? antDesignClasses.root : undefined}
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        checkboxSelection
+        disableSelectionOnClick
+        {...pagination}
+        rows={rows}
+        columns={columns}
+        rowLength={10}
+        localeText={trTR.props.MuiDataGrid.localeText}
+      />
+    </div>
+  );
+};
+
+export const NotAttendTable = () => {
+  const classes = useStyles();
+  const antDesignClasses = useStylesAntDesign();
+  const [isAntDesign, setIsAntDesign] = React.useState(false);
+  const [type, setType] = React.useState("Commodity");
+  const [size, setSize] = React.useState(100);
+
+  const columns = [
+    {
+      field: "id",
+      headerName: "ID",
+      width: 100,
+      editable: false,
+    },
+
+    {
+      field: "sellerName",
+      headerName: "Satıcı Firma ",
+      width: 160,
+      editable: false,
+    },
+    {
+      field: "purchaserName",
+      headerName: "Alıcı Firma ",
+      width: 160,
+      editable: false,
+    },
+    {
+      field: "purchaseDate",
+      headerName: "Satış Tarihi",
+      width: 160,
+      editable: false,
+    },
+    {
+      field: "amount",
+      headerName: "Satış Fiyatı",
+      width: 150,
+      sortable: false,
+    },
+  ];
+  var result = [];
+  var promise = axios
+    .get(domain + "companies")
+    .then(function ({ data }) {
+      // handle success
+      result = data.result;
+    })
+    .catch(function (error) {
+      // handle error
+    })
+    .then(function () {
+      // always executed
+    });
+  const mock = [
+    {
+      purchaseID: "1",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "2",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "3",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "4",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "5",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+
+    {
+      purchaseID: "6",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+
+    {
+      purchaseID: "7",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+
+    {
+      purchaseID: "8",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+    {
+      purchaseID: "9",
+      sellerName: "Snow",
+      purchaserName: "+905417479982",
+      purchaseDate: "2021-09-23T00:27:43",
+      amount: 100,
+    },
+  ];
+
+  var rows = mock.map((p) => {
+    const { purchaseID, sellerName, purchaserName, purchaseDate, amount } = p;
+    return {
+      id: purchaseID,
+      sellerName: sellerName,
+      purchaserName: purchaserName,
+      purchaseDate: purchaseDate,
+      amount: amount,
+    };
+  });
+  const [pagination, setPagination] = React.useState({
+    pagination: false,
+    autoPageSize: false,
+    pageSize: undefined,
+  });
+
+  const getActiveTheme = () => {
+    return isAntDesign ? "ant" : "default";
+  };
+
+  const handleApplyClick = (settings) => {
+    if (size !== settings.size) {
+      setSize(settings.size);
+    }
+
+    if (type !== settings.type) {
+      setType(settings.type);
+    }
+
+    if (getActiveTheme() !== settings.theme) {
+      setIsAntDesign(!isAntDesign);
+    }
+
+    if (size !== settings.size || type !== settings.type) {
+      setRowLength(settings.size);
+      loadNewData();
+    }
+
+    const newPaginationSettings = {
+      pagination: settings.pagesize !== -1,
+      autoPageSize: settings.pagesize === 0,
+      pageSize: settings.pagesize > 0 ? settings.pagesize : undefined,
+    };
+
+    setPagination((currentPaginationSettings) => {
+      if (
+        currentPaginationSettings.pagination ===
+          newPaginationSettings.pagination &&
+        currentPaginationSettings.autoPageSize ===
+          newPaginationSettings.autoPageSize &&
+        currentPaginationSettings.pageSize === newPaginationSettings.pageSize
+      ) {
+        return currentPaginationSettings;
+      }
+      return newPaginationSettings;
+    });
+  };
+
+  return (
+    <div className={classes.root}>
+      <Stack
+        direction="row"
+        spacing={2}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Button style={{ backgroundColor: "#7389F7" }}>
+          FUARA KATILMAYANLAR
+        </Button>
+      </Stack>
+      <SettingsPanel
+        onApply={handleApplyClick}
+        size={size}
+        type={type}
+        theme={getActiveTheme()}
+      />
+
+      <DataGrid
+        className={isAntDesign ? antDesignClasses.root : undefined}
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        checkboxSelection
+        disableSelectionOnClick
+        {...pagination}
+        rows={rows}
+        columns={columns}
+        rowLength={10}
+        localeText={trTR.props.MuiDataGrid.localeText}
+      />
+    </div>
   );
 };

@@ -1,10 +1,9 @@
-
 import { faPills, faTablets, faCapsules,faCannabis } from '@fortawesome/free-solid-svg-icons'; 
+
 const trafficShares = [
-    { id: 1, label: "Satış", value: 40, color: "secondary", icon: faPills },
-    { id: 2, label: "Alış", value: 30, color: "primary", icon: faTablets },
-    { id: 3, label: "Kar", value: 20, color: "tertiary", icon: faCapsules },
-    {id: 4, label: "Zarar", value: 10, color: "danger", icon: faCannabis}
+    { id: 1, label: "Katılıp Alım Yapanlar", value:60, color: "secondary", icon: faPills },
+    { id: 2, label: "Katılıp Alım Yapmayanlar ", value:15, color: "primary", icon: faTablets },
+    { id: 3, label: "Katılmayanlar", value:25, color: "tertiary", icon: faCapsules },
 ];
 
 const totalOrders = [
