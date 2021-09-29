@@ -1,8 +1,23 @@
 import React from "react";
 import Chartist from "react-chartist";
 import ChartistTooltip from "chartist-plugin-tooltips-updated";
-
+import axios from "axios";
+import { domain } from "../assets/domain";
 export const SalesValueChart = () => {
+  var result = [];
+  axios.get(domain + "purchases")
+  .then(function ({data}) {
+    // handle success
+    result = data.result;
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+  .then(function () {
+    // always executed
+  });
+
   var data = {
     labels: ["Pt", "Sa", "Ça", "Pe", "Cu", "Cmt", "Pa"],
     series: [[21, 12, 13, 14, 15, 16, 20]],
