@@ -13,6 +13,7 @@ namespace ExpoAPI.Contracts.Requests
         public string? FirstGuest { get; set; }
         public string? SecondGuest { get; set; }
         public string? ThirdGuest { get; set; }
+        public int? NumberOfGuests { get; set; }
         public string? GuestCompanyName { get; set; }
         public string? Phone { get; set; }
         public string? SNG { get; set; }

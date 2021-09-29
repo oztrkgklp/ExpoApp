@@ -49,6 +49,32 @@ namespace ExpoAPI.Controllers
             });
         }
 
+        [HttpGet("guests")]
+        [ProducesResponseType(typeof(GetGuestsApiResponseContract), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetGuestsApiResponseContract), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetGuestsApiResponseContract>> GetGuests( [FromQuery] GetGuestsApiRequestContract contract, CancellationToken cancellationToken)
+        {
+            var getGuests = await _mediator.Send(new GetGuestsCommand(), cancellationToken);
+
+            if (!getGuests.Success)
+            {
+                return BadRequest(new GetGuestsApiResponseContract()
+                {
+                    Instance = Guid.NewGuid().ToString(),
+                    ReturnPath = getGuests.ReturnPath,
+                    Messages = getGuests.Messages?.ToList(),
+                });
+            }
+
+            return Ok(new GetGuestsApiResponseContract
+            {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getGuests.Messages?.ToList(),
+                Result = getGuests.CompanyContracts,
+                ReturnPath = getGuests.ReturnPath
+            });
+        }
+
         [HttpGet("companies/entered")]
         [ProducesResponseType(typeof(GetEnteredCompaniesApiResponseContract), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(GetEnteredCompaniesApiResponseContract), StatusCodes.Status400BadRequest)]
@@ -230,6 +256,7 @@ namespace ExpoAPI.Controllers
                 ReturnPath = getTotalEndorsement.ReturnPath
             });
         }
+        
 
         [HttpGet("companies/count")]
         [ProducesResponseType(typeof(GetNumberOfCompaniesApiResponseContract), StatusCodes.Status200OK)]
@@ -254,6 +281,32 @@ namespace ExpoAPI.Controllers
                 Messages = getNumberOfCompanies.Messages?.ToList(),
                 Result = getNumberOfCompanies.NumberOfCompanies,
                 ReturnPath = getNumberOfCompanies.ReturnPath
+            });
+        }
+
+        [HttpGet("guests/count")]
+        [ProducesResponseType(typeof(GetNumberOfGuestsApiResponseContract), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetNumberOfGuestsApiResponseContract), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetNumberOfGuestsApiResponseContract>> GetNumberOfGuests( [FromQuery] GetNumberOfGuestsApiRequestContract contract, CancellationToken cancellationToken)
+        {
+            var getNumberOfGuests = await _mediator.Send(new GetNumberOfGuestsCommand(), cancellationToken);
+
+            if (!getNumberOfGuests.Success)
+            {
+                return BadRequest(new GetNumberOfGuestsApiResponseContract()
+                {
+                    Instance = Guid.NewGuid().ToString(),
+                    ReturnPath = getNumberOfGuests.ReturnPath,
+                    Messages = getNumberOfGuests.Messages?.ToList(),
+                });
+            }
+
+            return Ok(new GetNumberOfGuestsApiResponseContract
+            {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getNumberOfGuests.Messages?.ToList(),
+                Result = getNumberOfGuests.NumberOfGuests,
+                ReturnPath = getNumberOfGuests.ReturnPath
             });
         }
 
@@ -345,6 +398,7 @@ namespace ExpoAPI.Controllers
                                                                     EMail = contract.EMail,
                                                                     Phone = contract.Phone,
                                                                     Endorsement = contract.Endorsement,
+                                                                    IsGuest = contract.IsGuest.ToLower() == "true" ? true : false,
                                                                     IsEntered = contract.IsEntered.ToLower() == "true" ? true: false
                                                                 }), cancellationToken);
 
@@ -378,6 +432,7 @@ namespace ExpoAPI.Controllers
                                                                     EMail = contract.EMail,
                                                                     Phone = contract.Phone,
                                                                     Endorsement = contract.Endorsement,
+                                                                    IsGuest = contract.IsGuest.ToLower() == "true" ? true: false,
                                                                     IsEntered = contract.IsEntered.ToLower() == "true" ? true: false
                                                                 }), cancellationToken);
 

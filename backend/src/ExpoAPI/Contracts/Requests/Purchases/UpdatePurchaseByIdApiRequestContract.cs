@@ -9,6 +9,7 @@ namespace ExpoAPI.Contracts.Requests
         public int PurchaseID { get; set; }
 
         public int SellerID { get; set; }
+        public string? Product { get; set; }
 
         public int PurchaserID { get; set; }
 
