@@ -265,14 +265,14 @@ export default () => {
   const [isAntDesign, setIsAntDesign] = React.useState(false);
   const [type, setType] = React.useState("Commodity");
   const [size, setSize] = React.useState(100);
-  const [countryWeather, setWeather] = React.useState([]);
+  const [purchase, setPurchase] = React.useState([]);
   React.useEffect(() => {
-    const weather = async () => {
-      const weathers =  await fetchWeather();
-      setWeather(weathers.result);
+    const purchase = async () => {
+      const purchase =  await purchases();
+      setPurchase(purchase.result);
     };
 
-    weather();
+    purchase();
   },[]);
   const columns = [
     {
@@ -446,76 +446,7 @@ export default () => {
     
   ];
   
-  const mock = [
-    {
-      purchaseID: "1",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
-    {
-      purchaseID: "2",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
-    {
-      purchaseID: "3",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
-    {
-      purchaseID: "4",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
-    {
-      purchaseID: "5",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
-
-    {
-      purchaseID: "6",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
-
-    {
-      purchaseID: "7",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
-
-    {
-      purchaseID: "8",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
-    {
-      purchaseID: "9",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
-  ];
-
-  var rows = countryWeather.map((p) => {
+  var rows = purchase.map((p) => {
     const { purchaseID, sellerName, purchaserName, purchaseDate, amount } = p;
     return {
       id: purchaseID,

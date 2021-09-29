@@ -2,11 +2,9 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faEnvelope, faUnlockAlt  } from "@fortawesome/free-solid-svg-icons";
-import { Col, Row, Form, Card, Button, FormCheck, Container, InputGroup } from '@themesberg/react-bootstrap';
+import {Card,Container } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Routes } from "../../routes";
-import BgImage from "../../assets/img/illustrations/signin.svg";
-import { faAngry } from "@fortawesome/free-regular-svg-icons";
 import { CompanyTable,AttendTable,NotAttendTable } from "../../components/Tables";
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
