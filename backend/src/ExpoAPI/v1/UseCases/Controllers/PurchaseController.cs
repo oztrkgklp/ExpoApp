@@ -123,6 +123,7 @@ namespace ExpoAPI.Controllers
                     PurchaseID = getPurchaseById.PurchaseContract.PurchaseID,
                     SellerID = getPurchaseById.PurchaseContract.SellerID,
                     PurchaserID = getPurchaseById.PurchaseContract.PurchaserID,
+                    Product = getPurchaseById.PurchaseContract.Product,
                     PurchaseDate = getPurchaseById.PurchaseContract.PurchaseDate,
                     Amount = getPurchaseById.PurchaseContract.Amount
                 },
@@ -190,6 +191,7 @@ namespace ExpoAPI.Controllers
                                                                                     {
                                                                                         SellerID = contract.SellerID,
                                                                                         PurchaserID = contract.PurchaserID,
+                                                                                        Product = contract.Product,
                                                                                         PurchaseDate = DateTime.UtcNow.AddHours(3.0),
                                                                                         Amount = contract.Amount
                                                                                     }), cancellationToken);
@@ -221,6 +223,7 @@ namespace ExpoAPI.Controllers
                                                                                         PurchaseID = contract.PurchaseID,
                                                                                         SellerID = contract.SellerID,
                                                                                         PurchaserID = contract.PurchaserID,
+                                                                                        Product = contract.Product,
                                                                                         PurchaseDate = DateTime.Now,
                                                                                         Amount = contract.Amount
                                                                                     }), cancellationToken);

@@ -10,5 +10,7 @@ namespace ExpoAPI.UseCases.Company
         public string? EMail { get; set; }
         public decimal Endorsement { get; set; }
         public bool IsEntered { get; set; }
+        public bool IsGuest { get; set; }
+
     }
 }

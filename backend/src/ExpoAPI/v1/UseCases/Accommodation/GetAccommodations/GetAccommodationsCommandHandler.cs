@@ -45,6 +45,7 @@ namespace ExpoAPI.UseCases.Accommodation
                         FirstGuest = acc.FirstGuest,
                         SecondGuest = acc.SecondGuest,
                         ThirdGuest = acc.ThirdGuest,
+                        NumberOfGuests = acc.NumberOfGuests,
                         GuestCompanyName = acc.GuestCompanyName,
                         Phone = acc.Phone,
                         SNG = acc.SNG,
