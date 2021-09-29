@@ -24,6 +24,8 @@ import { Link } from "react-router-dom";
 
 import { Routes } from "../routes";
 import { pageTraffic, pageRanking } from "../data/tables";
+import regeneratorRuntime from "regenerator-runtime";
+
 import transactions from "../data/transactions";
 import commands from "../data/commands";
 import PropTypes from "prop-types";
@@ -41,6 +43,7 @@ import Stack from "@mui/material/Stack";
 import axios from "axios";
 import { useSwitch } from "@mui/core";
 import useSWR from "swr";
+import { fetchWeather } from "./FetchData";
 const defaultTheme = createTheme();
 const useStylesAntDesign = makeStyles(
   (theme) => ({
@@ -253,58 +256,8 @@ SettingsPanel.propTypes = {
   type: PropTypes.oneOf(["Commodity", "Employee"]).isRequired,
 };
 
-var company = [];
-var purchases = [];
 
-axios
-  .get(domain + "purchases")
-  .then(function ({ data }) {
-    // handle success
-    purchases = data.result;
-  })
-  .catch(function (error) {
-    // handle error
-  })
-  .then(function () {
-    // always executed
-  });
-
-axios
-  .get(domain + "companies")
-  .then(function ({ data }) {
-    // handle success
-    company = data.result;
-  })
-  .catch(function (error) {
-    // handle error
-  })
-  .then(function () {
-    // always executed
-  });
-var sellerNames = [];
-var purchaserNames = [];
-var getNames = (array, idType) => {
-  array = purchases.map((p) => {
-    axios
-      .get(
-        domain + "companies/id?companyID=" + idType === 0
-          ? p.sellerID
-          : p.purchaserID
-      )
-      .then(function ({ data }) {
-        // handle success
-        return data;
-      })
-      .catch(function (error) {
-        // handle error
-      })
-      .then(function () {
-        // always executed
-      });
-  });
-};
-getNames(sellerNames, 0);
-getNames(purchaserNames, 1);
+   
 
 export default () => {
   const classes = useStyles();
@@ -312,7 +265,15 @@ export default () => {
   const [isAntDesign, setIsAntDesign] = React.useState(false);
   const [type, setType] = React.useState("Commodity");
   const [size, setSize] = React.useState(100);
+  const [countryWeather, setWeather] = React.useState([]);
+  React.useEffect(() => {
+    const weather = async () => {
+      const weathers =  await fetchWeather();
+      setWeather(weathers.result);
+    };
 
+    weather();
+  },[]);
   const columns = [
     {
       field: "accommodationID",
@@ -484,21 +445,7 @@ export default () => {
 
     
   ];
-  var result = [];
-  var promise = axios
-    .get(domain + "purchases/with-name")
-    .then(function ({ data }) {
-      // handle success
-      result = data.result.map((r) => {
-        return r;
-      });
-    })
-    .catch(function (error) {
-      // handle error
-    })
-    .then(function () {
-      // always executed
-    });
+  
   const mock = [
     {
       purchaseID: "1",
@@ -568,7 +515,7 @@ export default () => {
     },
   ];
 
-  var rows = mock.map((p) => {
+  var rows = countryWeather.map((p) => {
     const { purchaseID, sellerName, purchaserName, purchaseDate, amount } = p;
     return {
       id: purchaseID,

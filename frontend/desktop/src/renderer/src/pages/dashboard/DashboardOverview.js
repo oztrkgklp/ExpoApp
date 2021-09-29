@@ -28,6 +28,7 @@ axios.get(domain + "companies/endorsement")
   .then(function ({data}) {
     // handle success
     companiesEndorsement = data.result
+    console.log(companiesEndorsement)
   })
   axios.get(domain + "companies/count")
   .then(function ({data}) {

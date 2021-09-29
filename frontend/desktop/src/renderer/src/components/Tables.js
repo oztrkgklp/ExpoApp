@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { domain } from "../assets/domain";
 import {
@@ -40,7 +40,10 @@ import Select from "@material-ui/core/Select";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
 import { useSwitch } from "@mui/core";
+import { purchases } from "./FetchData";
+
 import useSWR from "swr";
+// import { fetchData } from "./FetchData";
 const defaultTheme = createTheme();
 const useStylesAntDesign = makeStyles(
   (theme) => ({
@@ -253,65 +256,21 @@ SettingsPanel.propTypes = {
   type: PropTypes.oneOf(["Commodity", "Employee"]).isRequired,
 };
 
-var company = [];
-var purchases = [];
-
-axios
-  .get(domain + "purchases")
-  .then(function ({ data }) {
-    // handle success
-    purchases = data.result;
-  })
-  .catch(function (error) {
-    // handle error
-  })
-  .then(function () {
-    // always executed
-  });
-
-axios
-  .get(domain + "companies")
-  .then(function ({ data }) {
-    // handle success
-    company = data.result;
-  })
-  .catch(function (error) {
-    // handle error
-  })
-  .then(function () {
-    // always executed
-  });
-var sellerNames = [];
-var purchaserNames = [];
-var getNames = (array, idType) => {
-  array = purchases.map((p) => {
-    axios
-      .get(
-        domain + "companies/id?companyID=" + idType === 0
-          ? p.sellerID
-          : p.purchaserID
-      )
-      .then(function ({ data }) {
-        // handle success
-        return data;
-      })
-      .catch(function (error) {
-        // handle error
-      })
-      .then(function () {
-        // always executed
-      });
-  });
-};
-getNames(sellerNames, 0);
-getNames(purchaserNames, 1);
-
 export const PageVisitsTable = () => {
   const classes = useStyles();
   const antDesignClasses = useStylesAntDesign();
   const [isAntDesign, setIsAntDesign] = React.useState(false);
   const [type, setType] = React.useState("Commodity");
   const [size, setSize] = React.useState(100);
+  const [countryWeather, setWeather] = React.useState([]);
+  React.useEffect(() => {
+    const weather = async () => {
+      const weathers =  await purchases();
+      setWeather(weathers.result);
+    };
+
+    weather();
+  },[]);
 
   const columns = [
     {
@@ -346,91 +305,76 @@ export const PageVisitsTable = () => {
       sortable: true,
     },
   ];
-  var result = [];
-  var promise = axios
-    .get(domain + "purchases/with-name")
-    .then(function ({ data }) {
-      // handle success
-      result = data.result.map((r) => {
-        return r;
-      });
-    })
-    .catch(function (error) {
-      // handle error
-    })
-    .then(function () {
-      // always executed
-    });
-  const mock = [
-    {
-      purchaseID: "1",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
-    {
-      purchaseID: "2",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
-    {
-      purchaseID: "3",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
-    {
-      purchaseID: "4",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
-    {
-      purchaseID: "5",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
 
-    {
-      purchaseID: "6",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
+  // const mock = [
+  //   {
+  //     purchaseID: "1",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
+  //   {
+  //     purchaseID: "2",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
+  //   {
+  //     purchaseID: "3",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
+  //   {
+  //     purchaseID: "4",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
+  //   {
+  //     purchaseID: "5",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
 
-    {
-      purchaseID: "7",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
+  //   {
+  //     purchaseID: "6",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
 
-    {
-      purchaseID: "8",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
-    {
-      purchaseID: "9",
-      sellerName: "Snow",
-      purchaserName: "+905417479982",
-      purchaseDate: "2021-09-23T00:27:43",
-      amount: 100,
-    },
-  ];
+  //   {
+  //     purchaseID: "7",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
 
-  var rows = mock.map((p) => {
+  //   {
+  //     purchaseID: "8",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
+  //   {
+  //     purchaseID: "9",
+  //     sellerName: "Snow",
+  //     purchaserName: "+905417479982",
+  //     purchaseDate: "2021-09-23T00:27:43",
+  //     amount: 100,
+  //   },
+  // ];
+  var rows = countryWeather.map((p) => {
     const { purchaseID, sellerName, purchaserName, purchaseDate, amount } = p;
     return {
       id: purchaseID,

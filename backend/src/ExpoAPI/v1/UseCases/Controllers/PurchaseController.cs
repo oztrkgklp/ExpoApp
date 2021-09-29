@@ -190,7 +190,7 @@ namespace ExpoAPI.Controllers
                                                                                     {
                                                                                         SellerID = contract.SellerID,
                                                                                         PurchaserID = contract.PurchaserID,
-                                                                                        PurchaseDate = DateTime.Now,
+                                                                                        PurchaseDate = DateTime.UtcNow.AddHours(3.0),
                                                                                         Amount = contract.Amount
                                                                                     }), cancellationToken);
             if (!createPurchase.Success)
