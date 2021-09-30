@@ -52,7 +52,8 @@ import {
   getCompanyById,
   getCompanyIdByName,
   deletePurchase,
-  createPurchases
+  createPurchases,
+  getGuests,
 } from "./FetchData";
 
 const defaultTheme = createTheme();
@@ -283,38 +284,38 @@ export const PageVisitsTable = () => {
   const [purchaserId, setpurchaserId] = React.useState();
   const [deletedPurchaseId, setDeletedPurchaseId] = React.useState();
   const [isSubmit, setSubmit] = React.useState(false);
-
+  const [product, setProduct] = React.useState([]);
 
   React.useEffect(() => {
-
     const createPrc = async () => {
-        const purchase = await createPurchases({
-          sellerId,
-          purchaserId,
-          amount
-        });
-        console.log(purchase.result);
+      const purchase = await createPurchases({
+        sellerId,
+        purchaserId,
+        amount,
+        product,
+      });
+      console.log(purchase.result);
     };
 
     createPrc();
   }, [isSubmit]);
 
   React.useEffect(() => {
-      const getSellerId = async () => {
-        const seller = await getCompanyIdByName(sellerName)
-        console.log("SellerID: "+ seller.result)
-        setsellerId(seller.result)
-      }
-      getSellerId()
-    }, [sellerName]);
-    React.useEffect(() => {
-      const getPurchaserId = async () => {
-        const purchaser = await getCompanyIdByName(purchaserName)
-        console.log("PurchaseID: "+ purchaser.result)
-        setpurchaserId(purchaser.result)
-      }
-      getPurchaserId()
-    }, [purchaserName]);
+    const getSellerId = async () => {
+      const seller = await getCompanyIdByName(sellerName);
+      console.log("SellerID: " + seller.result);
+      setsellerId(seller.result);
+    };
+    getSellerId();
+  }, [sellerName]);
+  React.useEffect(() => {
+    const getPurchaserId = async () => {
+      const purchaser = await getCompanyIdByName(purchaserName);
+      console.log("PurchaseID: " + purchaser.result);
+      setpurchaserId(purchaser.result);
+    };
+    getPurchaserId();
+  }, [purchaserName]);
   React.useEffect(() => {
     const deleteCmp = async () => {
       const company = await deletePurchase(deletedPurchaseId);
@@ -339,13 +340,13 @@ export const PageVisitsTable = () => {
 
     purchasesData();
   }, []);
-   const handleClickOpen = () => {
+  const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setSubmit(true)
+    setSubmit(true);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -355,6 +356,7 @@ export const PageVisitsTable = () => {
       sellerName: sellerName,
       purchaserName: purchaserName,
       amount: amount,
+      product: product,
     };
     setPurchase([...purchase, newCustomer]);
     console.log(`user data is ${newCustomer}`);
@@ -393,6 +395,12 @@ export const PageVisitsTable = () => {
       sortable: true,
     },
     {
+      field: "product",
+      headerName: "Ürün",
+      width: 150,
+      sortable: true,
+    },
+    {
       field: "delete",
       headerName: "Silme",
       width: 150,
@@ -417,13 +425,21 @@ export const PageVisitsTable = () => {
   ];
 
   var rows = purchase.map((p) => {
-    const { purchaseID, sellerName, purchaserName, purchaseDate, amount } = p;
+    const {
+      purchaseID,
+      sellerName,
+      purchaserName,
+      purchaseDate,
+      amount,
+      product,
+    } = p;
     return {
       id: purchaseID,
       sellerName: sellerName,
       purchaserName: purchaserName,
       purchaseDate: purchaseDate,
       amount: amount,
+      product: product,
     };
   });
   const [pagination, setPagination] = React.useState({
@@ -436,7 +452,6 @@ export const PageVisitsTable = () => {
     return isAntDesign ? "ant" : "default";
   };
 
- 
   const handleApplyClick = (settings) => {
     if (size !== settings.size) {
       setSize(settings.size);
@@ -476,7 +491,7 @@ export const PageVisitsTable = () => {
   };
   const handleDelete = (clickedUser) => {
     console.log(clickedUser.id);
-    setDeletedPurchaseId(clickedUser.id)
+    setDeletedPurchaseId(clickedUser.id);
     setPurchase(purchase.filter((user) => user.purchaseID !== clickedUser.id));
   };
   return (
@@ -490,9 +505,7 @@ export const PageVisitsTable = () => {
           alignItems: "center",
         }}
       >
-        <Button style={{ backgroundColor: "#7389F7" }}>
-          SATIŞ LİSTESİ
-        </Button>
+        <Button style={{ backgroundColor: "#7389F7" }}>SATIŞ LİSTESİ</Button>
         <Button
           className={classes.btn}
           onClick={handleClickOpen}
@@ -914,20 +927,21 @@ export const CompanyTable = () => {
   const [eMail, seteMail] = React.useState("");
   const [endorsement, setendorsement] = React.useState("");
   const [isEntered, setisEntered] = React.useState(0);
+  const [isGuest, setIsGuest] = React.useState(0);
   const [deletedCompanyId, setDeletedCompanyId] = React.useState("");
   const [isSubmit, setSubmit] = React.useState(false);
-  const [isUpdateButtonClicked,setisUpdateButtonClicked] = React.useState(false);
+  const [isUpdateButtonClicked, setisUpdateButtonClicked] =React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleUpdateOpen = () => {
-    setUpdateOpen(true)
+    setUpdateOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
   const handleUpdateClose = () => {
-    setUpdateOpen(false)
+    setUpdateOpen(false);
   };
   const handleUpdateSubmit = (e) => {
     e.preventDefault();
@@ -940,9 +954,9 @@ export const CompanyTable = () => {
       isEntered: isEntered,
     };
     setSubmit(true);
-    var newCompany = company
-    var i =Array.indexOf(newCompany.filter(c=> c.companyID === companyID))
-    newCompany[i] = newCustomer
+    var newCompany = company;
+    var i = Array.indexOf(newCompany.filter((c) => c.companyID === companyID));
+    newCompany[i] = newCustomer;
     setCompany(newCompany);
     console.log(`user data is ${newCustomer}`);
     console.log(company);
@@ -965,95 +979,104 @@ export const CompanyTable = () => {
   const handleDelete = (clickedUser) => {
     setDeletedCompanyId(clickedUser.id);
     setCompany(company.filter((user) => user.companyID !== clickedUser.id));
-    console.log(clickedUser)
+    console.log(clickedUser);
   };
-  
-  const handleUpdate = (clickedUser) => {
-    
-   return (
-    <Dialog
-          disableBackdropClick
-          open={updateOpen}
-          onClose={handleUpdateClose}
-          aria-labelledby="form-dialog-title"
-        >
-          <DialogTitle id="form-dialog-title">Yeni Misafir Ekle</DialogTitle>
-          <form noValidate onSubmit={handleUpdateSubmit}>
-            <DialogContent>
-              <TextField
-                value={clickedUser.companyName}
-                onChange={(event) => setcompanyName(event.target.value)}
-                autoFocus
-                margin="dense"
-                id="companyName"
-                label="Firma Adı"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                value={clickedUser.phone}
-                onChange={(event) => setphone(event.target.value)}
-                margin="dense"
-                id="phone"
-                label="Telefon"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                value={clickedUser.eMail}
-                onChange={(event) => seteMail(event.target.value)}
-                margin="dense"
-                id="eMail"
-                label="E-Mail"
-                type="eMail"
-                fullWidth
-              />
-              <TextField
-                value={clickedUser.endorsement}
-                onChange={(event) => setendorsement(event.target.value)}
-                margin="dense"
-                id="endorsement"
-                label="Ciro"
-                type="text"
-                fullWidth
-              />
 
-              <InputLabel style={{marginTop:"20px"}} id="demo-simple-select-label">Katıldı mı?</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={isEntered}
-                label="Age"
-                onChange={(e)=>setisEntered(e.target.value)}
-              >
-                <MenuItem value={1}>Evet</MenuItem>
-                <MenuItem value={0}>Hayır</MenuItem>
-              </Select>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose} color="primary">
-                Vazgeç
-              </Button>
-              <Button onClick={handleClose} color="primary" type="submit">
-                Ekle
-              </Button>
-            </DialogActions>
-          </form>
-        </Dialog>
-    )
-    
-  }
+  const handleUpdate = (clickedUser) => {
+    return (
+      <Dialog
+        disableBackdropClick
+        open={updateOpen}
+        onClose={handleUpdateClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Yeni Misafir Ekle</DialogTitle>
+        <form noValidate onSubmit={handleUpdateSubmit}>
+          <DialogContent>
+            <TextField
+              value={clickedUser.companyName}
+              onChange={(event) => setcompanyName(event.target.value)}
+              autoFocus
+              margin="dense"
+              id="companyName"
+              label="Firma Adı"
+              type="text"
+              fullWidth
+            />
+            <TextField
+              value={clickedUser.phone}
+              onChange={(event) => setphone(event.target.value)}
+              margin="dense"
+              id="phone"
+              label="Telefon"
+              type="text"
+              fullWidth
+            />
+            <TextField
+              value={clickedUser.eMail}
+              onChange={(event) => seteMail(event.target.value)}
+              margin="dense"
+              id="eMail"
+              label="E-Mail"
+              type="eMail"
+              fullWidth
+            />
+            <TextField
+              value={clickedUser.endorsement}
+              onChange={(event) => setendorsement(event.target.value)}
+              margin="dense"
+              id="endorsement"
+              label="Ciro"
+              type="text"
+              fullWidth
+            />
+
+            <InputLabel
+              style={{ marginTop: "20px" }}
+              id="demo-simple-select-label"
+            >
+              Katıldı mı?
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={isEntered}
+              label="Age"
+              onChange={(e) => setisEntered(e.target.value)}
+            >
+              <MenuItem value={1}>Evet</MenuItem>
+              <MenuItem value={0}>Hayır</MenuItem>
+            </Select>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Vazgeç
+            </Button>
+            <Button onClick={handleClose} color="primary" type="submit">
+              Ekle
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
+    );
+  };
 
   React.useEffect(() => {
     const updateCompany = async () => {
-      const company = await updateCompany({companyID,companyName,phone,eMail,endorsement,isEntered});
-      console.log(company)
+      const company = await updateCompany({
+        companyID,
+        companyName,
+        phone,
+        eMail,
+        endorsement,
+        isEntered,
+      });
+      console.log(company);
     };
 
     updateCompany();
   }, [companyID]);
 
-  
   React.useEffect(() => {
     const createCmp = async () => {
       const company = await createCompany({
@@ -1062,6 +1085,7 @@ export const CompanyTable = () => {
         eMail,
         endorsement,
         isEntered,
+        isGuest,
       });
       console.log(company.result);
     };
@@ -1087,8 +1111,8 @@ export const CompanyTable = () => {
   const columns = [
     {
       field: "id",
-      headerName: "ID",
-      width: 100,
+      headerName: " ",
+      width: 90,
       editable: false,
     },
 
@@ -1100,8 +1124,8 @@ export const CompanyTable = () => {
     },
     {
       field: "phone",
-      headerName: "Telefon Numarası",
-      width: 200,
+      headerName: "Tel No",
+      width: 140,
       editable: false,
     },
     {
@@ -1109,7 +1133,7 @@ export const CompanyTable = () => {
       headerName: "E-Mail",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 130,
+      width: 180,
       editable: false,
     },
     {
@@ -1125,9 +1149,15 @@ export const CompanyTable = () => {
       editable: false,
     },
     {
+      field: "isGuest",
+      headerName: "Katılımcı Türü",
+      width: 166,
+      editable: false,
+    },
+    {
       field: "event",
-      headerName: "SİL",
-      width: 180,
+      headerName: " ",
+      width: 90,
       sortable: false,
       renderCell: (id) => (
         <>
@@ -1156,15 +1186,23 @@ export const CompanyTable = () => {
           >
             Düzenle
           </Button> */}
-          
         </>
       ),
     },
   ];
 
   const rows = company.map((c) => {
-    const { companyID, companyName, phone, eMail, endorsement, isEntered } = c;
-    return { id: companyID, companyName, phone, eMail, endorsement, isEntered: isEntered === true? "Katıldı": "Katılmadı" }});
+    const { companyID, companyName, phone, eMail, endorsement, isEntered,isGuest } = c;
+    return {
+      id: companyID,
+      companyName,
+      phone,
+      eMail,
+      endorsement,
+      isEntered: isEntered === true ? "Katıldı" : "Katılmadı",
+      isGuest: isGuest === true ? "Misafir": "Firma"
+    };
+  });
   const [pagination, setPagination] = React.useState({
     pagination: false,
     autoPageSize: false,
@@ -1224,7 +1262,7 @@ export const CompanyTable = () => {
           alignItems: "center",
         }}
       >
-        <Button style={{ backgroundColor: "#7389F7" }}>TÜM MİSAFİRLER</Button>
+        <Button style={{ backgroundColor: "#7389F7" }}>TÜM KATILIMCILAR</Button>
         <Button
           className={classes.btn}
           onClick={handleClickOpen}
@@ -1232,7 +1270,7 @@ export const CompanyTable = () => {
           color="primary"
           type="submit"
         >
-          Yeni Kayıt Ekle
+          Yeni Katılımcı Ekle
         </Button>
         <Dialog
           disableBackdropClick
@@ -1240,7 +1278,7 @@ export const CompanyTable = () => {
           onClose={handleClose}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Yeni Misafir Ekle</DialogTitle>
+          <DialogTitle id="form-dialog-title">Yeni Katılımcı Ekle</DialogTitle>
           <form noValidate onSubmit={handleSubmit}>
             <DialogContent>
               <TextField
@@ -1280,14 +1318,35 @@ export const CompanyTable = () => {
                 type="text"
                 fullWidth
               />
-
-              <InputLabel style={{marginTop:"20px"}} id="demo-simple-select-label">Katıldı mı?</InputLabel>
+              <InputLabel
+                style={{ marginTop: "20px" }}
+                id="demo-simple-select-label"
+              >
+                Misafir mi?
+              </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={isEntered}
                 label="Age"
-                onChange={(e)=>setisEntered(e.target.value)}
+                onChange={(e) => setIsGuest(e.target.value)}
+              >
+                <MenuItem value={1}>Evet</MenuItem>
+                <MenuItem value={0}>Hayır</MenuItem>
+              </Select>
+
+              <InputLabel
+                style={{ marginTop: "20px" }}
+                id="demo-simple-select-label"
+              >
+                Katıldı mı?
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={isEntered}
+                label="Age"
+                onChange={(e) => setisEntered(e.target.value)}
               >
                 <MenuItem value={1}>Evet</MenuItem>
                 <MenuItem value={0}>Hayır</MenuItem>
@@ -1382,12 +1441,18 @@ export const AttendTable = () => {
       width: 130,
       editable: false,
     },
-    
   ];
 
   const rows = company.map((c) => {
     const { companyID, companyName, phone, eMail, endorsement, isEntered } = c;
-    return { id: companyID, companyName, phone, eMail, endorsement, isEntered };
+    return {
+      id: companyID,
+      companyName,
+      phone,
+      eMail,
+      endorsement,
+      isEntered: isEntered === true ? "Katıldı" : "Katılmadı",
+    };
   });
   const [pagination, setPagination] = React.useState({
     pagination: false,
@@ -1518,12 +1583,6 @@ export const NoPurchaseCompany = () => {
       editable: false,
     },
     {
-      field: "endorsement",
-      headerName: "Ciro",
-      width: 110,
-      sortable: true,
-    },
-    {
       field: "isEntered",
       headerName: "Katılım",
       width: 130,
@@ -1532,8 +1591,14 @@ export const NoPurchaseCompany = () => {
   ];
 
   const rows = company.map((c) => {
-    const { companyID, companyName, phone, eMail, endorsement, isEntered } = c;
-    return { id: companyID, companyName, phone, eMail, endorsement, isEntered };
+    const { companyID, companyName, phone, eMail, isEntered } = c;
+    return {
+      id: companyID,
+      companyName,
+      phone,
+      eMail,
+      isEntered: isEntered === true ? "Katıldı" : "Katılmadı",
+    };
   });
   const [pagination, setPagination] = React.useState({
     pagination: false,
@@ -1849,6 +1914,343 @@ export const NotAttendTable = () => {
         theme={getActiveTheme()}
       />
 
+      <DataGrid
+        className={isAntDesign ? antDesignClasses.root : undefined}
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        checkboxSelection
+        disableSelectionOnClick
+        {...pagination}
+        rows={rows}
+        columns={columns}
+        rowLength={10}
+        localeText={trTR.props.MuiDataGrid.localeText}
+      />
+    </div>
+  );
+};
+
+export const GuestsTable = () => {
+  const classes = useStyles();
+  const antDesignClasses = useStylesAntDesign();
+  const [isAntDesign, setIsAntDesign] = React.useState(false);
+  const [type, setType] = React.useState("Commodity");
+  const [size, setSize] = React.useState(100);
+  const [company, setCompany] = React.useState([]);
+  const [guests, setGuests] = React.useState([]);
+
+  const [open, setOpen] = React.useState(false);
+  const [updateOpen, setUpdateOpen] = React.useState(false);
+
+  const [companyID, setCompanyID] = React.useState("");
+  const [companyName, setcompanyName] = React.useState("");
+  const [phone, setphone] = React.useState("");
+  const [eMail, seteMail] = React.useState("");
+  const [endorsement, setendorsement] = React.useState("");
+  const [isEntered, setisEntered] = React.useState(0);
+
+  const [deletedCompanyId, setDeletedCompanyId] = React.useState("");
+  const [isSubmit, setSubmit] = React.useState(false);
+  const [isUpdateButtonClicked, setisUpdateButtonClicked] =
+    React.useState(false);
+  const [isGuest, setIsGuest] = React.useState(0);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleUpdateOpen = () => {
+    setUpdateOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleUpdateClose = () => {
+    setUpdateOpen(false);
+  };
+  const handleUpdateSubmit = (e) => {
+    e.preventDefault();
+    const newCustomer = {
+      companyID: companyID,
+      companyName: companyName,
+      phone: phone,
+      eMail: eMail,
+      endorsement: endorsement,
+      isEntered: isEntered,
+    };
+    setSubmit(true);
+    var newCompany = company;
+    var i = Array.indexOf(newCompany.filter((c) => c.companyID === companyID));
+    newCompany[i] = newCustomer;
+    setCompany(newCompany);
+    console.log(`user data is ${newCustomer}`);
+    console.log(company);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newCustomer = {
+      companyID: company[company.length - 1].companyID + 1,
+      companyName: companyName,
+      phone: phone,
+      eMail: eMail,
+      endorsement: endorsement,
+      isEntered: isEntered,
+    };
+    setSubmit(true);
+    setCompany([...company, newCustomer]);
+    console.log(`user data is ${newCustomer}`);
+    console.log(company);
+  };
+  const handleDelete = (clickedUser) => {
+    setDeletedCompanyId(clickedUser.id);
+    setCompany(company.filter((user) => user.companyID !== clickedUser.id));
+    console.log(clickedUser);
+  };
+
+  const handleUpdate = (clickedUser) => {
+    return (
+      <Dialog
+        disableBackdropClick
+        open={updateOpen}
+        onClose={handleUpdateClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Yeni Misafir Ekle</DialogTitle>
+        <form noValidate onSubmit={handleUpdateSubmit}>
+          <DialogContent>
+            <TextField
+              value={clickedUser.companyName}
+              onChange={(event) => setcompanyName(event.target.value)}
+              autoFocus
+              margin="dense"
+              id="companyName"
+              label="Firma Adı"
+              type="text"
+              fullWidth
+            />
+            <TextField
+              value={clickedUser.phone}
+              onChange={(event) => setphone(event.target.value)}
+              margin="dense"
+              id="phone"
+              label="Telefon"
+              type="text"
+              fullWidth
+            />
+            <TextField
+              value={clickedUser.eMail}
+              onChange={(event) => seteMail(event.target.value)}
+              margin="dense"
+              id="eMail"
+              label="E-Mail"
+              type="eMail"
+              fullWidth
+            />
+            <TextField
+              value={clickedUser.endorsement}
+              onChange={(event) => setendorsement(event.target.value)}
+              margin="dense"
+              id="endorsement"
+              label="Ciro"
+              type="text"
+              fullWidth
+            />
+
+            <InputLabel
+              style={{ marginTop: "20px" }}
+              id="demo-simple-select-label"
+            >
+              Katıldı mı?
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={isEntered}
+              label="Age"
+              onChange={(e) => setisEntered(e.target.value)}
+            >
+              <MenuItem value={1}>Evet</MenuItem>
+              <MenuItem value={0}>Hayır</MenuItem>
+            </Select>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Vazgeç
+            </Button>
+            <Button onClick={handleClose} color="primary" type="submit">
+              Ekle
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
+    );
+  };
+
+  React.useEffect(() => {
+    const updateCompany = async () => {
+      const company = await updateCompany({
+        companyID,
+        companyName,
+        phone,
+        eMail,
+        endorsement,
+        isEntered,
+      });
+      console.log(company);
+    };
+
+    updateCompany();
+  }, [companyID]);
+
+  React.useEffect(() => {
+    const createCmp = async () => {
+      const company = await createCompany({
+        companyName,
+        phone,
+        eMail,
+        endorsement,
+        isEntered,
+        isGuest,
+      });
+      console.log(company.result);
+    };
+
+    createCmp();
+  }, [isSubmit]);
+  React.useEffect(() => {
+    const deleteCmp = async () => {
+      const company = await deleteCompany(deletedCompanyId);
+      console.log(company.result);
+    };
+
+    deleteCmp();
+  }, [deletedCompanyId]);
+  
+  React.useEffect(() => {
+    const guests = async () => {
+      const guest = await getGuests();
+      console.log(guest.result)
+      setGuests(guest.result);
+    };
+
+    guests();
+  }, []);
+  const columns = [
+    {
+      field: "id",
+      headerName: "ID",
+      width: 100,
+      editable: false,
+    },
+
+    {
+      field: "companyName",
+      headerName: "Firma Adı",
+      width: 150,
+      editable: false,
+    },
+    {
+      field: "phone",
+      headerName: "Telefon Numarası",
+      width: 200,
+      editable: false,
+    },
+    {
+      field: "eMail",
+      headerName: "E-Mail",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      width: 130,
+      editable: false,
+    },
+    
+    {
+      field: "isEntered",
+      headerName: "Katılım",
+      width: 130,
+      editable: false,
+    },
+    
+    
+  ];
+
+  const rows = guests.map((c) => {
+    const { companyID, companyName, phone, eMail, isEntered } = c;
+    return {
+      id: companyID,
+      companyName: companyName,
+      phone: phone,
+      eMail: eMail,
+      isEntered: isEntered === true ? "Katıldı" : "Katılmadı",
+      
+    };
+  });
+  const [pagination, setPagination] = React.useState({
+    pagination: false,
+    autoPageSize: false,
+    pageSize: undefined,
+  });
+
+  const getActiveTheme = () => {
+    return isAntDesign ? "ant" : "default";
+  };
+
+  const handleApplyClick = (settings) => {
+    if (size !== settings.size) {
+      setSize(settings.size);
+    }
+
+    if (type !== settings.type) {
+      setType(settings.type);
+    }
+
+    if (getActiveTheme() !== settings.theme) {
+      setIsAntDesign(!isAntDesign);
+    }
+
+    if (size !== settings.size || type !== settings.type) {
+      setRowLength(settings.size);
+      loadNewData();
+    }
+
+    const newPaginationSettings = {
+      pagination: settings.pagesize !== -1,
+      autoPageSize: settings.pagesize === 0,
+      pageSize: settings.pagesize > 0 ? settings.pagesize : undefined,
+    };
+
+    setPagination((currentPaginationSettings) => {
+      if (
+        currentPaginationSettings.pagination ===
+          newPaginationSettings.pagination &&
+        currentPaginationSettings.autoPageSize ===
+          newPaginationSettings.autoPageSize &&
+        currentPaginationSettings.pageSize === newPaginationSettings.pageSize
+      ) {
+        return currentPaginationSettings;
+      }
+      return newPaginationSettings;
+    });
+  };
+
+  return (
+    <div className={classes.root}>
+      <Stack
+        direction="row"
+        spacing={2}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Button style={{ backgroundColor: "#7389F7" }}>TÜM MİSAFİRLER</Button>
+      </Stack>
+      <SettingsPanel
+        onApply={handleApplyClick}
+        size={size}
+        type={type}
+        theme={getActiveTheme()}
+      />
       <DataGrid
         className={isAntDesign ? antDesignClasses.root : undefined}
         components={{

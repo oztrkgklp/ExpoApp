@@ -12,6 +12,11 @@ export const purchases = async () => {
   return data;
 };
 
+export const getGuests = async () => {
+  const { data } = await axios.get(domain + "guests");
+  return data;
+};
+
 export const accommodations = async () => {
   const { data } = await axios.get(domain + "accommodations");
   return data;
@@ -56,7 +61,9 @@ export const createCompany = async (params) => {
     "'&IsEntered='" +
     params.isEntered +
     "'&Endorsement=" +
-    params.endorsement;
+    params.endorsement +
+    "'&IsGuest='"+
+    params.isGuest;
   console.log(url);
   const { data } = await axios.post(url);
   return data;
@@ -69,7 +76,121 @@ export const createPurchases = async (params) => {
       "&PurchaserId=" +
       params.purchaserId +
       "&Amount=" +
-      params.amount
+      params.amount+
+      "&Product='"+
+      params.product+
+      "'"
+  );
+  return data;
+};
+
+export const createAccommodation = async (params) => {
+  
+  console.log(domain +
+    "accommodations?CompanyName='" +
+    params.companyName + "'"+
+    "&Hotel='" +
+    params.hotel + "'" +
+    "&CheckIn=" +
+    params.checkInDate+ " "+ params.checkInTime +
+    "&FirstGuest='"+
+    params.firstGuest+ "'"+
+    "&SecondGuest='"+
+    params.secondGuest+ "'"+
+    "&ThirdGuest='"+
+    params.thirdGuest+ "'"+
+    "&NumberOfGuests="+
+    params.numberOfGuests+
+    "&GuestCompanyName='"+
+    params.guestCompanyName+ "'"+
+    "&Phone='"+
+    params.phone+ "'"+
+    "&SNG='"+
+    params.SNG+ "'"+
+    "&DBL='"+
+    params.DBL+ "'"+
+    "&TRPL='"+
+    params.TRPL+ "'"+
+    "&QUAT='"+
+    params.QUAT+ "'"+
+    "&_SNGCHD='"+
+    params.SNGCHD+ "'"+
+    "&_DBLCHD='"+
+    params.DBLCHD+ "'"+
+    "&_TRPLCHD='"+
+    params.TRPLCHD+ "'"+
+    "&CheckOut=" +
+    params.checkOutDate+ " "+ params.checkOutTime +
+    "&_SNG='"+
+    params._SNG+ "'"+
+    "&_DBL='"+
+    params._DBL+ "'"+
+    "&_TRPL='"+
+    params._TRPL+ "'"+
+    "&_QUAT='"+
+    params._QUAT+ "'"+
+    "&_SNGCHD='"+
+    params._SNGCHD+ "'"+
+    "&_DBLCHD='"+
+    params._DBLCHD+ "'"+
+    "&_TRPLCHD='"+
+    params._TRPLCHD+ "'"+
+    "&Description='" +
+    params.description+"'")
+  const { data } = await axios.post(
+    domain +
+      "accommodations?CompanyName='" +
+      params.companyName + "'"+
+      "&Hotel='" +
+      params.hotel + "'" +
+      "&CheckIn=" +
+      params.checkInDate+ " "+ params.checkInTime + 
+      "&FirstGuest='"+
+      params.firstGuest+ "'"+
+      "&SecondGuest='"+
+      params.secondGuest+ "'"+
+      "&ThirdGuest='"+
+      params.thirdGuest+ "'"+
+      "&NumberOfGuests="+
+      params.numberOfGuests+
+      "&GuestCompanyName='"+
+      params.guestCompanyName+ "'"+
+      "&Phone='"+
+      params.phone+ "'"+
+      "&SNG='"+
+      params.SNG+ "'"+
+      "&DBL='"+
+      params.DBL+ "'"+
+      "&TRPL='"+
+      params.TRPL+ "'"+
+      "&QUAT='"+
+      params.QUAT+ "'"+
+      "&_SNGCHD='"+
+      params.SNGCHD+ "'"+
+      "&_DBLCHD='"+
+      params.DBLCHD+ "'"+
+      "&_TRPLCHD='"+
+      params.TRPLCHD+ "'"+
+      "&CheckOut=" +
+      params.checkOutDate+ " "+ params.checkOutTime +
+      "&_SNG='"+
+      params._SNG+ "'"+
+      "&_DBL='"+
+      params._DBL+ "'"+
+      "&_TRPL='"+
+      params._TRPL+ "'"+
+      "&_QUAT='"+
+      params._QUAT+ "'"+
+      "&_SNGCHD='"+
+      params._SNGCHD+ "'"+
+      "&_DBLCHD='"+
+      params._DBLCHD+ "'"+
+      "&_TRPLCHD='"+
+      params._TRPLCHD+ "'"+
+      "&Description='" +
+      params.description+"'"
+
+      
   );
   return data;
 };

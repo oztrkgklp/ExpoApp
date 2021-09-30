@@ -39,8 +39,15 @@ import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import { accommodations,deleteAccommodations } from "./FetchData";
+import { accommodations, createAccommodation, deleteAccommodations } from "./FetchData";
 import Stack from "@mui/material/Stack";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import TextField from "@material-ui/core/TextField";
+
 const defaultTheme = createTheme();
 const useStylesAntDesign = makeStyles(
   (theme) => ({
@@ -261,10 +268,14 @@ export default () => {
   const [size, setSize] = React.useState(100);
   const [accommodation, setaccommodation] = React.useState([]);
   const [deletedAccommodation, setDeletedAccommodation] = React.useState();
+  const [open,setOpen]=React.useState(false)
+  const [isSubmit,setSubmit]=React.useState(false)
   const handleDelete = (clickedUser) => {
     setDeletedAccommodation(clickedUser.id);
-    setaccommodation(accommodation.filter((user) => user.accommodationID !== clickedUser.id));
-    console.log(clickedUser)
+    setaccommodation(
+      accommodation.filter((user) => user.accommodationID !== clickedUser.id)
+    );
+    console.log(clickedUser);
   };
   React.useEffect(() => {
     const accommodation = async () => {
@@ -283,6 +294,83 @@ export default () => {
 
     deleteAcc();
   }, [deletedAccommodation]);
+  React.useEffect(() => {
+    const createAcc = async () => {
+      const company = await createAccommodation({
+        companyName: accommodationInfo[0],
+        hotel: accommodationInfo[1],
+        checkInDate: accommodationInfo[2],
+        checkInTime: accommodationInfo[3],
+        firstGuest: accommodationInfo[4],
+        secondGuest: accommodationInfo[5],
+        thirdGuest: accommodationInfo[6],
+        numberOfGuests: accommodationInfo[26],
+        guestCompanyName: accommodationInfo[7],
+        phone: accommodationInfo[8],
+        SNG: accommodationInfo[9],
+        DBL: accommodationInfo[10],
+        TRPL: accommodationInfo[11],
+        QUAT: accommodationInfo[12],
+        SNGCHD: accommodationInfo[13],
+        DBLCHD: accommodationInfo[14],
+        TRPLCHD: accommodationInfo[15],
+        checkOutDate: accommodationInfo[16],
+        checkOutTime: accommodationInfo[17],
+        _SNG: accommodationInfo[18],
+        _DBL: accommodationInfo[19],
+        _TRPL: accommodationInfo[20],
+        _QUAT: accommodationInfo[21],
+        _SNGCHD: accommodationInfo[22],
+        _DBLCHD: accommodationInfo[23],
+        _TRPLCHD: accommodationInfo[24],
+        description: accommodationInfo[25],
+      });
+      
+    };
+
+    createAcc();
+  }, [isSubmit]);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleSubmit = (e) => {
+    console.log(accommodationInfo);
+    e.preventDefault();
+    const newCustomer = {
+      companyName : accommodationInfo[0],
+      hotel : accommodationInfo[1],
+      checkInDate : accommodationInfo[2],
+      checkInTime : accommodationInfo[3],
+      firstGuest : accommodationInfo[4],
+      secondGuest : accommodationInfo[5],
+      thirdGuest : accommodationInfo[6],
+      numberOfGuests : accommodationInfo[26],
+      guestCompanyName : accommodationInfo[7],
+      phone : accommodationInfo[8],
+      SNG : accommodationInfo[9],
+      DBL : accommodationInfo[10],
+      TRPL : accommodationInfo[11],
+      QUAT : accommodationInfo[12],
+      SNGCHD : accommodationInfo[13],
+      DBLCHD : accommodationInfo[14],
+      TRPLCHD : accommodationInfo[15],
+      checkOutDate : accommodationInfo[16],
+      checkOutTime : accommodationInfo[17],
+      SNG : accommodationInfo[18],
+      _DBL : accommodationInfo[19],
+      _TRPL : accommodationInfo[20],
+      _QUAT : accommodationInfo[21],
+      _SNGCHD : accommodationInfo[22],
+      _DBLCHD : accommodationInfo[23],
+      _TRPLCHD : accommodationInfo[24],
+      description : accommodationInfo[25],
+    };
+    setSubmit(true);
+    console.log(`user data is ${accommodationInfo}`);
+  };
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
   const columns = [
     {
       field: "event",
@@ -316,7 +404,6 @@ export default () => {
           >
             Düzenle
           </Button> */}
-          
         </>
       ),
     },
@@ -347,7 +434,7 @@ export default () => {
     },
     {
       field: "checkInTime",
-      headerName: "Check-in Tarihi",
+      headerName: "Check-in Saati",
       width: 150,
       sortable: true,
     },
@@ -489,9 +576,37 @@ export default () => {
       width: 150,
       sortable: true,
     },
-   
   ];
-
+  const [accommodationInfo, setAccommodationInfo] = React.useState([
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    1
+  ]);
+  console.log(accommodation)
   var rows = accommodation.map((p) => {
     const {
       accommodationID,
@@ -501,6 +616,7 @@ export default () => {
       firstGuest,
       secondGuest,
       thirdGuest,
+      numberOfGuests,
       guestCompanyName,
       phone,
       sng,
@@ -523,10 +639,12 @@ export default () => {
       id: accommodationID,
       companyName: companyName,
       hotel: hotel,
-      checkIn: checkIn,
+      checkInDate: checkIn.split("T")[0],
+      checkInTime: checkIn.split("T")[1],
       firstGuest: firstGuest,
       secondGuest: secondGuest,
       thirdGuest: thirdGuest,
+      numberOfGuests: numberOfGuests,
       guestCompanyName: guestCompanyName,
       phone: phone,
       sng: sng,
@@ -536,7 +654,8 @@ export default () => {
       sngchd: sngchd,
       dblchd: dblchd,
       trplchd: trplchd,
-      checkOut: checkOut,
+      checkOutDate:checkOut.split("T")[0],
+      checkOutTime:checkOut.split("T")[1], 
       _SNG: _SNG,
       _DBL: _DBL,
       _TRPL: _TRPL,
@@ -605,8 +724,304 @@ export default () => {
           alignItems: "center",
         }}
       >
-        <Button style={{ backgroundColor: "#7389F7" }}>KONAKLAYAN LİSTESİ</Button>
-        
+        <Button style={{ backgroundColor: "#7389F7" }}>
+          KONAKLAYAN LİSTESİ
+        </Button>
+        <Button
+          className={classes.btn}
+          onClick={handleClickOpen}
+          variant="contained"
+          color="primary"
+          type="submit"
+        >
+          Yeni Katılımcı Ekle
+        </Button>
+        <Dialog
+          disableBackdropClick
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">Yeni Katılımcı Ekle</DialogTitle>
+          <form noValidate onSubmit={handleSubmit}>
+            <DialogContent>
+             
+              <TextField
+
+             onChange={(event) => (accommodationInfo[0] = event.target.value)}
+                autoFocus
+                margin="dense"
+                id="companyName"
+                label="Firma Adı"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[1] = event.target.value)}
+                autoFocus
+                margin="dense"
+                id="hotel"
+                label="hotel"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[2] = event.target.value)}
+                autoFocus
+                margin="dense"
+                id="checkInDate"
+                label="Check-in Tarihi"
+                type="text"
+                fullWidth
+                placeholder="GG.AA.YYYY"
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[3] = event.target.value)}
+                autoFocus
+                margin="dense"
+                id="checkInTime"
+                label=" Check-in Saati"
+                type="text"
+                placeholder="SS:DD:ss"
+                fullWidth
+              />
+              <InputLabel
+              style={{ marginTop: "20px" }}
+              id="demo-simple-select-label"
+            >
+              Misafir Sayısı
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+             value={accommodationInfo[28]}
+              label="Misafir Sayısı"
+              onChange={(e) =>accommodationInfo[28]= e.target.value}
+            >
+              <MenuItem value={1}>1</MenuItem>
+              <MenuItem value={2}>2</MenuItem>
+              <MenuItem value={3}>3</MenuItem>
+
+            </Select>
+              <TextField
+
+             onChange={(event) => (accommodationInfo[4] = event.target.value)}
+                autoFocus
+                margin="dense"
+                id="firstGuest"
+                label="Misafir Adı"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[5] = event.target.value)}
+                autoFocus
+                margin="dense"
+                id="secondGuest"
+                label="Misafir Adı"
+                type="text"
+                fullWidth
+              />
+
+              <TextField
+
+             onChange={(event) => (accommodationInfo[6] = event.target.value)}
+                margin="dense"
+                id="thirdGuest"
+                label="Misafir Adı"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[7] = event.target.value)}
+                margin="dense"
+                id="guestCompanyName"
+                label="Firma Adı"
+                type="eMail"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[8] = event.target.value)}
+                margin="dense"
+                id="phone"
+                label="Telefon"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[9] = event.target.value)}
+                margin="dense"
+                id="SNG"
+                label="SNG"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[10] = event.target.value)}
+                margin="dense"
+                id="DBL"
+                label="DBL"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[11] = event.target.value)}
+                margin="dense"
+                id="TRPL"
+                label="TRPL"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[12] = event.target.value)}
+                margin="dense"
+                id="QUAT"
+                label="QUAT"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[13] = event.target.value)}
+                margin="dense"
+                id="SNGCHD"
+                label="SNG+CHD"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[14] = event.target.value)}
+                margin="dense"
+                id="DBLCHD"
+                label="DBL+CHD"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[15] = event.target.value)}
+                margin="dense"
+                id="TRPLCHD"
+                label="TRPL+CHD"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[16] = event.target.value)}
+                margin="dense"
+                id="checkOutDate"
+                label="Check-out Date"
+                type="text"
+                fullWidth
+                placeholder="GG.AA.YYYY"
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[17] = event.target.value)}
+                margin="dense"
+                id="checkOutTime"
+                label="Check-out Time"
+                type="text"
+                fullWidth
+                placeholder="SS:DD:ss"
+              />
+             
+              <TextField
+
+             onChange={(event) => (accommodationInfo[18] = event.target.value)}
+                margin="dense"
+                id="_SNG"
+                label="SNG"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[19] = event.target.value)}
+                margin="dense"
+                id="_DBL"
+                label="DBL"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[20] = event.target.value)}
+                margin="dense"
+                id="_TRPL"
+                label="TRPL"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[21] = event.target.value)}
+                margin="dense"
+                id="_QUAT"
+                label="QUAT"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[22] = event.target.value)}
+                margin="dense"
+                id="_SNGCHD"
+                label="SNG+CHD"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[23] = event.target.value)}
+                margin="dense"
+                id="_DBLCHD"
+                label="DBL+CHD"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[24] = event.target.value)}
+                margin="dense"
+                id="_TRPLCHD"
+                label="TRPL+CHD"
+                type="text"
+                fullWidth
+              />
+              <TextField
+
+             onChange={(event) => (accommodationInfo[25] = event.target.value)}
+                margin="dense"
+                id="description"
+                label="Açıklama"
+                type="text"
+                fullWidth
+              />
+            </DialogContent>
+
+            <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                Vazgeç
+              </Button>
+              <Button onClick={handleClose} color="primary" type="submit">
+                Ekle
+              </Button>
+            </DialogActions>
+          </form>
+        </Dialog>
       </Stack>
       <SettingsPanel
         onApply={handleApplyClick}

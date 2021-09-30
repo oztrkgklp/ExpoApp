@@ -18,7 +18,6 @@ import {
 import { PageVisitsTable } from "../../components/Tables";
 import { trafficShares } from "../../data/charts";
 import { domain } from "../../assets/domain";
-import useSWR from "swr";
 import axios from "axios";
 import {
   enteredCompany,
@@ -27,8 +26,9 @@ import {
 } from "../../components/FetchData";
 var companiesEndorsement;
 var companiesCount;
+var enteredCount;
 var accommodationsCount;
-
+var guestCount;
 axios.get(domain + "companies/endorsement").then(function ({ data }) {
   // handle success
   companiesEndorsement = data.result;
@@ -38,8 +38,16 @@ axios.get(domain + "companies/count").then(function ({ data }) {
   companiesCount = data.result;
   // handle success
 });
+axios.get(domain + "companies/entered/count").then(function ({ data }) {
+  enteredCount = data.result;
+  // handle success
+});
 axios.get(domain + "accommodations/count").then(function ({ data }) {
   accommodationsCount = data.result;
+  // handle success
+});
+axios.get(domain + "guests/count").then(function ({ data }) {
+  guestCount = data.result;
   // handle success
 });
 
@@ -74,25 +82,34 @@ export default () => {
   }, []);
   return (
     <>
-      <Row className="justify-content-md-center">
-        <Col xs={12} className="mb-4 d-none d-sm-block">
+      <Row style={{ marginTop: "50px" }} className="justify-content-md-center">
+        {/* <Col xs={12} className="mb-4 d-none d-sm-block">
           <SalesValueWidget
             title="Satışlar"
-            value="10,567"
+            value={companiesEndorsement}
             percentage={10.57}
           />
         </Col>
         <Col xs={12} className="mb-4 d-sm-none">
           <SalesValueWidgetPhone
             title="SatışLar"
-            value="10,567"
+            value={companiesEndorsement}
             percentage={10.57}
+          />
+        </Col> */}
+        <Col xs={12} sm={6} xl={4} className="mb-4">
+          <CounterWidget
+            category={"Firmalar "}
+            title={companiesCount == null ? "0" : companiesCount}
+            percentage={18.2}
+            icon={faUsers}
+            iconColor="shape-secondary"
           />
         </Col>
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
-            category={"Misafirler "}
-            title={companiesCount == null ? "0" : companiesCount}
+            category={"Misafirler"}
+            title={guestCount == null ? "0" : guestCount}
             percentage={18.2}
             icon={faUsers}
             iconColor="shape-secondary"
@@ -102,7 +119,9 @@ export default () => {
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
             category="Ciro"
-            title={companiesEndorsement == null ? "0" :companiesEndorsement + "₺"}
+            title={
+              companiesEndorsement == null ? "0" : companiesEndorsement + "₺"
+            }
             period="5 Ekim - 8 Ekim"
             percentage={28.4}
             icon={faCoins}
@@ -112,7 +131,7 @@ export default () => {
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
             category="Konaklayan Misafir"
-            title={accommodationsCount == null ? "0" :accommodationsCount}
+            title={accommodationsCount == null ? "0" : accommodationsCount}
             period="5 Ekim - 8 Ekim"
             percentage={28.4}
             icon={faBed}
@@ -121,18 +140,8 @@ export default () => {
         </Col>
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
-            category="Katılan Firmalar"
-            title={companiesCount == null ? "0" : companiesCount}
-            period="5 Ekim - 8 Ekim"
-            percentage={28.4}
-            icon={faUserCheck}
-            iconColor="shape-tertiary"
-          />
-        </Col>
-        <Col xs={12} sm={6} xl={4} className="mb-4">
-          <CounterWidget
             category="Katılmayan Firma"
-            title={notEntered === null || "" ?notEntered ===   "0" : notEntered}
+            title={notEntered === null || "" ? notEntered === "0" : notEntered}
             period="5 Ekim - 8 Ekim"
             percentage={28.4}
             icon={faUserSlash}
@@ -142,21 +151,33 @@ export default () => {
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
             category="Harcama Yapmayanlar"
-            title={noPurchaseount == null ? "0" :noPurchaseount }
+            title={noPurchaseount == null ? "0" : noPurchaseount}
             period="5 Ekim - 8 Ekim"
             percentage={28.4}
             icon={faCoins}
             iconColor="shape-tertiary"
           />
         </Col>
-
+        <Col xs={12} sm={6} xl={4} className="mb-4"></Col>
+        
         <Col xs={12} sm={6} xl={4} className="mb-4">
-          <CircleChartWidget title="Ciro Dağılımı" data={trafficShares} />
+          <CounterWidget
+            category="Katılan Firmalar"
+            title={enteredCount == null ? "0" : enteredCount}
+            period="5 Ekim - 8 Ekim"
+            percentage={28.4}
+            icon={faUserCheck}
+            iconColor="shape-tertiary"
+          />
         </Col>
+        <Col xs={12} sm={6} xl={4} className="mb-4"></Col>
+        {/* <Col xs={12} sm={6} xl={4} className="mb-4">
+          <CircleChartWidget title="Katılımcı Dağılımı" data={trafficShares} />
+        </Col> */}
       </Row>
       <Row>
         <Col xs={12} xl={12} className="mb-4">
-          <Row>
+          <Row style={{ marginTop: "70px" }}>
             <Col xs={12} xl={8} className="mb-4">
               <Row>
                 <Col xs={12} className="mb-4">
@@ -166,7 +187,7 @@ export default () => {
               </Row>
             </Col>
             <Col xs={12} xl={4}>
-              <Row>
+              <Row style={{ marginTop: "120px" }}>
                 <Col xs={12} className="mb-4">
                   <ProgressTrackWidget />
                 </Col>
