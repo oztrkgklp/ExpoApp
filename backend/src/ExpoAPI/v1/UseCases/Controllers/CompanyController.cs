@@ -423,11 +423,11 @@ namespace ExpoAPI.Controllers
         [HttpPut("companies/{companyId}")]
         [ProducesResponseType(typeof(UpdateCompanyByIdApiResponseContract), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(UpdateCompanyByIdApiResponseContract), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<UpdateCompanyByIdApiResponseContract>> UpdateCompanyById( [FromQuery] UpdateCompanyByIdApiRequestContract contract, CancellationToken cancellationToken)
+        public async Task<ActionResult<UpdateCompanyByIdApiResponseContract>> UpdateCompanyById([FromRoute]int CompanyID, [FromQuery] UpdateCompanyByIdApiRequestContract contract, CancellationToken cancellationToken)
         {
             var updateCompanyById = await _mediator.Send(new UpdateCompanyByIdCommand(new CompanyContract()
                                                                 {
-                                                                    CompanyID = contract.CompanyID,
+                                                                    CompanyID = CompanyID,
                                                                     CompanyName = contract.CompanyName,
                                                                     EMail = contract.EMail,
                                                                     Phone = contract.Phone,

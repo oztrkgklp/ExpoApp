@@ -6,8 +6,6 @@ namespace ExpoAPI.Contracts.Requests
     [ExcludeFromCodeCoverage]
     public class UpdatePurchaseByIdApiRequestContract
     {
-        public int PurchaseID { get; set; }
-
         public int SellerID { get; set; }
         public string? Product { get; set; }
 

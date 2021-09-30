@@ -146,7 +146,7 @@ namespace ExpoAPI.Infrastructure.Repositories
         public async Task<IEnumerable<PurchaseWithNamesContract?>?> GetPurchasesWithCompanyNamesAsync(CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.Append(@"SELECT PurchaseID, C2.CompanyName AS SellerName, C1.CompanyName AS PurchaserName,Amount,PurchaseDate FROM PURCHASE P
+            queryBuilder.Append(@"SELECT PurchaseID, C2.CompanyName AS SellerName, C1.CompanyName AS PurchaserName,Product,Amount,PurchaseDate FROM PURCHASE P
                                     INNER JOIN COMPANY C1 ON C1.CompanyID = P.PurchaserID
                                     INNER JOIN COMPANY C2 ON C2.CompanyID = P.SellerID");
             using(Database)
