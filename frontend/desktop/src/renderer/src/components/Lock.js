@@ -39,11 +39,8 @@ import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import { accommodations,deleteAccommodations } from "./FetchData";
 import Stack from "@mui/material/Stack";
-import axios from "axios";
-import { useSwitch } from "@mui/core";
-import useSWR from "swr";
-import { fetchWeather } from "./FetchData";
 const defaultTheme = createTheme();
 const useStylesAntDesign = makeStyles(
   (theme) => ({
@@ -256,27 +253,75 @@ SettingsPanel.propTypes = {
   type: PropTypes.oneOf(["Commodity", "Employee"]).isRequired,
 };
 
-
-   
-
 export default () => {
   const classes = useStyles();
   const antDesignClasses = useStylesAntDesign();
   const [isAntDesign, setIsAntDesign] = React.useState(false);
   const [type, setType] = React.useState("Commodity");
   const [size, setSize] = React.useState(100);
-  const [purchase, setPurchase] = React.useState([]);
+  const [accommodation, setaccommodation] = React.useState([]);
+  const [deletedAccommodation, setDeletedAccommodation] = React.useState();
+  const handleDelete = (clickedUser) => {
+    setDeletedAccommodation(clickedUser.id);
+    setaccommodation(accommodation.filter((user) => user.accommodationID !== clickedUser.id));
+    console.log(clickedUser)
+  };
   React.useEffect(() => {
-    const purchase = async () => {
-      const purchase =  await purchases();
-      setPurchase(purchase.result);
+    const accommodation = async () => {
+      const guest = await accommodations();
+      console.log(guest.result);
+      setaccommodation(guest.result);
     };
 
-    purchase();
-  },[]);
+    accommodation();
+  }, []);
+  React.useEffect(() => {
+    const deleteAcc = async () => {
+      const company = await deleteAccommodations(deletedAccommodation);
+      console.log(company.result);
+    };
+
+    deleteAcc();
+  }, [deletedAccommodation]);
   const columns = [
     {
-      field: "accommodationID",
+      field: "event",
+      headerName: "SİL",
+      width: 180,
+      sortable: false,
+      renderCell: (id) => (
+        <>
+          <Button
+            style={{
+              backgroundColor: "#e8605d",
+              padding: "3px 35px",
+            }}
+            onClick={() => handleDelete(id)}
+            variant="contained"
+            color="primary"
+            type="submit"
+          >
+            Sil
+          </Button>
+          {/* <Button
+            style={{
+              backgroundColor: "#ffcc00",
+              
+              padding: "3px 35px"
+            }}
+            variant="contained"
+            color="primary"
+            type="submit"
+            onClick={()=>handleUpdate(id)}
+          >
+            Düzenle
+          </Button> */}
+          
+        </>
+      ),
+    },
+    {
+      field: "id",
       headerName: "ID",
       width: 100,
       editable: false,
@@ -341,7 +386,8 @@ export default () => {
       headerName: "SNG",
       width: 150,
       sortable: true,
-    },{
+    },
+    {
       field: "DBL",
       headerName: "DBL",
       width: 150,
@@ -400,7 +446,8 @@ export default () => {
       headerName: "SNG",
       width: 150,
       sortable: true,
-    },{
+    },
+    {
       field: "_DBL",
       headerName: "DBL",
       width: 150,
@@ -442,18 +489,61 @@ export default () => {
       width: 150,
       sortable: true,
     },
-
-    
+   
   ];
-  
-  var rows = purchase.map((p) => {
-    const { purchaseID, sellerName, purchaserName, purchaseDate, amount } = p;
+
+  var rows = accommodation.map((p) => {
+    const {
+      accommodationID,
+      companyName,
+      hotel,
+      checkIn,
+      firstGuest,
+      secondGuest,
+      thirdGuest,
+      guestCompanyName,
+      phone,
+      sng,
+      dbl,
+      trpl,
+      quat,
+      sngchd,
+      dblchd,
+      trplchd,
+      checkOut,
+      _SNG,
+      _DBL,
+      _TRPL,
+      _QUAT,
+      _SNGCHD,
+      _DBLCHD,
+      _TRPLCHD,
+    } = p;
     return {
-      id: purchaseID,
-      sellerName: sellerName,
-      purchaserName: purchaserName,
-      purchaseDate: purchaseDate,
-      amount: amount,
+      id: accommodationID,
+      companyName: companyName,
+      hotel: hotel,
+      checkIn: checkIn,
+      firstGuest: firstGuest,
+      secondGuest: secondGuest,
+      thirdGuest: thirdGuest,
+      guestCompanyName: guestCompanyName,
+      phone: phone,
+      sng: sng,
+      dbl: dbl,
+      trpl: trpl,
+      quat: quat,
+      sngchd: sngchd,
+      dblchd: dblchd,
+      trplchd: trplchd,
+      checkOut: checkOut,
+      _SNG: _SNG,
+      _DBL: _DBL,
+      _TRPL: _TRPL,
+      _QUAT: _QUAT,
+      _SNGCHD: _SNGCHD,
+      _DBLCHD: _DBLCHD,
+      _TRPLCH: _TRPLCHD,
     };
   });
   const [pagination, setPagination] = React.useState({
@@ -506,6 +596,18 @@ export default () => {
 
   return (
     <div className={classes.root}>
+      <Stack
+        direction="row"
+        spacing={2}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Button style={{ backgroundColor: "#7389F7" }}>KONAKLAYAN LİSTESİ</Button>
+        
+      </Stack>
       <SettingsPanel
         onApply={handleApplyClick}
         size={size}

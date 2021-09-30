@@ -1,7 +1,9 @@
 import React from "react";
 import {
-  faCashRegister,
-  faChartLine,
+  faCoins,
+  faUserCheck,
+  faUserSlash,
+  faUsers,
   faBed,
 } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row } from "@themesberg/react-bootstrap";
@@ -18,48 +20,58 @@ import { trafficShares } from "../../data/charts";
 import { domain } from "../../assets/domain";
 import useSWR from "swr";
 import axios from "axios";
-import { enteredCompany,notEnteredCompany } from "../../components/FetchData";
-var companiesEndorsement 
-var companiesCount
-var accommodationsCount
+import {
+  enteredCompany,
+  notEnteredCompany,
+  noPurchaseCount,
+} from "../../components/FetchData";
+var companiesEndorsement;
+var companiesCount;
+var accommodationsCount;
 
-
-axios.get(domain + "companies/endorsement")
-  .then(function ({data}) {
-    // handle success
-    companiesEndorsement = data.result
-    console.log(companiesEndorsement)
-  })
-  axios.get(domain + "companies/count")
-  .then(function ({data}) {
-    companiesCount=data.result
-    // handle success
-  })
-  axios.get(domain + "accommodations/count")
-  .then(function ({data}) {
-    accommodationsCount=data.result
-    // handle success
-  })
+axios.get(domain + "companies/endorsement").then(function ({ data }) {
+  // handle success
+  companiesEndorsement = data.result;
+  console.log(companiesEndorsement);
+});
+axios.get(domain + "companies/count").then(function ({ data }) {
+  companiesCount = data.result;
+  // handle success
+});
+axios.get(domain + "accommodations/count").then(function ({ data }) {
+  accommodationsCount = data.result;
+  // handle success
+});
 
 export default () => {
   const [entered, setEntered] = React.useState([]);
-  const [notEntered , setNotEntered]= React.useState([])
+  const [notEntered, setNotEntered] = React.useState([]);
+  const [noPurchaseount, setNoPurchaseount] = React.useState([]);
+
   React.useEffect(() => {
     const entered = async () => {
-      const company =  await enteredCompany();
+      const company = await enteredCompany();
       setEntered(company.result.length);
     };
 
     entered();
-  },[]);
+  }, []);
   React.useEffect(() => {
     const notEntered = async () => {
-      const company =  await notEnteredCompany();
+      const company = await notEnteredCompany();
       setNotEntered(company.result.length);
     };
 
     notEntered();
-  },[]);
+  }, []);
+  React.useEffect(() => {
+    const noPurchase = async () => {
+      const company = await noPurchaseCount();
+      setNoPurchaseount(company.result);
+    };
+
+    noPurchase();
+  }, []);
   return (
     <>
       <Row className="justify-content-md-center">
@@ -80,9 +92,9 @@ export default () => {
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
             category={"Misafirler "}
-            title={companiesCount }
+            title={companiesCount == null ? "0" : companiesCount}
             percentage={18.2}
-            icon={faChartLine}
+            icon={faUsers}
             iconColor="shape-secondary"
           />
         </Col>
@@ -90,17 +102,17 @@ export default () => {
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
             category="Ciro"
-            title={companiesEndorsement + "₺"}
+            title={companiesEndorsement == null ? "0" :companiesEndorsement + "₺"}
             period="5 Ekim - 8 Ekim"
             percentage={28.4}
-            icon={faCashRegister}
+            icon={faCoins}
             iconColor="shape-tertiary"
           />
         </Col>
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
-            category="Konaklayan"
-            title={accommodationsCount}
+            category="Konaklayan Misafir"
+            title={accommodationsCount == null ? "0" :accommodationsCount}
             period="5 Ekim - 8 Ekim"
             percentage={28.4}
             icon={faBed}
@@ -109,21 +121,31 @@ export default () => {
         </Col>
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
-            category="Katılan Firma"
-            title={entered}
+            category="Katılan Firmalar"
+            title={companiesCount == null ? "0" : companiesCount}
             period="5 Ekim - 8 Ekim"
             percentage={28.4}
-            icon={faCashRegister}
+            icon={faUserCheck}
             iconColor="shape-tertiary"
           />
         </Col>
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
             category="Katılmayan Firma"
-            title={notEntered}
+            title={notEntered === null || "" ?notEntered ===   "0" : notEntered}
             period="5 Ekim - 8 Ekim"
             percentage={28.4}
-            icon={faCashRegister}
+            icon={faUserSlash}
+            iconColor="shape-tertiary"
+          />
+        </Col>
+        <Col xs={12} sm={6} xl={4} className="mb-4">
+          <CounterWidget
+            category="Harcama Yapmayanlar"
+            title={noPurchaseount == null ? "0" :noPurchaseount }
+            period="5 Ekim - 8 Ekim"
+            percentage={28.4}
+            icon={faCoins}
             iconColor="shape-tertiary"
           />
         </Col>
