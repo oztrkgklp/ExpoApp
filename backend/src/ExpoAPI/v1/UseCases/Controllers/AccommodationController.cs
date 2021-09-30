@@ -18,12 +18,9 @@ namespace ExpoAPI.Controllers
     public class AccommodationController : ControllerBase
     {
         private readonly IMediator _mediator;
-        CultureInfo culture;
-
         public AccommodationController(IMediator mediator)
         {
             _mediator = mediator;
-            culture = new CultureInfo("en-US");
         }
 
         [HttpGet("accommodations")]
@@ -138,7 +135,7 @@ namespace ExpoAPI.Controllers
                                                                 {
                                                                     CompanyName = contract.CompanyName,
                                                                     Hotel = contract.Hotel,
-                                                                    CheckIn = Convert.ToDateTime(DateTime.Parse(contract.CheckIn.ToString()).ToString(culture)),
+                                                                    CheckIn = TimeZoneInfo.ConvertTimeToUtc((DateTime)contract.CheckIn).AddHours(3.0),
                                                                     FirstGuest = contract.FirstGuest,
                                                                     SecondGuest = contract.SecondGuest,
                                                                     ThirdGuest = contract.ThirdGuest,
@@ -151,7 +148,7 @@ namespace ExpoAPI.Controllers
                                                                     SNGCHD = contract.SNGCHD,
                                                                     DBLCHD = contract.DBLCHD,
                                                                     TRPLCHD = contract.TRPLCHD,
-                                                                    CheckOut = Convert.ToDateTime(DateTime.Parse(contract.CheckOut.ToString()).ToString(culture)),
+                                                                    CheckOut = TimeZoneInfo.ConvertTimeToUtc((DateTime)contract.CheckOut).AddHours(3.0),
                                                                     _SNG = contract._SNG,
                                                                     _DBL = contract._DBL,
                                                                     _TRPL = contract._TRPL,
@@ -190,7 +187,7 @@ namespace ExpoAPI.Controllers
                                                                     AccommodationID = accommodationId,
                                                                     CompanyName = contract.CompanyName,
                                                                     Hotel = contract.Hotel,
-                                                                    CheckIn = Convert.ToDateTime(DateTime.Parse(contract.CheckIn.ToString()).ToString(culture)),
+                                                                    CheckIn = TimeZoneInfo.ConvertTimeToUtc((DateTime)contract.CheckIn).AddHours(3.0),
                                                                     FirstGuest = contract.FirstGuest,
                                                                     SecondGuest = contract.SecondGuest,
                                                                     ThirdGuest = contract.ThirdGuest,
@@ -203,7 +200,7 @@ namespace ExpoAPI.Controllers
                                                                     SNGCHD = contract.SNGCHD,
                                                                     DBLCHD = contract.DBLCHD,
                                                                     TRPLCHD = contract.TRPLCHD,
-                                                                    CheckOut = Convert.ToDateTime(DateTime.Parse(contract.CheckOut.ToString()).ToString(culture)),
+                                                                    CheckOut = TimeZoneInfo.ConvertTimeToUtc((DateTime)contract.CheckOut).AddHours(3.0),
                                                                     _SNG = contract._SNG,
                                                                     _DBL = contract._DBL,
                                                                     _TRPL = contract._TRPL,
