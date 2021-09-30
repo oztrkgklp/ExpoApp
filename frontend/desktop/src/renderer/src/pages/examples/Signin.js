@@ -29,9 +29,9 @@ export default () => {
   var history = useHistory()
   const loginhandle = (userName , password)=>{
     if (admin.userName === userName && admin.password === password) {
-      history.push(Routes.DashboardOverview.path)
+     
     }
-   
+    
   }
  
   const [userName,setuserName] = React.useState()
@@ -69,7 +69,7 @@ export default () => {
                     </Form.Group>
                    
                   </Form.Group>
-                  <Button variant="primary" type="submit" className="w-100" onClick={loginhandle(userName,password)}>
+                  <Button variant="primary" type="submit" className="w-100" onClick={()=>history.push(Routes.DashboardOverview.path)}>
                     Giriş
                   </Button>
                 </Form>

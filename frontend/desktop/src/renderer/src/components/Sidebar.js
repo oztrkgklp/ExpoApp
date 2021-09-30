@@ -98,7 +98,6 @@ export default (props = {}) => {
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
               <NavItem title="Garanti Kongre" link={Routes.Presentation.path} image={ReactHero} />
-
               <NavItem title="Gösterge Paneli" link={Routes.DashboardOverview.path} icon={faChartPie} />
               <NavItem title="Misafirler" link={Routes.NewCompany.path} icon={faUsers} />
               <NavItem title="Konaklama" link={Routes.Acconmodation.path} icon={faBed} />

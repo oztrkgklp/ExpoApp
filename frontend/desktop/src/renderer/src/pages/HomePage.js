@@ -54,7 +54,7 @@ const RouteWithSidebar = ({ component: Component, ...rest }) => {
       <>
         <Preloader show={loaded ? false : true} />
         <Sidebar />
-
+        
         <main className="content">
           <Navbar />
           <Component {...props} />
