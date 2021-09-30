@@ -22,6 +22,7 @@ namespace ExpoAPI.Infrastructure.Repositories
 
         Task<CompanyContract?> GetCompanyByIdAsync(int companyID, CancellationToken cancellationToken);
         Task<IEnumerable<CompanyContract?>?> GetCompaniesAsync(CancellationToken cancellationToken);
+        Task<IEnumerable<CompanyContract?>?> GetGuestsAsync(CancellationToken cancellationToken);
         Task<IEnumerable<CompanyContract?>?> GetEnteredCompaniesAsync(CancellationToken cancellationToken);
         Task<int?> GetNumberOfEnteredCompaniesAsync(CancellationToken cancellationToken);
         Task<IEnumerable<CompanyContract?>?> GetEnteredCompaniesWithoutPurchaseAsync(CancellationToken cancellationToken);
@@ -29,6 +30,8 @@ namespace ExpoAPI.Infrastructure.Repositories
         Task<IEnumerable<CompanyContract?>?> GetNotEnteredCompaniesAsync(CancellationToken cancellationToken);
         Task<int?> GetNumberOfNotEnteredCompaniesAsync(CancellationToken cancellationToken);
         Task<int?> GetNumberOfCompaniesAsync(CancellationToken cancellationToken);
+        Task<int?> GetNumberOfGuestsAsync(CancellationToken cancellationToken);
+        Task<int?> GetNumberOfAccommodationsAsync(CancellationToken cancellationToken);
         Task<IEnumerable<string?>?> GetCompanyNamesAsync(CancellationToken cancellationToken);
         Task<object?> UpdateCompanyByIdAsync(CompanyContract? contract, CancellationToken cancellationToken);
         Task<object?> DeleteCompanyByIdAsync(int companyID, CancellationToken cancellationToken);
@@ -36,7 +39,6 @@ namespace ExpoAPI.Infrastructure.Repositories
 
         Task<AccommodationDBContract?> GetAccommodationByIdAsync(int AccommodationID, CancellationToken cancellationToken);
         Task<IEnumerable<AccommodationDBContract?>?> GetAccommodationsAsync(CancellationToken cancellationToken);
-        Task<int?> GetNumberOfAccommodationsAsync(CancellationToken cancellationToken);
         Task<object?> UpdateAccommodationByIdAsync(AccommodationContract? contract, CancellationToken cancellationToken);
         Task<object?> DeleteAccommodationByIdAsync(int accommodationID, CancellationToken cancellationToken);
         Task<object?> CreateAccommodationAsync(AccommodationContract? contract, CancellationToken cancellationToken);

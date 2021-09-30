@@ -8,6 +8,7 @@ namespace ExpoAPI.UseCases.Purchase
         public int PurchaseID { get; set; }
         public string? SellerName { get; set; }
         public string? PurchaserName { get; set; }
+        public string? Product { get; set; }
         public DateTime PurchaseDate { get; set; }
         public decimal Amount { get; set; }
     }
