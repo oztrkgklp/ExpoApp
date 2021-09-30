@@ -28,13 +28,15 @@ CREATE TABLE COMPANY (
     Phone varchar(255),
 	EMail varchar(255),
 	Endorsement decimal(19,4) not null,
-	IsEntered bit not null
+	IsEntered bit not null,
+    IsGuest bit not null
 );
 
 CREATE TABLE PURCHASE (
     PurchaseID int IDENTITY(1,1) PRIMARY KEY,
     PurchaseDate DATETIME not null,
     Amount decimal(19,4) not null,
+    Product varhar(255) not null,
 	SellerID int not null,
 	PurchaserID int not null
 );
@@ -48,6 +50,7 @@ CREATE TABLE ACCOMMODATION (
     FirstGuest varchar(255) not null,
     SecondGuest varchar(255),
     ThirdGuest varchar(255),
+    NumberOfGuests int not null,
     GuestCompanyName varchar(255),
     Phone varchar(255),
     SNG varchar(50),

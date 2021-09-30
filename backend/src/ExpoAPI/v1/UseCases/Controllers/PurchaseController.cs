@@ -123,6 +123,7 @@ namespace ExpoAPI.Controllers
                     PurchaseID = getPurchaseById.PurchaseContract.PurchaseID,
                     SellerID = getPurchaseById.PurchaseContract.SellerID,
                     PurchaserID = getPurchaseById.PurchaseContract.PurchaserID,
+                    Product = getPurchaseById.PurchaseContract.Product,
                     PurchaseDate = getPurchaseById.PurchaseContract.PurchaseDate,
                     Amount = getPurchaseById.PurchaseContract.Amount
                 },
@@ -190,6 +191,7 @@ namespace ExpoAPI.Controllers
                                                                                     {
                                                                                         SellerID = contract.SellerID,
                                                                                         PurchaserID = contract.PurchaserID,
+                                                                                        Product = contract.Product,
                                                                                         PurchaseDate = DateTime.UtcNow.AddHours(3.0),
                                                                                         Amount = contract.Amount
                                                                                     }), cancellationToken);
@@ -211,16 +213,17 @@ namespace ExpoAPI.Controllers
             });
         }
 
-        [HttpPut("purchases")]
+        [HttpPut("purchases/{purchaseId}")]
         [ProducesResponseType(typeof(UpdatePurchaseByIdApiResponseContract), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(UpdatePurchaseByIdApiResponseContract), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<UpdatePurchaseByIdApiResponseContract>> UpdatePurchase( [FromQuery] UpdatePurchaseByIdApiRequestContract contract, CancellationToken cancellationToken)
+        public async Task<ActionResult<UpdatePurchaseByIdApiResponseContract>> UpdatePurchase([FromRoute] int PurchaseID, [FromQuery] UpdatePurchaseByIdApiRequestContract contract, CancellationToken cancellationToken)
         {
             var updatePurchaseById = await _mediator.Send(new UpdatePurchaseByIdCommand(new PurchaseContract()
                                                                                     {
-                                                                                        PurchaseID = contract.PurchaseID,
+                                                                                        PurchaseID = PurchaseID,
                                                                                         SellerID = contract.SellerID,
                                                                                         PurchaserID = contract.PurchaserID,
+                                                                                        Product = contract.Product,
                                                                                         PurchaseDate = DateTime.Now,
                                                                                         Amount = contract.Amount
                                                                                     }), cancellationToken);

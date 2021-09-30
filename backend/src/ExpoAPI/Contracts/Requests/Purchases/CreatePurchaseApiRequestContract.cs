@@ -8,6 +8,7 @@ namespace ExpoAPI.Contracts.Requests
         public int SellerID { get; set; }
 
         public int PurchaserID { get; set; }
+        public string? Product { get; set; }
 
         public decimal Amount { get; set; }        
     }

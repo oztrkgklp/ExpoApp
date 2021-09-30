@@ -57,9 +57,10 @@ namespace ExpoAPI.Infrastructure.Repositories
         public async Task<object?> CreatePurchaseAsync(PurchaseContract? contract, CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.Append(@"INSERT INTO PURCHASE (SellerID,PurchaserID,PurchaseDate,Amount) VALUES (")
+            queryBuilder.Append(@"INSERT INTO PURCHASE (SellerID,PurchaserID,Product,PurchaseDate,Amount) VALUES (")
                                     .Append(contract.SellerID).Append(",")
-                                    .Append(contract.PurchaserID).Append(",'")
+                                    .Append(contract.PurchaserID).Append(",")
+                                    .Append(contract.Product).Append(",'")
                                     .Append(contract.PurchaseDate).Append("',")
                                     .Append(contract.Amount).Append(")");
             using(Database)
@@ -96,6 +97,7 @@ namespace ExpoAPI.Infrastructure.Repositories
             queryBuilder.Append(@"UPDATE PURCHASE SET ")
                                     .Append("SellerID").Append("=").Append(contract.SellerID).Append(",")
                                     .Append("PurchaserID").Append("=").Append(contract.PurchaserID).Append(",")
+                                    .Append("Product").Append("=").Append(contract.Product).Append(",")
                                     .Append("PurchaseDate").Append("='").Append(contract.PurchaseDate).Append("',")
                                     .Append("Amount").Append("=").Append(contract.Amount).Append(" WHERE PurchaseID=").Append(contract.PurchaseID);
             using(Database)
@@ -144,7 +146,7 @@ namespace ExpoAPI.Infrastructure.Repositories
         public async Task<IEnumerable<PurchaseWithNamesContract?>?> GetPurchasesWithCompanyNamesAsync(CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.Append(@"SELECT PurchaseID, C2.CompanyName AS SellerName, C1.CompanyName AS PurchaserName,Amount,PurchaseDate FROM PURCHASE P
+            queryBuilder.Append(@"SELECT PurchaseID, C2.CompanyName AS SellerName, C1.CompanyName AS PurchaserName,Product,Amount,PurchaseDate FROM PURCHASE P
                                     INNER JOIN COMPANY C1 ON C1.CompanyID = P.PurchaserID
                                     INNER JOIN COMPANY C2 ON C2.CompanyID = P.SellerID");
             using(Database)
@@ -178,7 +180,22 @@ namespace ExpoAPI.Infrastructure.Repositories
         public async Task<IEnumerable<CompanyContract?>?> GetCompaniesAsync(CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.Append(@"SELECT * FROM COMPANY");
+            queryBuilder.Append(@"SELECT * FROM COMPANY WHERE IsGuest = 0");
+            using(Database)
+            {
+                var getCompanies = await _dapperPolly.QueryAsyncWithRetry<CompanyContract>(Database, queryBuilder.ToString());
+                if (getCompanies.Any())
+                {
+                    return getCompanies.ToList();
+                }
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<CompanyContract?>?> GetGuestsAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT * FROM COMPANY WHERE IsGuest = 1");
             using(Database)
             {
                 var getCompanies = await _dapperPolly.QueryAsyncWithRetry<CompanyContract>(Database, queryBuilder.ToString());
@@ -193,7 +210,7 @@ namespace ExpoAPI.Infrastructure.Repositories
         public async Task<IEnumerable<CompanyContract?>?> GetEnteredCompaniesAsync(CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.Append(@"SELECT * FROM COMPANY WHERE IsEntered = 1");
+            queryBuilder.Append(@"SELECT * FROM COMPANY WHERE IsGuest = 0 AND IsEntered = 1");
             using(Database)
             {
                 var getCompanies = await _dapperPolly.QueryAsyncWithRetry<CompanyContract>(Database, queryBuilder.ToString());
@@ -208,7 +225,7 @@ namespace ExpoAPI.Infrastructure.Repositories
         public async Task<int?> GetNumberOfEnteredCompaniesAsync(CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.Append(@"SELECT COUNT(CompanyID) FROM COMPANY WHERE IsEntered = 1");
+            queryBuilder.Append(@"SELECT COUNT(CompanyID) FROM COMPANY WHERE IsGuest = 0 AND IsEntered = 1");
             using(Database)
             {
                 var getCompanies = await _dapperPolly.QueryAsyncWithRetry<int>(Database, queryBuilder.ToString());
@@ -224,7 +241,7 @@ namespace ExpoAPI.Infrastructure.Repositories
         {
             StringBuilder queryBuilder = new StringBuilder();
             queryBuilder.Append(@"select C.CompanyID,C.CompanyName,C.Phone,C.EMail,C.Endorsement,C.IsEntered from COMPANY C
-                                    INNER JOIN (select DISTINCT C.CompanyID from COMPANY C WHERE C.IsEntered = 1
+                                    INNER JOIN (select DISTINCT C.CompanyID from COMPANY C WHERE C.IsEntered = 1 AND C.IsGuest = 1
                                                 except
                                                 select DISTINCT C.CompanyID AS ID from COMPANY C	
                                                     INNER JOIN (select P.PurchaserID, P.Amount from PURCHASE P) P ON P.PurchaserID = C.CompanyID
@@ -244,11 +261,11 @@ namespace ExpoAPI.Infrastructure.Repositories
         {
             StringBuilder queryBuilder = new StringBuilder();
             queryBuilder.Append(@"select COUNT(C.CompanyID) from (select C.CompanyID,C.CompanyName,C.Phone,C.EMail,C.Endorsement,C.IsEntered from COMPANY C
-                                    INNER JOIN (select DISTINCT C.CompanyID from COMPANY C WHERE C.IsEntered = 1
+                                    INNER JOIN (select DISTINCT C.CompanyID from COMPANY C WHERE C.IsEntered = 1 AND C.IsGuest = 1
                                                 except
                                                 select DISTINCT C.CompanyID AS ID from COMPANY C	
                                                     INNER JOIN (select P.PurchaserID, P.Amount from PURCHASE P) P ON P.PurchaserID = C.CompanyID
-                                                    WHERE C.CompanyID = P.PurchaserID) I ON I.CompanyID = C.CompanyID) C");
+                                                    WHERE C.CompanyID = P.PurchaserID) I ON I.CompanyID = C.CompanyID) C ");
             using(Database)
             {
                 var getCompanies = await _dapperPolly.QueryAsyncWithRetry<int>(Database, queryBuilder.ToString());
@@ -263,7 +280,7 @@ namespace ExpoAPI.Infrastructure.Repositories
         public async Task<IEnumerable<CompanyContract?>?> GetNotEnteredCompaniesAsync(CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.Append(@"SELECT * FROM COMPANY WHERE IsEntered = 0");
+            queryBuilder.Append(@"SELECT * FROM COMPANY WHERE IsEntered = 0 AND IsGuest = 0");
             using(Database)
             {
                 var getCompanies = await _dapperPolly.QueryAsyncWithRetry<CompanyContract>(Database, queryBuilder.ToString());
@@ -278,7 +295,7 @@ namespace ExpoAPI.Infrastructure.Repositories
         public async Task<int?> GetNumberOfNotEnteredCompaniesAsync(CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.Append(@"SELECT COUNT(CompanyID) FROM COMPANY WHERE IsEntered = 0");
+            queryBuilder.Append(@"SELECT COUNT(CompanyID) FROM COMPANY WHERE IsGuest = 0 AND IsEntered = 0");
             using(Database)
             {
                 var getCompanies = await _dapperPolly.QueryAsyncWithRetry<int?>(Database, queryBuilder.ToString());
@@ -293,7 +310,22 @@ namespace ExpoAPI.Infrastructure.Repositories
         public async Task<int?> GetNumberOfCompaniesAsync(CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.Append(@"SELECT COUNT(CompanyID) FROM COMPANY");
+            queryBuilder.Append(@"SELECT COUNT(CompanyID) FROM COMPANY WHERE IsGuest = 0");
+            using(Database)
+            {
+                var getNumberOfCompanies = await _dapperPolly.QueryAsyncWithRetry<int?>(Database, queryBuilder.ToString());
+                if (getNumberOfCompanies.Any())
+                {
+                    return getNumberOfCompanies.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<int?> GetNumberOfGuestsAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT COUNT(CompanyID) FROM COMPANY WHERE IsGuest = 1");
             using(Database)
             {
                 var getNumberOfCompanies = await _dapperPolly.QueryAsyncWithRetry<int?>(Database, queryBuilder.ToString());
@@ -328,6 +360,7 @@ namespace ExpoAPI.Infrastructure.Repositories
                                     .Append("Phone").Append("=").Append(contract.Phone).Append(", ")
                                     .Append("EMail").Append("=").Append(contract.EMail).Append(", ")
                                     .Append("Endorsement").Append("=").Append(contract.Endorsement).Append(", ")
+                                    .Append("IsGuest").Append("=").Append(contract.IsGuest?1:0).Append(", ")
                                     .Append("IsEntered").Append("=").Append(contract.IsEntered?1:0).Append(" WHERE CompanyID =").Append(contract.CompanyID);
             using(Database)
             {
@@ -360,11 +393,12 @@ namespace ExpoAPI.Infrastructure.Repositories
         public async Task<object?> CreateCompanyAsync(CompanyContract? contract, CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.Append(@"INSERT INTO COMPANY (CompanyName,Phone,EMail,Endorsement,IsEntered) VALUES (")
+            queryBuilder.Append(@"INSERT INTO COMPANY (CompanyName,Phone,EMail,Endorsement,IsGuest,IsEntered) VALUES (")
                                     .Append(contract.CompanyName).Append(",")
                                     .Append(contract.Phone).Append(",")
                                     .Append(contract.EMail).Append(",")
                                     .Append(contract.Endorsement).Append(",")
+                                    .Append(contract.IsGuest?1:0).Append(",")
                                     .Append(contract.IsEntered?1:0).Append(")");
             using(Database)
             {
@@ -493,7 +527,7 @@ namespace ExpoAPI.Infrastructure.Repositories
         public async Task<int?> GetNumberOfAccommodationsAsync(CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.Append(@"select COUNT(AccommodationID) from ACCOMMODATION" );
+            queryBuilder.Append(@"select SUM(NumberOfGuests) from ACCOMMODATION" );
             using(Database)
             {
                 var getNumberOfAccommodations = await _dapperPolly.QueryAsyncWithRetry<int?>(Database, queryBuilder.ToString());
@@ -517,6 +551,7 @@ namespace ExpoAPI.Infrastructure.Repositories
                                     .Append("FirstGuest").Append("=").Append(contract.FirstGuest == null ? "\'\'" : contract.FirstGuest).Append(", ")
                                     .Append("SecondGuest").Append("=").Append(contract.SecondGuest == null ? "\'\'" : contract.SecondGuest).Append(", ")
                                     .Append("ThirdGuest").Append("=").Append(contract.ThirdGuest == null ? "\'\'" : contract.ThirdGuest).Append(", ")
+                                    .Append("NumberOfGuests").Append("=").Append(contract.NumberOfGuests == null ? "\'\'" : contract.NumberOfGuests).Append(", ")
                                     .Append("GuestCompanyName").Append("=").Append(contract.GuestCompanyName == null ? "\'\'" : contract.GuestCompanyName).Append(", ")
                                     .Append("Phone").Append("=").Append(contract.Phone == null ? "\'\'" : contract.Phone).Append(", ")
                                     .Append("SNG").Append("=").Append(contract.SNG == null ? "\'\'" : contract.SNG).Append(", ")
@@ -574,6 +609,7 @@ namespace ExpoAPI.Infrastructure.Repositories
                                     .Append("FirstGuest").Append(",")
                                     .Append("SecondGuest").Append(",")
                                     .Append("ThirdGuest").Append(",")
+                                    .Append("NumberOfGuests").Append(",")
                                     .Append("GuestCompanyName").Append(",")
                                     .Append("Phone").Append(",")
                                     .Append("SNG").Append(",")
@@ -600,6 +636,7 @@ namespace ExpoAPI.Infrastructure.Repositories
                                     .Append(contract.FirstGuest == null ? "\'\'" : contract.FirstGuest).Append(",")
                                     .Append(contract.SecondGuest == null ? "\'\'" : contract.SecondGuest).Append(",")
                                     .Append(contract.ThirdGuest == null ? "\'\'" : contract.ThirdGuest).Append(",")
+                                    .Append(contract.NumberOfGuests == null ? "\'\'" : contract.NumberOfGuests).Append(",")
                                     .Append(contract.GuestCompanyName == null ? "\'\'" : contract.GuestCompanyName).Append(",")
                                     .Append(contract.Phone == null ? "\'\'" : contract.Phone).Append(",")
                                     .Append(contract.SNG == null ? "\'\'" : contract.SNG).Append(",")

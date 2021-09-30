@@ -60,6 +60,7 @@ namespace ExpoAPI.UseCases.Purchase
                     {
                         PurchaseID = item.PurchaseID,
                         SellerID = item.SellerID,
+                        Product = item.Product,
                         PurchaserID = item.PurchaserID,
                         PurchaseDate = item.PurchaseDate,
                         Amount = item.Amount

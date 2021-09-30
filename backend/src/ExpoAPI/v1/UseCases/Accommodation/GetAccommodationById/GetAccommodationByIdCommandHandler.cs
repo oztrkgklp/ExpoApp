@@ -41,6 +41,7 @@ namespace ExpoAPI.UseCases.Accommodation
                     FirstGuest = getAccommodationById.FirstGuest,
                     SecondGuest = getAccommodationById.SecondGuest,
                     ThirdGuest = getAccommodationById.ThirdGuest,
+                    NumberOfGuests = getAccommodationById.NumberOfGuests,
                     GuestCompanyName = getAccommodationById.GuestCompanyName,
                     Phone = getAccommodationById.Phone,
                     SNG = getAccommodationById.SNG,
