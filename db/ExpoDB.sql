@@ -36,7 +36,7 @@ CREATE TABLE PURCHASE (
     PurchaseID int IDENTITY(1,1) PRIMARY KEY,
     PurchaseDate DATETIME not null,
     Amount decimal(19,4) not null,
-    Product varhar(255) not null,
+    Product varchar(255) not null,
 	SellerID int not null,
 	PurchaserID int not null
 );
