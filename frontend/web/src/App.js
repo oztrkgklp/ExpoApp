@@ -10,16 +10,12 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-<<<<<<< HEAD
-import Background from "./image/logo.png";
-=======
 import Background from "./image/logo.jpg";
 import useSWR from "swr";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
->>>>>>> 6527580fad0264e69ed81e20cbbc3b45be92264e
 import Stack from "@mui/material/Stack";
 import { createGuest } from "./Data";
 
