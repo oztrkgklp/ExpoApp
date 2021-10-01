@@ -1087,7 +1087,6 @@ export const CompanyTable = () => {
         isEntered,
         isGuest,
       });
-      console.log(company.result);
     };
 
     createCmp();

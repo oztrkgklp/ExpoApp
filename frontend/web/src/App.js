@@ -10,13 +10,9 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Background from "./image/logo.gif";
-import useSWR from "swr";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import Background from "./image/logo.png";
 import Stack from "@mui/material/Stack";
+import { createGuest } from "./Data";
 
 function Copyright(props) {
   return (
@@ -37,13 +33,33 @@ function Copyright(props) {
 }
 
 const theme = createTheme();
-
 export default function SignInSide() {
-  const [company, setCompany] = React.useState(0);
-  const handleChange = (event) => {
-    setCompany(event.target.value);
-  };
+  const [sellerName, setsellerName] = React.useState("");
+  const [sellerId, setsellerId] = React.useState(0);
+  const [purchaserName, setpurchaserName] = React.useState("");
+  const [purchaserId, setpurchaserId] = React.useState(0);
+  const [eMail, setemail] = React.useState("");
+  const [phone, setphone] = React.useState("");
+  const [count, setcount] = React.useState(0);
+  const [product, setProduct] = React.useState("");
+  const [isSubmit, setSubmit] = React.useState(false);
 
+  const handleSubmit = () => {
+    // setSubmit(true);
+  };
+  React.useEffect(() => {
+    const createPurchasse = async () => {
+      console.log("Purchaser Name: " + purchaserName);
+      console.log("EMail: " + purchaserName);
+      console.log("Phone: " + purchaserName);
+
+      const Purchaser = await createGuest({ purchaserName, eMail, phone });
+      console.log(Purchaser);
+      setSubmit(false);
+    };
+
+    createPurchasse();
+  }, [isSubmit]);
   return (
     <ThemeProvider theme={theme}>
       <Grid
@@ -73,58 +89,42 @@ export default function SignInSide() {
             <Typography component="h1" variant="h5">
               Kayıt Sayfası
             </Typography>
-            {/* <Box sx={{ minWidth: 120 }}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Şirket</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={company}
-                  label="Şirket"
-                  onChange={handleChange}
-                >
-                  <MenuItem value={0}>Şirket Seçin...</MenuItem>
-                  <MenuItem value={1}>Garanti Kongre</MenuItem>
-                  <MenuItem value={2}>Twenty</MenuItem>
-                  <MenuItem value={3}>Thirty</MenuItem>
-                </Select>
-              </FormControl>
-              </Box> */}
 
             <Stack direction="row" spacing={2}>
-              <Button variant="contained" color="secondary">Satış Yapan Firmalar</Button>
+              <Button variant="contained" color="secondary">
+                Satış Yapan Firmalar
+              </Button>
               <Button variant="contained" href="#outlined-buttons">
                 Alış Yapan Firmalar
               </Button>
             </Stack>
-            <Box
-              component="form"
-              noValidate
-              // onSubmit={handleSubmit}
-              sx={{ mt: 1 }}
-            >
+            <Box component="form" noValidate sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                id="companyName"
+                value={sellerName}
+                onChange={(e) => setsellerName(e.target.value)}
+                id="sellerName"
                 label="Satış Yapan Şirket Adı"
-                name="companyName"
+                name="sellerName"
                 autoFocus
               />
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                id="companyName"
+                onChange={(e) => setpurchaserName(e.target.value)}
+                id="purchaserName"
                 label="Alım Yapan Şirket Adı"
-                name="companyName"
+                name="purchaserName"
                 autoFocus
               />
               <TextField
                 margin="normal"
                 required
                 fullWidth
+                onChange={(e) => setemail(e.target.value)}
                 name="email"
                 label="Email Adresi"
                 id="email"
@@ -133,6 +133,7 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
+                onChange={(e) => setphone(e.target.value)}
                 name="phone"
                 label="Telefon Numarası"
                 id="phone"
@@ -141,16 +142,26 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
+                onChange={(e) => setProduct(e.target.value)}
+                name="product"
+                label="Ürün"
+                id="count"
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                onChange={(e) => setcount(e.target.value)}
                 name="count"
                 label="Miktar"
                 id="count"
               />
-
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                onClick={() => handleSubmit}
               >
                 Kaydet
               </Button>
