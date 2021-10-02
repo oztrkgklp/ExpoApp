@@ -10,14 +10,24 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Background from "./image/logo.jpg";
+import Background from "./image/logo.png";
 import useSWR from "swr";
 import InputLabel from "@mui/material/InputLabel";
+import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
-import { createGuest, createPurchase, getIdByName, getGuests } from "./Data";
+import {
+  createGuest,
+  createPurchase,
+  getIdByName,
+  getGuests,
+  updateEndorsement,
+  getCompanyById,
+} from "./Data";
+import { GuestsTable } from "./SellerTable";
 
 function Copyright(props) {
   return (
@@ -48,47 +58,85 @@ export default function SignInSide() {
   const [count, setcount] = React.useState(0);
   const [product, setProduct] = React.useState("");
   const [isSubmit, setSubmit] = React.useState(false);
-
-  React.useEffect(()=>{
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  React.useEffect(() => {
     const seller = async () => {
-      const id = await getIdByName(sellerName)
-      setsellerId(id.result)
-    }
-    seller()
-
-  },[sellerName])
-
-  React.useEffect(()=>{
-    const purchaser = async () => {
-      const id = await getIdByName(purchaserName)
-      setpurchaserId(id.result)
-      console.log(id.result)
-    }
-   purchaser()
-  },[purchaserName])
-
-  React.useEffect((e) => {
-    const createPurchase_ = async () => {
-      if(sellerId === null || sellerId === 0)
-      {
-        return null
-      }
-      if(purchaserId === null || purchaserId === 0){
-        const Purchaser = await createGuest(purchaserName, eMail, phone);
-        var id = await getIdByName(purchaserName)
-        const purchase = await createPurchase(sellerId,id.result,count,product)
-      }
-      else{
-        setsellerName(sellerName)
-        setpurchaserName(purchaserName)
-        const purchase = await createPurchase(sellerId,purchaserId,count,product)
-      }
+      const id = await getIdByName(sellerName);
+      setsellerId(id.result);
     };
+    seller();
+  }, [sellerName]);
 
-    createPurchase_();
-  }, [isSubmit]);
+  React.useEffect(() => {
+    const purchaser = async () => {
+      const id = await getIdByName(purchaserName);
+      setpurchaserId(id.result);
+      console.log(id.result);
+    };
+    purchaser();
+  }, [purchaserName]);
+
+  React.useEffect(
+    (e) => {
+      const createPurchase_ = async () => {
+        if (sellerId === null || sellerId === 0) {
+          return null;
+        }
+        if (purchaserId === null || purchaserId === 0) {
+          const Purchaser = await createGuest(purchaserName, eMail, phone);
+          var id = await getIdByName(purchaserName);
+          const purchase = await createPurchase(
+            sellerId,
+            id.result,
+            count,
+            product
+          );
+          const cmp = await getCompanyById(sellerId);
+          const update = await updateEndorsement(
+            sellerId,
+            sellerName,
+            cmp.result.phone,
+            cmp.result.eMail,
+            parseFloat(cmp.result.endorsement) + parseFloat(count),
+            cmp.result.isEntered,
+            cmp.result.isGuest
+          );
+        } else {
+          setsellerName(sellerName);
+          setpurchaserName(purchaserName);
+          const purchase = await createPurchase(
+            sellerId,
+            purchaserId,
+            count,
+            product
+          );
+          const cmp = await getCompanyById(sellerId);
+          const update = await updateEndorsement(
+            sellerId,
+            sellerName,
+            cmp.result.phone,
+            cmp.result.eMail,
+            parseFloat(cmp.result.endorsement) + parseFloat(count),
+            cmp.result.isEntered,
+            cmp.result.isGuest
+          );
+        }
+      };
+
+      createPurchase_();
+    },
+    [isSubmit]
+  );
   return (
     <ThemeProvider theme={theme}>
+      
       <Grid
         container
         component="main"
@@ -99,7 +147,7 @@ export default function SignInSide() {
         }}
       >
         <CssBaseline />
-        <Grid item xs={false} sm={4} md={7} />
+        <Grid item xs={false} sm={4} md={7}  />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
@@ -118,11 +166,22 @@ export default function SignInSide() {
             </Typography>
 
             <Stack direction="row" spacing={2}>
-              <Button variant="contained" color="secondary">
+              <Button
+                id="basic-button"
+                aria-controls="basic-menu"
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+                variant="contained"
+                
+              >
                 Satış Yapan Firmalar
               </Button>
+             
+               
+             
               <Button variant="contained" href="#outlined-buttons">
-                Alış Yapan Firmalar
+                Alış Yapan Misafirler
               </Button>
             </Stack>
             <Box component="form" noValidate sx={{ mt: 1 }}>
@@ -131,7 +190,9 @@ export default function SignInSide() {
                 required
                 fullWidth
                 value={sellerName}
-                onChange={(e) => {setsellerName(e.target.value)}}
+                onChange={(e) => {
+                  setsellerName(e.target.value);
+                }}
                 id="sellerName"
                 label="Satış Yapan Şirket Adı"
                 name="sellerName"
@@ -141,7 +202,9 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                onChange={(e) => {setpurchaserName(e.target.value)}}
+                onChange={(e) => {
+                  setpurchaserName(e.target.value);
+                }}
                 id="purchaserName"
                 label="Alım Yapan Şirket Adı"
                 name="purchaserName"
@@ -151,7 +214,9 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                onChange={(e) => {setemail(e.target.value)}}
+                onChange={(e) => {
+                  setemail(e.target.value);
+                }}
                 name="email"
                 label="Email Adresi"
                 id="email"
@@ -160,7 +225,9 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                onChange={(e) => {setphone(e.target.value)}}
+                onChange={(e) => {
+                  setphone(e.target.value);
+                }}
                 name="phone"
                 label="Telefon Numarası"
                 id="phone"
@@ -169,7 +236,9 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                onChange={(e) => {setProduct(e.target.value)}}
+                onChange={(e) => {
+                  setProduct(e.target.value);
+                }}
                 name="product"
                 label="Ürün"
                 id="count"
@@ -178,7 +247,9 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                onChange={(e) => {setcount(e.target.value)}}
+                onChange={(e) => {
+                  setcount(e.target.value);
+                }}
                 name="count"
                 label="Miktar"
                 id="count"
@@ -188,7 +259,9 @@ export default function SignInSide() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                onClick={(e) =>{setSubmit(true)}}
+                onClick={(e) => {
+                  setSubmit(true);
+                }}
               >
                 Kaydet
               </Button>

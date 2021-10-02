@@ -3,7 +3,7 @@ import { domain } from "../assets/domain";
 import regeneratorRuntime from "regenerator-runtime";
 
 export const companies = async () => {
-  const { data } = await axios.get(domain + "companies");
+  const { data } = await axios.get(domain + "all");
   return data;
 };
 
@@ -49,21 +49,25 @@ export const deleteCompany = async (id) => {
   const { data } = await axios.delete(domain + "companies/" + id);
   return data;
 };
-export const createCompany = async (params) => {
+export const createCompany = async (companyName,phone,eMail,isEntered,endorsement,isGuest) => {
+  console.log(typeof(isEntered))
+  console.log(typeof(isGuest))
+  console.log(isGuest)
+  console.log(isEntered)
   const url =
     domain +
     "companies?CompanyName=\'" +
-    params.companyName +
+    companyName +
     "'&Phone='" +
-    params.phone +
+    phone +
     "'&EMail='" +
-    params.eMail +
+    eMail +
     "'&IsEntered=" +
-    (params.isEntered === 1 ?"true":"false") +
+    (isEntered === true ?"true":"false") +
     "&Endorsement=" +
-    params.endorsement +
+    endorsement +
     "&IsGuest="+
-    (params.isGuest === 0 ? "true":"false");
+    (isGuest === true ? "true":"false");
   console.log(url);
   const { data } = await axios.post(url);
   return data;
@@ -137,6 +141,12 @@ export const createAccommodation = async (params) => {
     params._TRPLCHD+ "'"+
     "&Description='" +
     params.description+"'")
+    var i = 1
+    if(params.secondGuest.length>0)
+      i++
+    if(params.thirdGuest.length>0)
+      i++
+    console.log(i)
   const { data } = await axios.post(
     domain +
       "accommodations?CompanyName='" +
@@ -152,7 +162,7 @@ export const createAccommodation = async (params) => {
       "&ThirdGuest='"+
       params.thirdGuest+ "'"+
       "&NumberOfGuests="+
-      params.numberOfGuests+
+      i+
       "&GuestCompanyName='"+
       params.guestCompanyName+ "'"+
       "&Phone='"+
@@ -165,33 +175,76 @@ export const createAccommodation = async (params) => {
       params.TRPL+ "'"+
       "&QUAT='"+
       params.QUAT+ "'"+
-      "&_SNGCHD='"+
+      "&SNGCHD='"+
       params.SNGCHD+ "'"+
-      "&_DBLCHD='"+
+      "&DBLCHD='"+
       params.DBLCHD+ "'"+
-      "&_TRPLCHD='"+
+      "&TRPLCHD='"+
       params.TRPLCHD+ "'"+
       "&CheckOut=" +
       params.checkOutDate+ " "+ params.checkOutTime +
-      "&_SNG='"+
+      "&SNG_='"+
       params._SNG+ "'"+
-      "&_DBL='"+
+      "&DBL_='"+
       params._DBL+ "'"+
-      "&_TRPL='"+
+      "&TRPL_='"+
       params._TRPL+ "'"+
-      "&_QUAT='"+
+      "&QUAT_='"+
       params._QUAT+ "'"+
-      "&_SNGCHD='"+
+      "&SNG_CHD='"+
       params._SNGCHD+ "'"+
-      "&_DBLCHD='"+
+      "&DBL_CHD='"+
       params._DBLCHD+ "'"+
-      "&_TRPLCHD='"+
+      "&TRPL_CHD='"+
       params._TRPLCHD+ "'"+
       "&Description='" +
       params.description+"'"
 
       
   );
+  return data;
+};
+export const updateEndorsement = async (
+  companyID,
+  companyName,
+  phone,
+  eMail,
+  endorsement,
+  isEntered,
+  isGuest
+) => {
+  const url =
+    domain +
+    "companies/" +
+    companyID +
+    "?CompanyName='" +
+    companyName +
+    "'&Phone='" +
+    phone +
+    "'&EMail='" +
+    eMail +
+    "'&Endorsement=" +
+    endorsement +
+    "&IsEntered=" +
+    (isEntered === true ? "true" : "false") +
+    "&IsGuest=" +
+    (isGuest === true ? "true" : "false");
+    console.log(url)
+  const { data } = await axios.put(url);
+  return data;
+};
+
+export const createGuest = async (companyName, phone, eMail) => {
+  const url =
+    domain +
+    "companies?CompanyName='" +
+    companyName +
+    "'&Phone='" +
+    phone +
+    "'&EMail='" +
+    eMail +
+    "'&Endorsement=0&IsEntered=true&IsGuest=true";
+  const { data } = await axios.post(url);
   return data;
 };
 

@@ -47,8 +47,8 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import { timeFormat } from "../assets/dateTime";
-import {ToastContainer,toast,Zoom} from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
+import { ToastContainer, toast, Zoom } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   purchases,
   companies,
@@ -61,7 +61,9 @@ import {
   getCompanyIdByName,
   deletePurchase,
   createPurchases,
+  createGuest,
   getGuests,
+  updateEndorsement,
 } from "./FetchData";
 
 const defaultTheme = createTheme();
@@ -294,9 +296,9 @@ export const PageVisitsTable = () => {
   const [isSubmit, setSubmit] = React.useState(false);
   const [product, setProduct] = React.useState([]);
   const [error, setError] = React.useState(false);
-  
-  const handleSuccessToast = ()=>{
-    toast('🦄Yeni Satış Oluşturuldu', {
+
+  const handleSuccessToast = () => {
+    toast("🦄Yeni Satış Oluşturuldu", {
       position: "top-center",
       autoClose: 5000,
       hideProgressBar: false,
@@ -304,10 +306,10 @@ export const PageVisitsTable = () => {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      });
-  }
-  const handleFailedToast = ()=>{
-    toast.error('🦄Kayıtlı Olmayan Satıcı/Alıcı', {
+    });
+  };
+  const handleFailedToast = () => {
+    toast.error("🦄Kayıtlı Olmayan Satıcı/Alıcı", {
       position: "top-center",
       autoClose: 5000,
       hideProgressBar: false,
@@ -315,30 +317,36 @@ export const PageVisitsTable = () => {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      });
-  }
-  
+    });
+  };
+
   React.useEffect(() => {
     const createPrc = async () => {
-      if (sellerId !== null || purchaserId !== null) {
-        
-      const purchase = await createPurchases({
-          sellerId,
-          purchaserId,
-          amount,
-          product,
-        });
-        handleSuccessToast()
-      } 
+      if(sellerId === null || sellerId === 0)
+      {
+        return null
+      }
+      if(purchaserId === null || purchaserId === 0){
+        const Purchaser = await createGuest(purchaserName, eMail, phone);
+        var id = await getCompanyIdByName(purchaserName)
+        const purchase = await createPurchases({sellerId,purchaserId:id.result,amount,product})
+        const cmp = await getCompanyById(sellerId)
+        const update = await updateEndorsement(sellerId,sellerName,cmp.result.phone,cmp.result.eMail,parseFloat(cmp.result.endorsement)+parseFloat(amount),cmp.result.isEntered,cmp.result.isGuest)
+        handleSuccessToast();
+      }
       else{
-        handleFailedToast()
-        
+        setsellerName(sellerName)
+        setpurchaserName(purchaserName)
+        const purchase = await createPurchases({sellerId,purchaserId,amount,product})
+        const cmp = await getCompanyById(sellerId)
+        const update = await updateEndorsement(sellerId,sellerName,cmp.result.phone,cmp.result.eMail,parseFloat(cmp.result.endorsement)+parseFloat(amount),cmp.result.isEntered,cmp.result.isGuest)
       }
     };
-
-    createPrc();
+    if (isSubmit) {
+      createPrc();
+    }
   }, [isSubmit]);
-  
+
   React.useEffect(() => {
     const getSellerId = async () => {
       const seller = await getCompanyIdByName(sellerName);
@@ -361,7 +369,9 @@ export const PageVisitsTable = () => {
       console.log(company.result);
     };
 
-    deleteCmp();
+    if(deletedPurchaseId){
+      deleteCmp();
+    } 
   }, [deletedPurchaseId]);
   React.useEffect(() => {
     const purchasesData = async () => {
@@ -441,7 +451,7 @@ export const PageVisitsTable = () => {
     },
     {
       field: "delete",
-      headerName: "Silme",
+      headerName: " ",
       width: 150,
       sortable: false,
       renderCell: (id) => (
@@ -456,13 +466,13 @@ export const PageVisitsTable = () => {
             color="primary"
             type="submit"
           >
-            Delete
+            Sil
           </Button>
         </>
       ),
     },
   ];
-
+  console.log(purchase);
   var rows = purchase.map((p) => {
     const {
       purchaseID,
@@ -562,7 +572,7 @@ export const PageVisitsTable = () => {
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">Yeni Satış Ekleme</DialogTitle>
-        <form noValidate onSubmit={handleSubmit}>
+        <form noValidate>
           <DialogContent>
             <TextField
               value={sellerName}
@@ -604,10 +614,10 @@ export const PageVisitsTable = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
-              Cancel
+              Vazgeç
             </Button>
             <Button onClick={handleClose} color="primary" type="submit">
-              Add
+              Ekle
             </Button>
           </DialogActions>
         </form>
@@ -618,7 +628,7 @@ export const PageVisitsTable = () => {
         type={type}
         theme={getActiveTheme()}
       />
-     
+
       <DataGrid
         className={isAntDesign ? antDesignClasses.root : undefined}
         components={{
@@ -627,12 +637,12 @@ export const PageVisitsTable = () => {
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
-        rows={rows}
+        rows={rows.reverse()}
         columns={columns}
         rowLength={10}
         localeText={trTR.props.MuiDataGrid.localeText}
-      /> 
-      <ToastContainer/>
+      />
+      <ToastContainer />
     </div>
   );
 };
@@ -976,47 +986,24 @@ export const CompanyTable = () => {
   const [phone, setphone] = React.useState("");
   const [eMail, seteMail] = React.useState("");
   const [endorsement, setendorsement] = React.useState("0");
-  const [isEntered, setisEntered] = React.useState(0);
-  const [isGuest, setIsGuest] = React.useState(0);
+  const [isEntered, setisEntered] = React.useState(true);
+  const [isGuest, setIsGuest] = React.useState(false);
   const [deletedCompanyId, setDeletedCompanyId] = React.useState("");
   const [isSubmit, setSubmit] = React.useState(false);
-  const [isUpdateButtonClicked, setisUpdateButtonClicked] =
-    React.useState(false);
-const [endorsementSelect,setEndorsementSelect] = React.useState(0)
+  const [endorsementSelect, setEndorsementSelect] = React.useState(0);
   const handleClickOpen = () => {
     setOpen(true);
   };
-  const handleUpdateOpen = () => {
-    setUpdateOpen(true);
-  };
+
   const handleClose = () => {
     setOpen(false);
   };
-  const handleUpdateClose = () => {
-    setUpdateOpen(false);
-  };
-  const handleUpdateSubmit = (e) => {
-    e.preventDefault();
-    const newCustomer = {
-      companyID: companyID,
-      companyName: companyName,
-      phone: phone,
-      eMail: eMail,
-      endorsement: endorsement,
-      isEntered: isEntered,
-    };
-    setSubmit(true);
-    var newCompany = company;
-    var i = Array.indexOf(newCompany.filter((c) => c.companyID === companyID));
-    newCompany[i] = newCustomer;
-    setCompany(newCompany);
-    console.log(`user data is ${newCustomer}`);
-    console.log(company);
-  };
   const handleSubmit = (e) => {
-    e.preventDefault();
+    
+    setIsGuest(globalIsGuest)
+    console.log(isGuest)
     const newCustomer = {
-      companyID: company[company.length - 1].companyID + 1,
+      companyID: company.length > 0 ? company[company.length - 1].companyID + 1: 1,
       companyName: companyName,
       phone: phone,
       eMail: eMail,
@@ -1026,7 +1013,7 @@ const [endorsementSelect,setEndorsementSelect] = React.useState(0)
     setSubmit(true);
     setCompany([...company, newCustomer]);
     console.log(`user data is ${newCustomer}`);
-    console.log(company);
+    location.reload();
   };
   const handleDelete = (clickedUser) => {
     setDeletedCompanyId(clickedUser.id);
@@ -1034,114 +1021,20 @@ const [endorsementSelect,setEndorsementSelect] = React.useState(0)
     console.log(clickedUser);
   };
 
-  const handleUpdate = (clickedUser) => {
-    return (
-      <Dialog
-        disableBackdropClick
-        open={updateOpen}
-        onClose={handleUpdateClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">Yeni Misafir Ekle</DialogTitle>
-        <form noValidate onSubmit={handleUpdateSubmit}>
-          <DialogContent>
-            <TextField
-              value={clickedUser.companyName}
-              onChange={(event) => setcompanyName(event.target.value)}
-              autoFocus
-              margin="dense"
-              id="companyName"
-              label="Firma Adı"
-              type="text"
-              fullWidth
-            />
-            <TextField
-              value={clickedUser.phone}
-              onChange={(event) => setphone(event.target.value)}
-              margin="dense"
-              id="phone"
-              label="Telefon"
-              type="text"
-              fullWidth
-            />
-            <TextField
-              value={clickedUser.eMail}
-              onChange={(event) => seteMail(event.target.value)}
-              margin="dense"
-              id="eMail"
-              label="E-Mail"
-              type="eMail"
-              fullWidth
-            />
-            <TextField
-              value={clickedUser.endorsement}
-              onChange={(event) => setendorsement(event.target.value)}
-              margin="dense"
-              id="endorsement"
-              label="Ciro"
-              type="text"
-              fullWidth
-            />
-
-            <InputLabel
-              style={{ marginTop: "20px" }}
-              id="demo-simple-select-label"
-            >
-              Katıldı mı?
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={isEntered}
-              label="Age"
-              onChange={(e) => setisEntered(e.target.value)}
-            >
-              <MenuItem value={1}>Evet</MenuItem>
-              <MenuItem value={0}>Hayır</MenuItem>
-            </Select>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Vazgeç
-            </Button>
-            <Button onClick={handleClose} color="primary" type="submit">
-              Ekle
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
-    );
-  };
-
-  React.useEffect(() => {
-    const updateCompany = async () => {
-      const company = await updateCompany({
-        companyID,
-        companyName,
-        phone,
-        eMail,
-        endorsement,
-        isEntered,
-      });
-      console.log(company);
-    };
-
-    updateCompany();
-  }, [companyID]);
-
   React.useEffect(() => {
     const createCmp = async () => {
-      const company = await createCompany({
+      const company = await createCompany(
         companyName,
         phone,
         eMail,
-        endorsement,
         isEntered,
+        endorsement,  
         isGuest,
-      });
+      );
     };
-
-    createCmp();
+    if(isSubmit)
+      createCmp();
+    
   }, [isSubmit]);
   React.useEffect(() => {
     const deleteCmp = async () => {
@@ -1149,7 +1042,9 @@ const [endorsementSelect,setEndorsementSelect] = React.useState(0)
       console.log(company.result);
     };
 
-    deleteCmp();
+    if (deletedCompanyId) {
+      deleteCmp();
+    }
   }, [deletedCompanyId]);
   React.useEffect(() => {
     const companiesData = async () => {
@@ -1309,9 +1204,10 @@ const [endorsementSelect,setEndorsementSelect] = React.useState(0)
       return newPaginationSettings;
     });
   };
-
+var globalIsGuest
   const showEndorsement = (val) => {
     if (val === "1") {
+     globalIsGuest = false
       return (
         <TextField
           value={endorsement}
@@ -1323,9 +1219,10 @@ const [endorsementSelect,setEndorsementSelect] = React.useState(0)
           fullWidth
         />
       );
-    } else {
+    } else if (val === "0"){
+      globalIsGuest = true
     }
-  };
+  }
 
   return (
     <div className={classes.root}>
@@ -1394,18 +1291,17 @@ const [endorsementSelect,setEndorsementSelect] = React.useState(0)
                   row
                   aria-label="gender"
                   name="row-radio-buttons-group"
-                  onChange={(e)=>setEndorsementSelect(e.target.value)}
+                  onChange={(e) => setEndorsementSelect(e.target.value)}
                 >
-                  <FormControlLabel
-                    value="1"
-                    control={<Radio />}
-                    label="Evet"
-                    
-                  />
                   <FormControlLabel
                     value="0"
                     control={<Radio />}
                     label="Hayır"
+                  />
+                  <FormControlLabel
+                    value="1"
+                    control={<Radio />}
+                    label="Evet"
                   />
                 </RadioGroup>
               </FormControl>
@@ -1422,10 +1318,10 @@ const [endorsementSelect,setEndorsementSelect] = React.useState(0)
                 id="demo-simple-select"
                 value={isEntered}
                 label="Age"
-                onChange={(e) => setisEntered(e.target.value)}
+                onChange={(e) => {setisEntered(e.target.value); console.log(isEntered)}}
               >
-                <MenuItem value={1}>Evet</MenuItem>
-                <MenuItem value={0}>Hayır</MenuItem>
+                <MenuItem value={true}>Evet</MenuItem>
+                <MenuItem value={false}>Hayır</MenuItem>
               </Select>
             </DialogContent>
             <DialogActions>
@@ -1453,7 +1349,7 @@ const [endorsementSelect,setEndorsementSelect] = React.useState(0)
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
-        rows={rows}
+        rows={rows.reverse()}
         columns={columns}
         rowLength={10}
         localeText={trTR.props.MuiDataGrid.localeText}
@@ -1590,7 +1486,7 @@ export const AttendTable = () => {
         }}
       >
         <Button style={{ backgroundColor: "#7389F7" }}>
-          FUARA KATILMAYANLAR
+          FUARA KATILMAYAN FİRMALAR
         </Button>
       </Stack>
       <SettingsPanel
@@ -1607,7 +1503,7 @@ export const AttendTable = () => {
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
-        rows={rows}
+        rows={rows.reverse()}
         columns={columns}
         rowLength={10}
         localeText={trTR.props.MuiDataGrid.localeText}
@@ -1753,7 +1649,7 @@ export const NoPurchaseCompany = () => {
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
-        rows={rows}
+        rows={rows.reverse()}
         columns={columns}
         rowLength={10}
         localeText={trTR.props.MuiDataGrid.localeText}
@@ -1998,7 +1894,7 @@ export const NotAttendTable = () => {
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
-        rows={rows}
+        rows={rows.reverse()}
         columns={columns}
         rowLength={10}
         localeText={trTR.props.MuiDataGrid.localeText}
@@ -2220,7 +2116,7 @@ export const GuestsTable = () => {
 
     {
       field: "companyName",
-      headerName: "Firma Adı",
+      headerName: "Misafir Adı",
       width: 150,
       editable: false,
     },
@@ -2332,7 +2228,7 @@ export const GuestsTable = () => {
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
-        rows={rows}
+        rows={rows.reverse()}
         columns={columns}
         rowLength={10}
         localeText={trTR.props.MuiDataGrid.localeText}

@@ -297,8 +297,7 @@ export default () => {
       const company = await deleteAccommodations(deletedAccommodation);
       console.log(company.result);
     };
-
-    deleteAcc();
+    if (deletedAccommodation) deleteAcc();
   }, [deletedAccommodation]);
   React.useEffect(() => {
     const createAcc = async () => {
@@ -332,14 +331,13 @@ export default () => {
         description: accommodationInfo[25],
       });
     };
-
-    createAcc();
+    if (isSubmit) createAcc();
   }, [isSubmit]);
   const handleClose = () => {
     setOpen(false);
   };
   const handleSubmit = (e) => {
-    e.preventDefault();
+  
     handleClose();
     const newCustomer = {
       companyName: accommodationInfo[0],
@@ -379,7 +377,7 @@ export default () => {
   const columns = [
     {
       field: "event",
-      headerName: "SİL",
+      headerName: " ",
       width: 180,
       sortable: false,
       renderCell: (id) => (
@@ -396,25 +394,13 @@ export default () => {
           >
             Sil
           </Button>
-          {/* <Button
-            style={{
-              backgroundColor: "#ffcc00",
-              
-              padding: "3px 35px"
-            }}
-            variant="contained"
-            color="primary"
-            type="submit"
-            onClick={()=>handleUpdate(id)}
-          >
-            Düzenle
-          </Button> */}
+         
         </>
       ),
     },
     {
       field: "id",
-      headerName: "ID",
+      headerName: " ",
       width: 100,
       editable: false,
     },
@@ -583,32 +569,31 @@ export default () => {
     },
   ];
   const [accommodationInfo, setAccommodationInfo] = React.useState([
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
-    "0",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
+    " ",
     1,
   ]);
   var rows = accommodation.map((p) => {
@@ -620,7 +605,6 @@ export default () => {
       firstGuest,
       secondGuest,
       thirdGuest,
-      numberOfGuests,
       guestCompanyName,
       phone,
       sng,
@@ -638,6 +622,7 @@ export default () => {
       _SNGCHD,
       _DBLCHD,
       _TRPLCHD,
+      description
     } = p;
     return {
       id: accommodationID,
@@ -648,17 +633,16 @@ export default () => {
       firstGuest: firstGuest,
       secondGuest: secondGuest,
       thirdGuest: thirdGuest,
-      numberOfGuests: numberOfGuests,
       guestCompanyName: guestCompanyName,
       phone: phone,
-      sng: sng,
-      dbl: dbl,
-      trpl: trpl,
-      quat: quat,
-      sngchd: sngchd,
-      dblchd: dblchd,
-      trplchd: trplchd,
-      checkOutDate: checkOut.split("T")[0],
+      SNG: sng,
+      DBL: dbl,
+      TRPL: trpl,
+      QUAT: quat,
+      SNGCHD: sngchd,
+      DBLCHD: dblchd,
+      TRPLCHD: trplchd,
+      checkOutDate: dateFormat(checkOut.split("T")[0]),
       checkOutTime: checkOut.split("T")[1],
       _SNG: _SNG,
       _DBL: _DBL,
@@ -666,7 +650,8 @@ export default () => {
       _QUAT: _QUAT,
       _SNGCHD: _SNGCHD,
       _DBLCHD: _DBLCHD,
-      _TRPLCH: _TRPLCHD,
+      _TRPLCHD: _TRPLCHD,
+      description
     };
   });
   const [pagination, setPagination] = React.useState({
@@ -738,7 +723,7 @@ export default () => {
           color="primary"
           type="submit"
         >
-          Yeni Katılımcı Ekle
+          Yeni Konaklama Ekle
         </Button>
         <Dialog
           disableBackdropClick
@@ -746,7 +731,7 @@ export default () => {
           onClose={handleClose}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Yeni Katılımcı Ekle</DialogTitle>
+          <DialogTitle id="form-dialog-title">Yeni Konakalama Ekle</DialogTitle>
           <form onSubmit={handleSubmit}>
             <DialogContent>
               <TextField
@@ -799,51 +784,35 @@ export default () => {
                 fullWidth
                 required
               />
-              <InputLabel
-                style={{ marginTop: "20px" }}
-                id="demo-simple-select-label"
-                required
-              >
-                Misafir Sayısı
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={accommodationInfo[26]}
-                label="Misafir Sayısı"
-                onChange={(e) => (accommodationInfo[26] = e.target.value)}
-              >
-                <MenuItem
-                  value={1}
-                  onClick={() => {
-                    setNo(1);
-                  }}
-                >
-                  1
-                </MenuItem>
-                <MenuItem
-                  value={2}
-                  onClick={() => {
-                    setNo(2);
-                  }}
-                >
-                  2
-                </MenuItem>
-                <MenuItem
-                  value={3}
-                  onClick={() => {
-                    setNo(3);
-                  }}
-                >
-                  3
-                </MenuItem>
-              </Select>
-
-              {guestFields(no, [
-                accommodationInfo[4],
-                accommodationInfo[5],
-                accommodationInfo[6],
-              ])}
+              
+              <TextField
+              onChange={(event) => (accommodationInfo[4] = event.target.value)}
+              autoFocus
+              required
+              margin="dense"
+              id="firstGuest"
+              label="1. Misafir Adı"
+              type="text"
+              fullWidth
+            />
+            <TextField
+              onChange={(event) => (accommodationInfo[5] = event.target.value)}
+              autoFocus
+              margin="dense"
+              id="secondGuest"
+              label="2.Misafir Adı"
+              type="text"
+              fullWidth
+            />
+            <TextField
+              onChange={(event) => (accommodationInfo[6] = event.target.value)}
+              autoFocus
+              margin="dense"
+              id="thirdGuest"
+              label="3. Misafir Adı"
+              type="text"
+              fullWidth
+            />
               <TextField
                 onChange={(event) =>
                   (accommodationInfo[7] = event.target.value)
@@ -851,7 +820,7 @@ export default () => {
                 margin="dense"
                 id="guestCompanyName"
                 label="Firma Adı"
-                type="eMail"
+                type="text"
                 fullWidth
               />
               <TextField
@@ -1065,7 +1034,7 @@ export default () => {
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
-        rows={rows}
+        rows={rows.reverse()}
         columns={columns}
         rowLength={10}
         localeText={trTR.props.MuiDataGrid.localeText}
@@ -1074,75 +1043,48 @@ export default () => {
   );
 };
 
-const guestFields = (no, values) => {
-  console.log(no);
-  console.log(values);
+// const guestFields = (no, values) => {
+//   console.log(no);
+//   console.log(values);
 
-  if (no === 1) {
-    return (
-      <TextField
-        onChange={(event) => (values[0] = event.target.value)}
-        autoFocus
-        margin="dense"
-        id="firstGuest"
-        label="Misafir Adı"
-        type="text"
-        fullWidth
-      />
-    );
-  } else if (no === 2) {
-    return (
-      <>
-        <TextField
-          onChange={(event) => (values[0] = event.target.value)}
-          autoFocus
-          margin="dense"
-          id="firstGuest"
-          label="1. Misafir Adı"
-          type="text"
-          fullWidth
-        />
-        <TextField
-          onChange={(event) => (values[1] = event.target.value)}
-          autoFocus
-          margin="dense"
-          id="secondGuest"
-          label="2.Misafir Adı"
-          type="text"
-          fullWidth
-        />
-      </>
-    );
-  } 
-  else if (no === 3) {
-    <>
-      <TextField
-        onChange={(event) => (values[0] = event.target.value)}
-        autoFocus
-        margin="dense"
-        id="firstGuest"
-        label="1. Misafir Adı"
-        type="text"
-        fullWidth
-      />
-      <TextField
-        onChange={(event) => (values[1] = event.target.value)}
-        autoFocus
-        margin="dense"
-        id="secondGuest"
-        label="2.Misafir Adı"
-        type="text"
-        fullWidth
-      />
-      <TextField
-        onChange={(event) => (values[2] = event.target.value)}
-        autoFocus
-        margin="dense"
-        id="thirdGuest"
-        label="3. Misafir Adı"
-        type="text"
-        fullWidth
-      />
-    </>;
-  }
-};
+//   if (no === 1) {
+//     return (
+//       <TextField
+//         onChange={(event) => (values[0] = event.target.value)}
+//         autoFocus
+//         margin="dense"
+//         id="firstGuest"
+//         label="Misafir Adı"
+//         type="text"
+//         fullWidth
+//       />
+//     );
+//   } else if (no === 2) {
+//     return (
+//       <>
+//         <TextField
+//           onChange={(event) => (values[0] = event.target.value)}
+//           autoFocus
+//           margin="dense"
+//           id="firstGuest"
+//           label="1. Misafir Adı"
+//           type="text"
+//           fullWidth
+//         />
+//         <TextField
+//           onChange={(event) => (values[1] = event.target.value)}
+//           autoFocus
+//           margin="dense"
+//           id="secondGuest"
+//           label="2.Misafir Adı"
+//           type="text"
+//           fullWidth
+//         />
+//       </>
+//     );
+//   } else if (no === 3) {
+//     <>
+      
+//     </>;
+//   }
+// };
