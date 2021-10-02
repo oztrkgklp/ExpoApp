@@ -17,7 +17,7 @@ import {
 } from "@themesberg/react-bootstrap";
 import { Link } from "react-router-dom";
 import NOTIFICATIONS_DATA from "../data/notifications";
-import Profile3 from "../assets/img/team/profile-picture-3.jpg";
+import Profile3 from "../assets/img/technologies/logo.jpg";
 import { Routes } from "../routes";
 import Signin from "../pages/examples/Signin"
 export default (props) => {
@@ -34,7 +34,6 @@ export default (props) => {
   };
 
   const Notification = (props) => {
-    const { link, sender, image, time, message, read = false } = props;
     const readClassName = read ? "" : "text-danger";
     return (
       <ListGroup.Item action href={link} className="border-bottom border-light">
@@ -101,7 +100,7 @@ export default (props) => {
 
                 <Dropdown.Item
                   className="fw-bold"
-                  Link={Routes.Presentation.path}
+                  as={Link} to={Routes.Presentation.path}
                 >
                   <FontAwesomeIcon
                     icon={faSignOutAlt}

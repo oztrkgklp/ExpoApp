@@ -5,6 +5,7 @@ import {
   faUserSlash,
   faUsers,
   faBed,
+  faBuilding
 } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row } from "@themesberg/react-bootstrap";
 
@@ -102,7 +103,7 @@ export default () => {
             category={"Firmalar "}
             title={companiesCount == null ? "0" : companiesCount}
             percentage={18.2}
-            icon={faUsers}
+            icon={faBuilding}
             iconColor="shape-secondary"
           />
         </Col>
