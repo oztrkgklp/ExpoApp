@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleDown,
   faAngleUp,
-  faUserPlus,
+  faUserPlus, faBuilding,
 } from "@fortawesome/free-solid-svg-icons";
 import {
-  faBootstrap,
+ 
   faReact,
   faVuejs,
 } from "@fortawesome/free-brands-svg-icons";
@@ -280,7 +280,7 @@ export const ProgressTrackWidget = () => {
           <Progress
             title={r.companyName}
             color="blue"
-            icon={faBootstrap}
+            icon={faBuilding}
             percentage={r.endorsement}
           />
           

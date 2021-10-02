@@ -87,7 +87,7 @@ export default (props = {}) => {
                 </div>
                 <div className="d-block">
                   <h6>Hi, Jane</h6>
-                  <Button as={Link} variant="secondary" size="xs" to={Routes.Signin.path} className="text-dark">
+                  <Button as={Link} variant="secondary" size="xs" to={Routes.Presentation.path} className="text-dark">
                     <FontAwesomeIcon icon={faSignOutAlt} className="me-2" /> Sign Out
                   </Button>
                 </div>
@@ -97,7 +97,7 @@ export default (props = {}) => {
               </Nav.Link>
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
-              <NavItem title="Garanti Kongre" link={Routes.Presentation.path} image={ReactHero} />
+              {/* <NavItem title="Garanti Kongre" link={Routes.Presentation.path} image={ReactHero} /> */}
               <NavItem title="Gösterge Paneli" link={Routes.DashboardOverview.path} icon={faChartPie} />
               <NavItem title="Misafirler" link={Routes.NewCompany.path} icon={faUsers} />
               <NavItem title="Konaklama" link={Routes.Acconmodation.path} icon={faBed} />

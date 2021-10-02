@@ -52,18 +52,18 @@ export const deleteCompany = async (id) => {
 export const createCompany = async (params) => {
   const url =
     domain +
-    "companies?CompanyName='" +
+    "companies?CompanyName=\'" +
     params.companyName +
     "'&Phone='" +
     params.phone +
     "'&EMail='" +
     params.eMail +
-    "'&IsEntered='" +
-    params.isEntered +
-    "'&Endorsement=" +
+    "'&IsEntered=" +
+    (params.isEntered === 1 ?"true":"false") +
+    "&Endorsement=" +
     params.endorsement +
-    "'&IsGuest='"+
-    params.isGuest;
+    "&IsGuest="+
+    (params.isGuest === 0 ? "true":"false");
   console.log(url);
   const { data } = await axios.post(url);
   return data;
