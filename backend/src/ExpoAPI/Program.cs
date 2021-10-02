@@ -37,11 +37,13 @@ namespace ExpoAPI
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
-                .UseKestrel(options =>
-                {
-                    options.ListenAnyIP(5009);
-                    options.AddServerHeader = false;
-                })
+                // .UseKestrel(options =>
+                // {
+                //     options.ListenAnyIP(5009);
+                //     options.AddServerHeader = false;
+                // })
+                .UseIISIntegration()
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseSerilog()
                 .UseStartup<Startup>();
         }

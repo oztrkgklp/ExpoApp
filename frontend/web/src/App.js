@@ -17,7 +17,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
-import { createGuest } from "./Data";
+import { createGuest, createPurchase, getIdByName, getGuests } from "./Data";
 
 function Copyright(props) {
   return (
@@ -49,21 +49,43 @@ export default function SignInSide() {
   const [product, setProduct] = React.useState("");
   const [isSubmit, setSubmit] = React.useState(false);
 
-  const handleSubmit = () => {
-    // setSubmit(true);
-  };
-  React.useEffect(() => {
-    const createPurchasse = async () => {
-      console.log("Purchaser Name: " + purchaserName);
-      console.log("EMail: " + purchaserName);
-      console.log("Phone: " + purchaserName);
+  React.useEffect(()=>{
+    const seller = async () => {
+      const id = await getIdByName(sellerName)
+      setsellerId(id.result)
+    }
+    seller()
 
-      const Purchaser = await createGuest({ purchaserName, eMail, phone });
-      console.log(Purchaser);
-      setSubmit(false);
+  },[sellerName])
+
+  React.useEffect(()=>{
+    const purchaser = async () => {
+      const id = await getIdByName(purchaserName)
+      setpurchaserId(id.result)
+      console.log(id.result)
+    }
+   purchaser()
+  },[purchaserName])
+
+  React.useEffect((e) => {
+    const createPurchase_ = async () => {
+      if(sellerId === null || sellerId === 0)
+      {
+        return null
+      }
+      if(purchaserId === null || purchaserId === 0){
+        const Purchaser = await createGuest(purchaserName, eMail, phone);
+        var id = await getIdByName(purchaserName)
+        const purchase = await createPurchase(sellerId,id.result,count,product)
+      }
+      else{
+        setsellerName(sellerName)
+        setpurchaserName(purchaserName)
+        const purchase = await createPurchase(sellerId,purchaserId,count,product)
+      }
     };
 
-    createPurchasse();
+    createPurchase_();
   }, [isSubmit]);
   return (
     <ThemeProvider theme={theme}>
@@ -109,7 +131,7 @@ export default function SignInSide() {
                 required
                 fullWidth
                 value={sellerName}
-                onChange={(e) => setsellerName(e.target.value)}
+                onChange={(e) => {setsellerName(e.target.value)}}
                 id="sellerName"
                 label="Satış Yapan Şirket Adı"
                 name="sellerName"
@@ -119,7 +141,7 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                onChange={(e) => setpurchaserName(e.target.value)}
+                onChange={(e) => {setpurchaserName(e.target.value)}}
                 id="purchaserName"
                 label="Alım Yapan Şirket Adı"
                 name="purchaserName"
@@ -129,7 +151,7 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                onChange={(e) => setemail(e.target.value)}
+                onChange={(e) => {setemail(e.target.value)}}
                 name="email"
                 label="Email Adresi"
                 id="email"
@@ -138,7 +160,7 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                onChange={(e) => setphone(e.target.value)}
+                onChange={(e) => {setphone(e.target.value)}}
                 name="phone"
                 label="Telefon Numarası"
                 id="phone"
@@ -147,7 +169,7 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                onChange={(e) => setProduct(e.target.value)}
+                onChange={(e) => {setProduct(e.target.value)}}
                 name="product"
                 label="Ürün"
                 id="count"
@@ -156,7 +178,7 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                onChange={(e) => setcount(e.target.value)}
+                onChange={(e) => {setcount(e.target.value)}}
                 name="count"
                 label="Miktar"
                 id="count"
@@ -166,7 +188,7 @@ export default function SignInSide() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                onClick={() => handleSubmit}
+                onClick={(e) =>{setSubmit(true)}}
               >
                 Kaydet
               </Button>
