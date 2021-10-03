@@ -15,10 +15,9 @@ import useSWR from "swr";
 import InputLabel from "@mui/material/InputLabel";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
+import {ToastContainer,toast,Zoom} from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import {
   createGuest,
   createPurchase,
@@ -26,9 +25,10 @@ import {
   getGuests,
   updateEndorsement,
   getCompanyById,
+  getCompanyName,
 } from "./Data";
-import { GuestsTable } from "./SellerTable";
-
+import SellerTable from "./SellerTable";
+import PurchaseTable from "./PurchaseTable"
 function Copyright(props) {
   return (
     <Typography
@@ -48,7 +48,8 @@ function Copyright(props) {
 }
 
 const theme = createTheme();
-export default function SignInSide() {
+
+export default function App() {
   const [sellerName, setsellerName] = React.useState("");
   const [sellerId, setsellerId] = React.useState(0);
   const [purchaserName, setpurchaserName] = React.useState("");
@@ -59,12 +60,47 @@ export default function SignInSide() {
   const [product, setProduct] = React.useState("");
   const [isSubmit, setSubmit] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [companyNames, setCompanyNames] = React.useState([]);
+
+
+  const handleFailedToast = ()=>{
+    toast.error('🦄 Eksik/Hatalı Satıcı Firma Adı ', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      });
+  }
+  const handleSuccessToast = ()=>{
+    toast.success('🦄 Satış Başarıyla Kaydedildi ', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      });
+  }
+  
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const [anchorEl2, setAnchorEl2] = React.useState(null);
+  const open2 = Boolean(anchorEl2);
+  const handleClick2 = (event) => {
+    setAnchorEl2(event.currentTarget);
+  };
+  const handleClose2 = () => {
+    setAnchorEl2(null);
   };
   React.useEffect(() => {
     const seller = async () => {
@@ -82,11 +118,20 @@ export default function SignInSide() {
     };
     purchaser();
   }, [purchaserName]);
-
+  React.useEffect(() => {
+    const purchaser = async () => {
+      const companyName = await getCompanyName();
+      setCompanyNames(companyName.result);
+      console.log(companyName.result);
+    };
+    purchaser();
+  }, []);
   React.useEffect(
     (e) => {
+      
       const createPurchase_ = async () => {
-        if (sellerId === null || sellerId === 0) {
+        if (sellerId === 0 || sellerId === null) {
+          handleFailedToast()
           return null;
         }
         if (purchaserId === null || purchaserId === 0) {
@@ -109,8 +154,9 @@ export default function SignInSide() {
             cmp.result.isGuest
           );
         } else {
-          setsellerName(sellerName);
-          setpurchaserName(purchaserName);
+          var includeCompanyName = companyNames.includes(sellerName)
+          if (includeCompanyName == true) {
+            
           const purchase = await createPurchase(
             sellerId,
             purchaserId,
@@ -127,13 +173,18 @@ export default function SignInSide() {
             cmp.result.isEntered,
             cmp.result.isGuest
           );
+         
+         }
+          
         }
+        
       };
 
       createPurchase_();
     },
     [isSubmit]
   );
+
   return (
     <ThemeProvider theme={theme}>
       
@@ -147,7 +198,7 @@ export default function SignInSide() {
         }}
       >
         <CssBaseline />
-        <Grid item xs={false} sm={4} md={7}  />
+        <Grid item xs={false} sm={4} md={7} />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
@@ -173,16 +224,46 @@ export default function SignInSide() {
                 aria-expanded={open ? "true" : undefined}
                 onClick={handleClick}
                 variant="contained"
-                
               >
                 Satış Yapan Firmalar
               </Button>
-             
-               
-             
-              <Button variant="contained" href="#outlined-buttons">
-                Alış Yapan Misafirler
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem>
+                  <SellerTable />{" "}
+                </MenuItem>
+              </Menu>
+
+              <Button
+                id="basic-button"
+                aria-controls="basic-menu"
+                aria-haspopup="true"
+                aria-expanded={open2 ? "true" : undefined}
+                onClick={handleClick2}
+                variant="contained"
+              >
+                Alım Yapan Misafirler
               </Button>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl2}
+                open={open2}
+                onClose={handleClose2}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem>
+                  <PurchaseTable />{" "}
+                </MenuItem>
+              </Menu>
             </Stack>
             <Box component="form" noValidate sx={{ mt: 1 }}>
               <TextField
@@ -206,7 +287,7 @@ export default function SignInSide() {
                   setpurchaserName(e.target.value);
                 }}
                 id="purchaserName"
-                label="Alım Yapan Şirket Adı"
+                label="Alım Yapan Misafir Adı"
                 name="purchaserName"
                 autoFocus
               />
@@ -270,6 +351,7 @@ export default function SignInSide() {
           </Box>
         </Grid>
       </Grid>
+      <ToastContainer/>
     </ThemeProvider>
   );
 }

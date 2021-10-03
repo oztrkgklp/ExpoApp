@@ -21,7 +21,7 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import { getCompanies } from './Data';
+import { getGuests } from './Data';
 
 function createData(name, calories, fat, carbs, protein) {
   return {
@@ -78,7 +78,7 @@ const headCells = [
     id: 'companyName',
     numeric: true,
     disablePadding: false,
-    label: 'Firma Adı',
+    label: 'Misafir Adı',
   },
   {
     id: 'eMail',
@@ -91,12 +91,7 @@ const headCells = [
     disablePadding: false,
     label: 'Telefon',
   },
-  {
-    id: 'endorsement',
-    numeric: true,
-    disablePadding: false,
-    label: 'Ciro',
-  },
+  
  
 ];
 
@@ -221,7 +216,7 @@ export default function EnhancedTable() {
   const [company,setCompany]=React.useState([])
   React.useEffect(() => {
     const companiesData = async () => {
-      const company = await getCompanies();
+      const company = await getGuests();
       console.log(company.result)
       rows = (company.result);
     };
@@ -340,7 +335,6 @@ export default function EnhancedTable() {
                       <TableCell align="right">{row.companyName}</TableCell>
                       <TableCell align="right">{row.eMail}</TableCell>
                       <TableCell align="right">{row.phone}</TableCell>
-                      <TableCell align="right">{row.endorsement}</TableCell>
                     </TableRow>
                   );
                 })}
