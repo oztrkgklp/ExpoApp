@@ -36,6 +36,7 @@ function createData(name, calories, fat, carbs, protein) {
 var rows = [
   
 ];
+var result = [];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -90,12 +91,6 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: 'Telefon',
-  },
-  {
-    id: 'endorsement',
-    numeric: true,
-    disablePadding: false,
-    label: 'Ciro',
   },
  
 ];
@@ -186,7 +181,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Nutrition
+          Firmalar
         </Typography>
       )}
 
@@ -223,7 +218,11 @@ export default function EnhancedTable() {
     const companiesData = async () => {
       const company = await getCompanies();
       console.log(company.result)
-      rows = (company.result);
+      result = (company.result);
+      rows = result.map((c) =>{
+          const {companyID, companyName, eMail, phone, endorsement, isGuest, isEntered} = c 
+          return {companyID,companyName,eMail,phone}
+      })
     };
     
     companiesData();

@@ -38,8 +38,8 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="https://garantikongre.com/" target="_blank">
-        Garanti Kongre
+      <Link color="inherit" href="http://idealorganizasyon.org/" target="_blank">
+        İdeal Organizasyon
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -131,11 +131,12 @@ export default function App() {
       
       const createPurchase_ = async () => {
         if (sellerId === 0 || sellerId === null) {
+          if(sellerName !== "")
           handleFailedToast()
           return null;
         }
         if (purchaserId === null || purchaserId === 0) {
-          const Purchaser = await createGuest(purchaserName, eMail, phone);
+          const Purchaser = await createGuest(purchaserName, eMail === null || eMail===""?" ":eMail, phone === null || phone===""?" ":phone);
           var id = await getIdByName(purchaserName);
           const purchase = await createPurchase(
             sellerId,
@@ -293,24 +294,24 @@ export default function App() {
               />
               <TextField
                 margin="normal"
-                required
+                // required
                 fullWidth
                 onChange={(e) => {
                   setemail(e.target.value);
                 }}
                 name="email"
-                label="Email Adresi"
+                label="Alıcı Email Adresi"
                 id="email"
               />
               <TextField
                 margin="normal"
-                required
+                // required
                 fullWidth
                 onChange={(e) => {
                   setphone(e.target.value);
                 }}
                 name="phone"
-                label="Telefon Numarası"
+                label="Alıcı Telefon Numarası"
                 id="phone"
               />
               <TextField
@@ -332,7 +333,7 @@ export default function App() {
                   setcount(e.target.value);
                 }}
                 name="count"
-                label="Miktar"
+                label="Satış Miktarı"
                 id="count"
               />
               <Button
@@ -341,7 +342,13 @@ export default function App() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 onClick={(e) => {
+                  e.preventDefault();
+                  if(!companyNames.includes(sellerName)){
+                    handleFailedToast();
+                    return null
+                  }
                   setSubmit(true);
+                  window.setTimeout(function(){window.location.reload()},2500)
                 }}
               >
                 Kaydet
