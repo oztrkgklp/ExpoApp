@@ -67,7 +67,7 @@ export const CounterWidget = (props) => {
   const { icon, iconColor, category, title } = props;
 
   return (
-    <Card border="light" className="shadow-sm">
+    <Card border="dark" className="shadow-lg">
       <Card.Body>
         <Row className="d-block d-xl-flex align-items-center">
           <Col

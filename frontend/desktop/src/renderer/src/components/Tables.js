@@ -277,6 +277,28 @@ SettingsPanel.propTypes = {
   theme: PropTypes.oneOf(["ant", "default"]).isRequired,
   type: PropTypes.oneOf(["Commodity", "Employee"]).isRequired,
 };
+const handleSuccessToast = (mes) => {
+  toast("🦄" + mes, {
+    position: "top-center",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
+const handleFailedToast = (mes) => {
+  toast.error("🦄" + mes, {
+    position: "top-center",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
 
 export const PageVisitsTable = () => {
   const classes = useStyles();
@@ -297,49 +319,47 @@ export const PageVisitsTable = () => {
   const [product, setProduct] = React.useState([]);
   const [error, setError] = React.useState(false);
 
-  const handleSuccessToast = () => {
-    toast("🦄Yeni Satış Oluşturuldu", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
-  const handleFailedToast = () => {
-    toast.error("🦄Kayıtlı Olmayan Satıcı/Alıcı", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
-
   React.useEffect(() => {
     const createPrc = async () => {
-      if(sellerId === null || sellerId === 0)
-      {
-        return null
+      console.log(sellerId);
+      console.log(purchaserId);
+
+      if (sellerId === null || sellerId === 0) {
+        handleFailedToast("YANLIŞ SATICI/ALICI ADI");
+        window.setTimeout(function () {
+          location.reload();
+        }, 2000);
+        return null;
       }
-      if(purchaserId === null || purchaserId === 0){
-        const Purchaser = await createGuest(purchaserName, eMail, phone);
-        var id = await getCompanyIdByName(purchaserName)
-        const purchase = await createPurchases({sellerId,purchaserId:id.result,amount,product})
-        const cmp = await getCompanyById(sellerId)
-        const update = await updateEndorsement(sellerId,sellerName,cmp.result.phone,cmp.result.eMail,parseFloat(cmp.result.endorsement)+parseFloat(amount),cmp.result.isEntered,cmp.result.isGuest)
-        handleSuccessToast();
-      }
-      else{
-        setsellerName(sellerName)
-        setpurchaserName(purchaserName)
-        const purchase = await createPurchases({sellerId,purchaserId,amount,product})
-        const cmp = await getCompanyById(sellerId)
-        const update = await updateEndorsement(sellerId,sellerName,cmp.result.phone,cmp.result.eMail,parseFloat(cmp.result.endorsement)+parseFloat(amount),cmp.result.isEntered,cmp.result.isGuest)
+      if (purchaserId === null || purchaserId === 0) {
+        handleFailedToast("YANLIŞ SATICI/ALICI ADI");
+        window.setTimeout(function () {
+          location.reload();
+        }, 2000);
+        return null;
+      } else {
+        setsellerName(sellerName);
+        setpurchaserName(purchaserName);
+        const purchase = await createPurchases({
+          sellerId,
+          purchaserId,
+          amount,
+          product,
+        });
+        const cmp = await getCompanyById(sellerId);
+        const update = await updateEndorsement(
+          sellerId,
+          sellerName,
+          cmp.result.phone,
+          cmp.result.eMail,
+          parseFloat(cmp.result.endorsement) + parseFloat(amount),
+          cmp.result.isEntered,
+          cmp.result.isGuest
+        );
+        handleSuccessToast("GİRİŞ BAŞARILI");
+        window.setTimeout(function () {
+          location.reload();
+        }, 2000);
       }
     };
     if (isSubmit) {
@@ -369,9 +389,9 @@ export const PageVisitsTable = () => {
       console.log(company.result);
     };
 
-    if(deletedPurchaseId){
+    if (deletedPurchaseId) {
       deleteCmp();
-    } 
+    }
   }, [deletedPurchaseId]);
   React.useEffect(() => {
     const purchasesData = async () => {
@@ -472,7 +492,7 @@ export const PageVisitsTable = () => {
       ),
     },
   ];
-  console.log(purchase);
+
   var rows = purchase.map((p) => {
     const {
       purchaseID,
@@ -999,11 +1019,11 @@ export const CompanyTable = () => {
     setOpen(false);
   };
   const handleSubmit = (e) => {
-    
-    setIsGuest(globalIsGuest)
-    console.log(isGuest)
+    setIsGuest(globalIsGuest);
+    console.log(isGuest);
     const newCustomer = {
-      companyID: company.length > 0 ? company[company.length - 1].companyID + 1: 1,
+      companyID:
+        company.length > 0 ? company[company.length - 1].companyID + 1 : 1,
       companyName: companyName,
       phone: phone,
       eMail: eMail,
@@ -1023,18 +1043,20 @@ export const CompanyTable = () => {
 
   React.useEffect(() => {
     const createCmp = async () => {
-      const company = await createCompany(
-        companyName,
-        phone,
-        eMail,
-        isEntered,
-        endorsement,  
-        isGuest,
-      );
+      
+        const company = await createCompany(
+          companyName,
+          phone,
+          eMail,
+          isEntered,
+          endorsement,
+          isGuest
+        );
+       
+        console.log("AAAAAAAAAAAAAA");
+      
     };
-    if(isSubmit)
-      createCmp();
-    
+    if (isSubmit) createCmp();
   }, [isSubmit]);
   React.useEffect(() => {
     const deleteCmp = async () => {
@@ -1204,10 +1226,10 @@ export const CompanyTable = () => {
       return newPaginationSettings;
     });
   };
-var globalIsGuest
+  var globalIsGuest;
   const showEndorsement = (val) => {
     if (val === "1") {
-     globalIsGuest = false
+      globalIsGuest = false;
       return (
         <TextField
           value={endorsement}
@@ -1219,10 +1241,10 @@ var globalIsGuest
           fullWidth
         />
       );
-    } else if (val === "0"){
-      globalIsGuest = true
+    } else if (val === "0") {
+      globalIsGuest = true;
     }
-  }
+  };
 
   return (
     <div className={classes.root}>
@@ -1252,7 +1274,7 @@ var globalIsGuest
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title">Yeni Katılımcı Ekle</DialogTitle>
-          <form noValidate onSubmit={handleSubmit}>
+          <form noValidate onSubmit={handleSubmit }>
             <DialogContent>
               <TextField
                 value={companyName}
@@ -1318,7 +1340,10 @@ var globalIsGuest
                 id="demo-simple-select"
                 value={isEntered}
                 label="Age"
-                onChange={(e) => {setisEntered(e.target.value); console.log(isEntered)}}
+                onChange={(e) => {
+                  setisEntered(e.target.value);
+                  console.log(isEntered);
+                }}
               >
                 <MenuItem value={true}>Evet</MenuItem>
                 <MenuItem value={false}>Hayır</MenuItem>
@@ -1357,7 +1382,6 @@ var globalIsGuest
     </div>
   );
 };
-
 export const AttendTable = () => {
   const classes = useStyles();
   const antDesignClasses = useStylesAntDesign();

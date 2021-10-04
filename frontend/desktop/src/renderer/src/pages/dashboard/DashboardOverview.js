@@ -8,7 +8,6 @@ import {
   faBuilding
 } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row } from "@themesberg/react-bootstrap";
-
 import {
   CounterWidget,
   CircleChartWidget,

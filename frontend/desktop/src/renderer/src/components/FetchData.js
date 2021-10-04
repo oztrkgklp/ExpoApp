@@ -89,64 +89,12 @@ export const createPurchases = async (params) => {
 };
 
 export const createAccommodation = async (params) => {
-  
-  console.log(domain +
-    "accommodations?CompanyName='" +
-    params.companyName + "'"+
-    "&Hotel='" +
-    params.hotel + "'" +
-    "&CheckIn=" +
-    params.checkInDate+ " "+ params.checkInTime +
-    "&FirstGuest='"+
-    params.firstGuest+ "'"+
-    "&SecondGuest='"+
-    params.secondGuest+ "'"+
-    "&ThirdGuest='"+
-    params.thirdGuest+ "'"+
-    "&NumberOfGuests="+
-    params.numberOfGuests+
-    "&GuestCompanyName='"+
-    params.guestCompanyName+ "'"+
-    "&Phone='"+
-    params.phone+ "'"+
-    "&SNG='"+
-    params.SNG+ "'"+
-    "&DBL='"+
-    params.DBL+ "'"+
-    "&TRPL='"+
-    params.TRPL+ "'"+
-    "&QUAT='"+
-    params.QUAT+ "'"+
-    "&_SNGCHD='"+
-    params.SNGCHD+ "'"+
-    "&_DBLCHD='"+
-    params.DBLCHD+ "'"+
-    "&_TRPLCHD='"+
-    params.TRPLCHD+ "'"+
-    "&CheckOut=" +
-    params.checkOutDate+ " "+ params.checkOutTime +
-    "&_SNG='"+
-    params._SNG+ "'"+
-    "&_DBL='"+
-    params._DBL+ "'"+
-    "&_TRPL='"+
-    params._TRPL+ "'"+
-    "&_QUAT='"+
-    params._QUAT+ "'"+
-    "&_SNGCHD='"+
-    params._SNGCHD+ "'"+
-    "&_DBLCHD='"+
-    params._DBLCHD+ "'"+
-    "&_TRPLCHD='"+
-    params._TRPLCHD+ "'"+
-    "&Description='" +
-    params.description+"'")
     var i = 1
-    if(params.secondGuest.length>0)
+    if(params.secondGuest.length>1)
       i++
-    if(params.thirdGuest.length>0)
+    if(params.thirdGuest.length>1)
       i++
-    console.log(i)
+    
   const { data } = await axios.post(
     domain +
       "accommodations?CompanyName='" +
@@ -290,6 +238,11 @@ export const updateCompany = async (params) => {
 export const getCompanyById = async (id) => {
   const url = domain + "companies/" + id;
   console.log(url);
+  const { data } = await axios.get(url);
+  return data;
+};
+export const getCompanyName = async () => {
+  const url = domain + "company-names";
   const { data } = await axios.get(url);
   return data;
 };

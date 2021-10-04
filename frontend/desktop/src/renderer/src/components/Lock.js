@@ -2,12 +2,27 @@ import * as React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { domain } from "../assets/domain";
 import {
+  faCoins,
+  faUserCheck,
+  faUserSlash,
+  faUsers,
+  faBed,
+  faBuilding
+} from "@fortawesome/free-solid-svg-icons";
+import {
   faEdit,
   faEllipsisH,
   faExternalLinkAlt,
   faEye,
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
+import {
+  CounterWidget,
+  CircleChartWidget,
+  ProgressTrackWidget,
+  SalesValueWidget,
+  SalesValueWidgetPhone,
+} from "./Widgets";
 import {
   Col,
   Row,
@@ -25,6 +40,7 @@ import { Link } from "react-router-dom";
 import { Routes } from "../routes";
 import { pageTraffic, pageRanking } from "../data/tables";
 import regeneratorRuntime from "regenerator-runtime";
+import Grid from '@mui/material/Grid';
 
 import transactions from "../data/transactions";
 import commands from "../data/commands";
@@ -158,7 +174,7 @@ const useStylesAntDesign = makeStyles(
         "& .MuiCheckbox-root.Mui-checked .MuiIconButton-label:after": {
           position: "absolute",
           display: "table",
-          border: "2px solid #fff",
+          border: "20px solid black",
           borderTop: 0,
           borderLeft: 0,
           transform: "rotate(45deg) translate(-50%,-50%)",
@@ -190,7 +206,7 @@ const useStyles = makeStyles(
     root: {
       display: "flex",
       flexDirection: "column",
-      height: 600,
+      height: 800,
       width: "100%",
       "& .MuiFormGroup-options": {
         alignItems: "center",
@@ -704,6 +720,8 @@ export default () => {
 
   return (
     <div className={classes.root}>
+    
+      
       <Stack
         direction="row"
         spacing={2}
@@ -1032,13 +1050,64 @@ export default () => {
           Toolbar: GridToolbar,
         }}
         checkboxSelection
-        disableSelectionOnClick
+        
         {...pagination}
         rows={rows.reverse()}
         columns={columns}
         rowLength={10}
         localeText={trTR.props.MuiDataGrid.localeText}
       />
+      <Row>
+        <Col xs={12} sm={6} xl={2} className="mb-4">
+          <CounterWidget
+            category={"ACB "}
+            title={"1"}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
+        <Col xs={12} sm={6} xl={2} className="mb-4">
+          <CounterWidget
+            category={"ABC "}
+            title={"1"}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
+        <Col xs={12} sm={6} xl={2} className="mb-4">
+          <CounterWidget
+            category={"ABC "}
+            title={"1"}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
+        <Col xs={12} sm={6} xl={2} className="mb-4">
+          <CounterWidget
+            category={"ACB "}
+            title={"1"}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
+        <Col xs={12} sm={6} xl={2} className="mb-4">
+          <CounterWidget
+            category={"ABC "}
+            title={"1"}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
+        <Col xs={12} sm={6} xl={2} className="mb-4">
+          <CounterWidget
+            category={"ABC "}
+            title={"1"}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
+      </Row>
+      
     </div>
   );
 };
