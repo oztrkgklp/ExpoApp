@@ -7,7 +7,7 @@ import {
   faUserSlash,
   faUsers,
   faBed,
-  faBuilding
+  faBuilding,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faEdit,
@@ -40,7 +40,9 @@ import { Link } from "react-router-dom";
 import { Routes } from "../routes";
 import { pageTraffic, pageRanking } from "../data/tables";
 import regeneratorRuntime from "regenerator-runtime";
-import Grid from '@mui/material/Grid';
+import Grid from "@mui/material/Grid";
+import { ToastContainer, toast, Zoom } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import transactions from "../data/transactions";
 import commands from "../data/commands";
@@ -68,6 +70,29 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import { dateFormat } from "../assets/dateTime";
+import { AccTable } from "./Tables";
+const handleSuccessToast = (mes) => {
+  toast("🦄" + mes, {
+    position: "top-center",
+    autoClose: 1500,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
+const handleFailedToast = (mes) => {
+  toast.error("🦄" + mes, {
+    position: "top-center",
+    autoClose: 1500,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
 
 const defaultTheme = createTheme();
 const useStylesAntDesign = makeStyles(
@@ -311,7 +336,9 @@ export default () => {
   React.useEffect(() => {
     const deleteAcc = async () => {
       const company = await deleteAccommodations(deletedAccommodation);
-      console.log(company.result);
+      handleSuccessToast("Kayıt Başarıyla Silindi")
+      window.setTimeout(function(){window.location.reload()},1500)
+
     };
     if (deletedAccommodation) deleteAcc();
   }, [deletedAccommodation]);
@@ -346,6 +373,11 @@ export default () => {
         _TRPLCHD: accommodationInfo[24],
         description: accommodationInfo[25],
       });
+      
+      handleSuccessToast("Giriş Başarılı");
+      window.setTimeout(function () {
+        window.location.reload();
+      }, 1500);
     };
     if (isSubmit) createAcc();
   }, [isSubmit]);
@@ -353,7 +385,6 @@ export default () => {
     setOpen(false);
   };
   const handleSubmit = (e) => {
-  
     handleClose();
     const newCustomer = {
       companyName: accommodationInfo[0],
@@ -410,7 +441,6 @@ export default () => {
           >
             Sil
           </Button>
-         
         </>
       ),
     },
@@ -439,12 +469,7 @@ export default () => {
       width: 160,
       editable: false,
     },
-    {
-      field: "checkInTime",
-      headerName: "Check-in Saati",
-      width: 150,
-      sortable: true,
-    },
+
     {
       field: "firstGuest",
       headerName: "Misafir Adı",
@@ -523,12 +548,7 @@ export default () => {
       width: 150,
       sortable: true,
     },
-    {
-      field: "checkOutTime",
-      headerName: "Check-out Time",
-      width: 150,
-      sortable: true,
-    },
+
     {
       field: "checkOutDate",
       headerName: "Check-out Date",
@@ -638,7 +658,7 @@ export default () => {
       _SNGCHD,
       _DBLCHD,
       _TRPLCHD,
-      description
+      description,
     } = p;
     return {
       id: accommodationID,
@@ -667,7 +687,7 @@ export default () => {
       _SNGCHD: _SNGCHD,
       _DBLCHD: _DBLCHD,
       _TRPLCHD: _TRPLCHD,
-      description
+      description,
     };
   });
   const [pagination, setPagination] = React.useState({
@@ -720,7 +740,6 @@ export default () => {
 
   return (
     <div className={classes.root}>
-    
       
       <Stack
         direction="row"
@@ -789,48 +808,41 @@ export default () => {
                 placeholder="GG.AA.YYYY"
                 required
               />
+
               <TextField
                 onChange={(event) =>
-                  (accommodationInfo[3] = event.target.value)
+                  (accommodationInfo[4] = event.target.value)
+                }
+                autoFocus
+                required
+                margin="dense"
+                id="firstGuest"
+                label="1. Misafir Adı"
+                type="text"
+                fullWidth
+              />
+              <TextField
+                onChange={(event) =>
+                  (accommodationInfo[5] = event.target.value)
                 }
                 autoFocus
                 margin="dense"
-                id="checkInTime"
-                label=" Check-in Saati"
+                id="secondGuest"
+                label="2.Misafir Adı"
                 type="text"
-                placeholder="SS:DD:ss"
                 fullWidth
-                required
               />
-              
               <TextField
-              onChange={(event) => (accommodationInfo[4] = event.target.value)}
-              autoFocus
-              required
-              margin="dense"
-              id="firstGuest"
-              label="1. Misafir Adı"
-              type="text"
-              fullWidth
-            />
-            <TextField
-              onChange={(event) => (accommodationInfo[5] = event.target.value)}
-              autoFocus
-              margin="dense"
-              id="secondGuest"
-              label="2.Misafir Adı"
-              type="text"
-              fullWidth
-            />
-            <TextField
-              onChange={(event) => (accommodationInfo[6] = event.target.value)}
-              autoFocus
-              margin="dense"
-              id="thirdGuest"
-              label="3. Misafir Adı"
-              type="text"
-              fullWidth
-            />
+                onChange={(event) =>
+                  (accommodationInfo[6] = event.target.value)
+                }
+                autoFocus
+                margin="dense"
+                id="thirdGuest"
+                label="3. Misafir Adı"
+                type="text"
+                fullWidth
+              />
               <TextField
                 onChange={(event) =>
                   (accommodationInfo[7] = event.target.value)
@@ -927,94 +939,13 @@ export default () => {
                 }
                 margin="dense"
                 id="checkOutDate"
-                label="Check-out Date"
+                label="Check-out Tarihi"
                 type="text"
                 fullWidth
                 placeholder="GG.AA.YYYY"
                 required
               />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[17] = event.target.value)
-                }
-                margin="dense"
-                id="checkOutTime"
-                label="Check-out Time"
-                type="text"
-                fullWidth
-                placeholder="SS:DD:ss"
-                required
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[18] = event.target.value)
-                }
-                margin="dense"
-                id="_SNG"
-                label="SNG"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[19] = event.target.value)
-                }
-                margin="dense"
-                id="_DBL"
-                label="DBL"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[20] = event.target.value)
-                }
-                margin="dense"
-                id="_TRPL"
-                label="TRPL"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[21] = event.target.value)
-                }
-                margin="dense"
-                id="_QUAT"
-                label="QUAT"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[22] = event.target.value)
-                }
-                margin="dense"
-                id="_SNGCHD"
-                label="SNG+CHD"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[23] = event.target.value)
-                }
-                margin="dense"
-                id="_DBLCHD"
-                label="DBL+CHD"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[24] = event.target.value)
-                }
-                margin="dense"
-                id="_TRPLCHD"
-                label="TRPL+CHD"
-                type="text"
-                fullWidth
-              />
+
               <TextField
                 onChange={(event) =>
                   (accommodationInfo[25] = event.target.value)
@@ -1050,110 +981,15 @@ export default () => {
           Toolbar: GridToolbar,
         }}
         checkboxSelection
-        
         {...pagination}
         rows={rows.reverse()}
         columns={columns}
         rowLength={10}
         localeText={trTR.props.MuiDataGrid.localeText}
       />
-      <Row>
-        <Col xs={12} sm={6} xl={2} className="mb-4">
-          <CounterWidget
-            category={"ACB "}
-            title={"1"}
-            percentage={18.2}
-            iconColor="shape-secondary"
-          />
-        </Col>
-        <Col xs={12} sm={6} xl={2} className="mb-4">
-          <CounterWidget
-            category={"ABC "}
-            title={"1"}
-            percentage={18.2}
-            iconColor="shape-secondary"
-          />
-        </Col>
-        <Col xs={12} sm={6} xl={2} className="mb-4">
-          <CounterWidget
-            category={"ABC "}
-            title={"1"}
-            percentage={18.2}
-            iconColor="shape-secondary"
-          />
-        </Col>
-        <Col xs={12} sm={6} xl={2} className="mb-4">
-          <CounterWidget
-            category={"ACB "}
-            title={"1"}
-            percentage={18.2}
-            iconColor="shape-secondary"
-          />
-        </Col>
-        <Col xs={12} sm={6} xl={2} className="mb-4">
-          <CounterWidget
-            category={"ABC "}
-            title={"1"}
-            percentage={18.2}
-            iconColor="shape-secondary"
-          />
-        </Col>
-        <Col xs={12} sm={6} xl={2} className="mb-4">
-          <CounterWidget
-            category={"ABC "}
-            title={"1"}
-            percentage={18.2}
-            iconColor="shape-secondary"
-          />
-        </Col>
-      </Row>
       
+     
+      <ToastContainer/>
     </div>
   );
 };
-
-// const guestFields = (no, values) => {
-//   console.log(no);
-//   console.log(values);
-
-//   if (no === 1) {
-//     return (
-//       <TextField
-//         onChange={(event) => (values[0] = event.target.value)}
-//         autoFocus
-//         margin="dense"
-//         id="firstGuest"
-//         label="Misafir Adı"
-//         type="text"
-//         fullWidth
-//       />
-//     );
-//   } else if (no === 2) {
-//     return (
-//       <>
-//         <TextField
-//           onChange={(event) => (values[0] = event.target.value)}
-//           autoFocus
-//           margin="dense"
-//           id="firstGuest"
-//           label="1. Misafir Adı"
-//           type="text"
-//           fullWidth
-//         />
-//         <TextField
-//           onChange={(event) => (values[1] = event.target.value)}
-//           autoFocus
-//           margin="dense"
-//           id="secondGuest"
-//           label="2.Misafir Adı"
-//           type="text"
-//           fullWidth
-//         />
-//       </>
-//     );
-//   } else if (no === 3) {
-//     <>
-      
-//     </>;
-//   }
-// };

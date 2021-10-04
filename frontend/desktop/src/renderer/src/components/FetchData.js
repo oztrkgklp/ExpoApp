@@ -102,7 +102,7 @@ export const createAccommodation = async (params) => {
       "&Hotel='" +
       params.hotel + "'" +
       "&CheckIn=" +
-      params.checkInDate+ " "+ params.checkInTime + 
+      params.checkInDate+ " 00:00:00" + 
       "&FirstGuest='"+
       params.firstGuest+ "'"+
       "&SecondGuest='"+
@@ -130,7 +130,7 @@ export const createAccommodation = async (params) => {
       "&TRPLCHD='"+
       params.TRPLCHD+ "'"+
       "&CheckOut=" +
-      params.checkOutDate+ " "+ params.checkOutTime +
+      params.checkOutDate+ " 00:00:00" +
       "&SNG_='"+
       params._SNG+ "'"+
       "&DBL_='"+
@@ -229,7 +229,8 @@ export const updateCompany = async (params) => {
     "'&IsEntered='" +
     params.isEntered +
     "'&Endorsement=" +
-    params.endorsement;
+    params.endorsement +
+    "&IsGuest"
   console.log(url);
   const { data } = await axios.put(url);
   return data;
@@ -237,6 +238,13 @@ export const updateCompany = async (params) => {
 
 export const getCompanyById = async (id) => {
   const url = domain + "companies/" + id;
+  console.log(url);
+  const { data } = await axios.get(url);
+  return data;
+};
+
+export const getPurchaseById = async (id) => {
+  const url = domain + "purchases/" + id;
   console.log(url);
   const { data } = await axios.get(url);
   return data;
