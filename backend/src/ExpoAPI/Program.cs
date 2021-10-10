@@ -42,6 +42,8 @@ namespace ExpoAPI
                     options.ListenAnyIP(5009);
                     options.AddServerHeader = false;
                 })
+                // .UseIISIntegration()
+                // .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseSerilog()
                 .UseStartup<Startup>();
         }

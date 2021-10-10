@@ -150,13 +150,13 @@ namespace ExpoAPI.Controllers
                                                                     DBLCHD = contract.DBLCHD,
                                                                     TRPLCHD = contract.TRPLCHD,
                                                                     CheckOut = TimeZoneInfo.ConvertTimeToUtc((DateTime)contract.CheckOut).AddHours(3.0),
-                                                                    _SNG = contract._SNG,
-                                                                    _DBL = contract._DBL,
-                                                                    _TRPL = contract._TRPL,
-                                                                    _QUAT = contract._QUAT,
-                                                                    _SNGCHD = contract._SNGCHD,
-                                                                    _DBLCHD = contract._DBLCHD,
-                                                                    _TRPLCHD = contract._TRPLCHD,
+                                                                    _SNG = contract.SNG_,
+                                                                    _DBL = contract.DBL_,
+                                                                    _TRPL = contract.TRPL_,
+                                                                    _QUAT = contract.QUAT_,
+                                                                    _SNGCHD = contract.SNG_CHD,
+                                                                    _DBLCHD = contract.DBL_CHD,
+                                                                    _TRPLCHD = contract.TRPL_CHD,
                                                                     Description = contract.Description
                                                                 }), cancellationToken);
 

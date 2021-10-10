@@ -5,7 +5,7 @@ import { faAngleLeft, faEnvelope, faUnlockAlt  } from "@fortawesome/free-solid-s
 import {Card,Container } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Routes } from "../../routes";
-import { CompanyTable,AttendTable,NoPurchaseCompany } from "../../components/Tables";
+import { CompanyTable,AttendTable,NoPurchaseCompany,GuestsTable } from "../../components/Tables";
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -34,11 +34,15 @@ const select = () => {
         <Grid item xs={12}>
           <Item><CompanyTable/></Item>
         </Grid>
-        <Grid item xs={6}>
-          <Item><AttendTable/></Item>
+        <Grid item xs={12}>
+          <Item><GuestsTable/></Item>
         </Grid>
-        <Grid item xs={6}>
+       
+        <Grid item xs={12}>
           <Item><NoPurchaseCompany/></Item>
+        </Grid> 
+        <Grid item xs={12}>
+          <Item><AttendTable/></Item>
         </Grid>
       </Grid>
     </Box>

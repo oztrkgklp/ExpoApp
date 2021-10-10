@@ -180,7 +180,22 @@ namespace ExpoAPI.Infrastructure.Repositories
         public async Task<IEnumerable<CompanyContract?>?> GetCompaniesAsync(CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.Append(@"SELECT * FROM COMPANY WHERE IsGuest = 0");
+            queryBuilder.Append(@"SELECT * FROM COMPANY WHERE IsGuest=0");
+            using(Database)
+            {
+                var getCompanies = await _dapperPolly.QueryAsyncWithRetry<CompanyContract>(Database, queryBuilder.ToString());
+                if (getCompanies.Any())
+                {
+                    return getCompanies.ToList();
+                }
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<CompanyContract?>?> GetAllAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT * FROM COMPANY");
             using(Database)
             {
                 var getCompanies = await _dapperPolly.QueryAsyncWithRetry<CompanyContract>(Database, queryBuilder.ToString());

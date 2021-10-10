@@ -24,13 +24,13 @@ namespace ExpoAPI.Contracts.Requests
         public string? DBLCHD { get; set; }
         public string? TRPLCHD { get; set; }
         public DateTime? CheckOut { get; set; }
-        public string? _SNG { get; set; }
-        public string? _DBL { get; set; }
-        public string? _TRPL { get; set; }
-        public string? _QUAT { get; set; }
-        public string? _SNGCHD { get; set; }
-        public string? _DBLCHD { get; set; }
-        public string? _TRPLCHD { get; set; }
+        public string? SNG_ { get; set; }
+        public string? DBL_ { get; set; }
+        public string? TRPL_ { get; set; }
+        public string? QUAT_ { get; set; }
+        public string? SNG_CHD { get; set; }
+        public string? DBL_CHD { get; set; }
+        public string? TRPL_CHD { get; set; }
         public string? Description { get; set; }
 
     }

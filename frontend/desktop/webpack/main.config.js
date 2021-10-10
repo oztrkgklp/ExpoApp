@@ -4,7 +4,7 @@ module.exports = {
   mode: 'production',
   target: 'electron-main',
   entry:{
-    index: ['babel-polyfill', '../src/main/index.js'],
+    index: ['babel-polyfill', path.join(__dirname,'../src/main/index.js')],
   },
   output: {
     path: path.join(__dirname, '../dist'),

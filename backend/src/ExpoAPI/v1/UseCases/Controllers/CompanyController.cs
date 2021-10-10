@@ -49,6 +49,32 @@ namespace ExpoAPI.Controllers
             });
         }
 
+        [HttpGet("all")]
+        [ProducesResponseType(typeof(GetAllApiResponseContract), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetAllApiResponseContract), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetAllApiResponseContract>> GetAll( [FromQuery] GetAllApiRequestContract contract, CancellationToken cancellationToken)
+        {
+            var getAll = await _mediator.Send(new GetAllCommand(), cancellationToken);
+
+            if (!getAll.Success)
+            {
+                return BadRequest(new GetAllApiResponseContract()
+                {
+                    Instance = Guid.NewGuid().ToString(),
+                    ReturnPath = getAll.ReturnPath,
+                    Messages = getAll.Messages?.ToList(),
+                });
+            }
+
+            return Ok(new GetAllApiResponseContract
+            {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getAll.Messages?.ToList(),
+                Result = getAll.CompanyContracts,
+                ReturnPath = getAll.ReturnPath
+            });
+        }
+
         [HttpGet("guests")]
         [ProducesResponseType(typeof(GetGuestsApiResponseContract), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(GetGuestsApiResponseContract), StatusCodes.Status400BadRequest)]
