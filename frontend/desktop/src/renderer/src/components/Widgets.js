@@ -32,6 +32,7 @@ import axios from "axios";
 import { domain } from "../assets/domain";
 import { Link } from "react-router-dom";
 import { Routes } from "../routes";
+import { getCompanies } from "./FetchData";
 
 export const ProfileCardWidget = () => {
   return (
@@ -229,22 +230,17 @@ export const TeamMembersWidget = () => {
     </Card>
   );
 };
-var result = [];
-axios
-  .get(domain + "companies")
-  .then(function ({ data }) {
-    // handle success
-    result = data.result;
-  })
-  .catch(function (error) {
-    // handle error
-    console.log(error);
-  })
-  .then(function () {
-    // always executed
-  });
 
 export const ProgressTrackWidget = () => {
+  const [companies,setCompanies] = React.useState([])
+  React.useEffect(() => {
+    const companiesData = async () => {
+      const company = await getCompanies();
+      setCompanies(company.result);
+    };
+    console.log(companies)
+    companiesData();
+  }, []);
   const Progress = (props) => {
     const { title, percentage, icon, color, last = false } = props;
     const extraClassName = last ? "" : "mb-2";
@@ -276,7 +272,7 @@ export const ProgressTrackWidget = () => {
         <h5 className="mb-0">Şirket Karları</h5>
       </Card.Header>
       <Card.Body>
-        {result.slice(0,5).map((r, i) => (
+        {companies.sort((a,b)=>{return parseFloat(b.endorsement)-parseFloat(a.endorsement)}).slice(0,5).map((r, i) => (
           <Progress
             title={r.companyName}
             color="blue"

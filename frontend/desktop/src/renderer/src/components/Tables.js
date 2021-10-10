@@ -659,7 +659,7 @@ export const PageVisitsTable = () => {
             <Button onClick={handleClose} color="primary">
               Vazgeç
             </Button>
-            <Button onClick={handleClose} color="primary" type="submit">
+            <Button onClick={(e)=>{e.preventDefault();handleClose()}} color="primary" type="submit">
               Ekle
             </Button>
           </DialogActions>
@@ -1022,12 +1022,6 @@ export const CompanyTable = () => {
   const [size, setSize] = React.useState(100);
   const [company, setCompany] = React.useState([]);
   const [open, setOpen] = React.useState(false);
-  const [open2, setOpen2] = React.useState(false);
-
-  const [array, setArray] = React.useState([]);
-
-  const [update, setUpdate] = React.useState(false);
-  const [companyID, setCompanyID] = React.useState("");
   const [companyName, setcompanyName] = React.useState("");
   const [phone, setphone] = React.useState("");
   const [eMail, seteMail] = React.useState("");
@@ -1035,10 +1029,9 @@ export const CompanyTable = () => {
   const [isEntered, setisEntered] = React.useState(true);
   const [isGuest, setIsGuest] = React.useState(false);
   const [deletedCompanyId, setDeletedCompanyId] = React.useState("");
-  const [updatedCompanyId, setUpdatedCompanyId] = React.useState("");
   const [isSubmit, setSubmit] = React.useState(false);
-  const [endorsementSelect, setEndorsementSelect] = React.useState(0);
-  const [endorsementSelect2, setEndorsementSelect2] = React.useState(0);
+  const [endorsementSelect, setEndorsementSelect] = React.useState("0");
+  var globalIsGuest;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -1058,87 +1051,26 @@ export const CompanyTable = () => {
       eMail: eMail,
       endorsement: endorsement,
       isEntered: isEntered,
+      isGuest: isGuest
     };
+    console.log(newCustomer)
+    window.setTimeout(function () {
+      window.location.reload();
+    }, 10000);
     setSubmit(true);
     setCompany([...company, newCustomer]);
     window.setTimeout(function () {
       window.location.reload();
     }, 1000);
-    console.log(`user data is ${newCustomer}`);
   };
   const handleDelete = (clickedUser) => {
     setDeletedCompanyId(clickedUser.id);
     setCompany(company.filter((user) => user.companyID !== clickedUser.id));
     console.log(clickedUser);
   };
-
-
-  const handleClose2 = () => {
-    setOpen2(false);
-  };
-  const handleSubmit2 = (e) => {
-    const newCustomer = {
-      companyID: updatedCompanyId,
-      companyName: array[0],
-      phone: array[1],
-      eMail: array[2],
-      endorsement: array[3],
-      isEntered: array[4],
-      isGuest: array[5]
-    };
-    setUpdate(true);
-    window.setTimeout(function () {
-      window.location.reload();
-    }, 1000);
-  };
-  const handleUpdate = (clickedUser) => {
-    setUpdatedCompanyId(clickedUser.id);
-    setOpen2(true);
-  };
-
-  var globalIsGuest2;
-  const showEndorsement2 = (val) => {
-    if (val === "1") {
-      globalIsGuest2 = false;
-      return (
-        <TextField
-          value={array[3]}
-          onChange={(event) => array[3] = event.target.value}
-          margin="dense"
-          id="endorsement"
-          label="Ciro"
-          type="text"
-          fullWidth
-        />
-      );
-    } else if (val === "0") {
-      globalIsGuest2 = true;
-    }
-  };
-
-  React.useEffect(() => {
-    array[5] = globalIsGuest2
-    const updateCmp = async () => {
-      console.log(array)
-      const company = await updateEndorsement(
-          updatedCompanyId,
-          array[0],
-          array[1],
-          array[2],
-          array[3],
-          array[4],
-          array[5]
-      );
-      handleSuccessToast("Düzenleme Başarılı")
-      window.setTimeout(function () {
-        location.reload();
-      }, 2000);
-    };
-    if (update) updateCmp();
-  }, [update]);
-
   React.useEffect(() => {
     const createCmp = async () => {
+      console.log(isGuest)
       const company = await createCompany(
         companyName,
         phone,
@@ -1154,6 +1086,9 @@ export const CompanyTable = () => {
     const deleteCmp = async () => {
       const company = await deleteCompany(deletedCompanyId);
       console.log(company.result);
+      window.setTimeout(function () {
+        location.reload();
+      }, 1000);
     };
 
     if (deletedCompanyId) {
@@ -1235,122 +1170,6 @@ export const CompanyTable = () => {
           >
             Sil
           </Button>
-          {/* <Button
-            style={{
-              backgroundColor: "#ffcc00",
-              
-              padding: "3px 35px"
-            }}
-            variant="contained"
-            color="primary"
-            type="submit"
-            onClick={()=>handleUpdate(id)}
-          >
-            Düzenle
-          </Button> */}
-          <Dialog
-          disableBackdropClick
-          open={open2}
-          onClose={handleClose2}
-          aria-labelledby="form-dialog-title"
-        >
-          <DialogTitle id="form-dialog-title">Katılımcı Düzenle</DialogTitle>
-          <form noValidate onSubmit={handleSubmit2}>
-            <DialogContent>
-              
-            <TextField
-                value={updatedCompanyId}
-                autoFocus
-                margin="dense"
-                id="id"
-                label="ID"
-                disabled
-                type="text"
-                fullWidth
-              />
-              <TextField
-                value={array[0]}
-                onChange={(event) => array[0] = event.target.value}
-                autoFocus
-                margin="dense"
-                id="companyName"
-                label="Katılımcı Adı"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                value={array[1]}
-                onChange={(event) => array[1] = event.target.value}
-                margin="dense"
-                id="phone"
-                label="Telefon"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                value={array[2]}
-                onChange={(event) => array[2] = event.target.value}
-                margin="dense"
-                id="eMail"
-                label="E-Mail"
-                type="eMail"
-                fullWidth
-              />
-              <FormControl component="fieldset" style={{ marginTop: "25px" }}>
-                <FormLabel component="legend" style={{ marginBottom: "10px" }}>
-                  Firma mı?
-                </FormLabel>
-                <RadioGroup
-                  style={{ marginLeft: "10px" }}
-                  row
-                  aria-label="gender"
-                  defaultValue="0"
-                  name="row-radio-buttons-group"
-                  onChange={(e) => setEndorsementSelect2(e.target.value)}
-                >
-                  <FormControlLabel
-                    value="0"
-                    control={<Radio />}
-                    label="Hayır"
-                  />
-                  <FormControlLabel
-                    value="1"
-                    control={<Radio />}
-                    label="Evet"
-                  />
-                </RadioGroup>
-              </FormControl>
-              {showEndorsement2(endorsementSelect2)}
-
-              <InputLabel
-                style={{ marginTop: "20px" }}
-                id="demo-simple-select-label"
-              >
-                Katıldı mı?
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={isEntered}
-                label="Age"
-                onChange={(e) => {
-                  array[4] = e.target.value;
-                }}
-              >
-                <MenuItem value={true}>Evet</MenuItem>
-                <MenuItem value={false}>Hayır</MenuItem>
-              </Select>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose2} color="primary">
-                Vazgeç
-              </Button>
-              <Button onClick={(e)=>{e.preventDefault();handleClose2()}} color="primary" type="submit">
-                Ekle
-              </Button>
-            </DialogActions>
-          </form>
-        </Dialog>
         </>
       ),
     },
@@ -1423,9 +1242,9 @@ export const CompanyTable = () => {
       return newPaginationSettings;
     });
   };
-  var globalIsGuest;
   const showEndorsement = (val) => {
     if (val === "1") {
+      // setIsGuest(false)
       globalIsGuest = false;
       return (
         <TextField
@@ -1439,7 +1258,9 @@ export const CompanyTable = () => {
         />
       );
     } else if (val === "0") {
+      // setIsGuest(true)
       globalIsGuest = true;
+      console.log("klsakasldjaksjkasd")
     }
   };
 
@@ -1508,6 +1329,8 @@ export const CompanyTable = () => {
                 <RadioGroup
                   style={{ marginLeft: "10px" }}
                   row
+                  // defaultValue="0"
+                  value={endorsementSelect}
                   aria-label="gender"
                   name="row-radio-buttons-group"
                   onChange={(e) => setEndorsementSelect(e.target.value)}
@@ -1550,7 +1373,7 @@ export const CompanyTable = () => {
               <Button onClick={handleClose} color="primary">
                 Vazgeç
               </Button>
-              <Button onClick={handleClose} color="primary" type="submit">
+              <Button onClick={(e)=>{handleClose()}} color="primary" type="submit">
                 Ekle
               </Button>
             </DialogActions>
@@ -1579,6 +1402,7 @@ export const CompanyTable = () => {
     </div>
   );
 };
+
 export const AttendTable = () => {
   const classes = useStyles();
   const antDesignClasses = useStylesAntDesign();

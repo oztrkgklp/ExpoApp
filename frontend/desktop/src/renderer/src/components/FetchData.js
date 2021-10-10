@@ -254,3 +254,8 @@ export const getCompanyName = async () => {
   const { data } = await axios.get(url);
   return data;
 };
+export const getCompanies = async () => {
+  const url = domain + "companies";
+  const { data } = await axios.get(url);
+  return data;
+};
