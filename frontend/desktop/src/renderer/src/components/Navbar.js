@@ -59,7 +59,7 @@ export default (props) => {
       </ListGroup.Item>
     );
   };
-  const userName = "İdeal Organizasyon";
+  const userName = "TEST";
   
   return (
     <Navbar variant="dark" expanded className="ps-0 pe-2 pb-0">

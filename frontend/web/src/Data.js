@@ -2,10 +2,11 @@ import axios from "axios";
 import domain from "./Domain";
 
 export const createGuest = async (companyName, phone, eMail) => {
+  
   const url =
     domain +
     "companies?CompanyName='" +
-    companyName +
+    companyName.toUpperCase() +
     "'&Phone='" +
     phone +
     "'&EMail='" +

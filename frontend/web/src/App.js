@@ -16,8 +16,11 @@ import InputLabel from "@mui/material/InputLabel";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
-import {ToastContainer,toast,Zoom} from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import { ToastContainer, toast, Zoom } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   createGuest,
   createPurchase,
@@ -28,7 +31,7 @@ import {
   getCompanyName,
 } from "./Data";
 import SellerTable from "./SellerTable";
-import PurchaseTable from "./PurchaseTable"
+import PurchaseTable from "./PurchaseTable";
 function Copyright(props) {
   return (
     <Typography
@@ -38,7 +41,11 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="http://idealorganizasyon.org/" target="_blank">
+      <Link
+        color="inherit"
+        href="http://idealorganizasyon.org/"
+        target="_blank"
+      >
         İdeal Organizasyon
       </Link>{" "}
       {new Date().getFullYear()}
@@ -62,9 +69,8 @@ export default function App() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [companyNames, setCompanyNames] = React.useState([]);
 
-
-  const handleFailedToast = ()=>{
-    toast.error('🦄 Eksik/Hatalı Satıcı Firma Adı ', {
+  const handleFailedToast = () => {
+    toast.error("🦄 Eksik/Hatalı Satıcı Firma Adı ", {
       position: "top-center",
       autoClose: 5000,
       hideProgressBar: false,
@@ -72,10 +78,10 @@ export default function App() {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      });
-  }
-  const handleSuccessToast = ()=>{
-    toast.success('🦄 Satış Başarıyla Kaydedildi ', {
+    });
+  };
+  const handleSuccessToast = () => {
+    toast.success("🦄 Satış Başarıyla Kaydedildi ", {
       position: "top-center",
       autoClose: 5000,
       hideProgressBar: false,
@@ -83,9 +89,8 @@ export default function App() {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      });
-  }
-  
+    });
+  };
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -128,15 +133,17 @@ export default function App() {
   }, []);
   React.useEffect(
     (e) => {
-      
       const createPurchase_ = async () => {
         if (sellerId === 0 || sellerId === null) {
-          if(sellerName !== "")
-          handleFailedToast()
+          if (sellerName !== "") handleFailedToast();
           return null;
         }
         if (purchaserId === null || purchaserId === 0) {
-          const Purchaser = await createGuest(purchaserName, eMail === null || eMail===""?" ":eMail, phone === null || phone===""?" ":phone);
+          const Purchaser = await createGuest(
+            purchaserName,
+            eMail === null || eMail === "" ? " " : eMail,
+            phone === null || phone === "" ? " " : phone
+          );
           var id = await getIdByName(purchaserName);
           const purchase = await createPurchase(
             sellerId,
@@ -155,30 +162,26 @@ export default function App() {
             cmp.result.isGuest
           );
         } else {
-          var includeCompanyName = companyNames.includes(sellerName)
+          var includeCompanyName = companyNames.includes(sellerName);
           if (includeCompanyName == true) {
-            
-          const purchase = await createPurchase(
-            sellerId,
-            purchaserId,
-            count,
-            product
-          );
-          const cmp = await getCompanyById(sellerId);
-          const update = await updateEndorsement(
-            sellerId,
-            sellerName,
-            cmp.result.phone,
-            cmp.result.eMail,
-            parseFloat(cmp.result.endorsement) + parseFloat(count),
-            cmp.result.isEntered,
-            cmp.result.isGuest
-          );
-         
-         }
-          
+            const purchase = await createPurchase(
+              sellerId,
+              purchaserId,
+              count,
+              product
+            );
+            const cmp = await getCompanyById(sellerId);
+            const update = await updateEndorsement(
+              sellerId,
+              sellerName,
+              cmp.result.phone,
+              cmp.result.eMail,
+              parseFloat(cmp.result.endorsement) + parseFloat(count),
+              cmp.result.isEntered,
+              cmp.result.isGuest
+            );
+          }
         }
-        
       };
 
       createPurchase_();
@@ -188,7 +191,6 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      
       <Grid
         container
         component="main"
@@ -267,19 +269,31 @@ export default function App() {
               </Menu>
             </Stack>
             <Box component="form" noValidate sx={{ mt: 1 }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                value={sellerName}
-                onChange={(e) => {
-                  setsellerName(e.target.value);
-                }}
-                id="sellerName"
-                label="Satış Yapan Şirket Adı"
-                name="sellerName"
-                autoFocus
-              />
+              
+              <Box sx={{ maxWidth: 200, minWidth:200}}>
+                <FormControl fullWidth>
+                  
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={sellerName}
+                    displayEmpty
+                    sx={{ maxWidth: 200, minWidth:200}}
+                    onChange={(e) => {
+                      setsellerName(e.target.value);
+                    }}
+                    
+                  >
+                    <MenuItem disabled value="">
+                      <em>Satış Yapan Firma</em>
+                    </MenuItem>
+                    <MenuItem value={"aaaa"}>aaaa</MenuItem>
+                    <MenuItem value={"AA"}>AA</MenuItem>
+                    <MenuItem value={"b"}>b</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+
               <TextField
                 margin="normal"
                 required
@@ -343,12 +357,14 @@ export default function App() {
                 sx={{ mt: 3, mb: 2 }}
                 onClick={(e) => {
                   e.preventDefault();
-                  if(!companyNames.includes(sellerName)){
+                  if (!companyNames.includes(sellerName)) {
                     handleFailedToast();
-                    return null
+                    return null;
                   }
                   setSubmit(true);
-                  window.setTimeout(function(){window.location.reload()},2500)
+                  window.setTimeout(function () {
+                    window.location.reload();
+                  }, 2500);
                 }}
               >
                 Kaydet
@@ -358,7 +374,7 @@ export default function App() {
           </Box>
         </Grid>
       </Grid>
-      <ToastContainer/>
+      <ToastContainer />
     </ThemeProvider>
   );
 }
