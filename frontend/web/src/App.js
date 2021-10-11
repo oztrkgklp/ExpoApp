@@ -18,7 +18,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import OutlinedInput from "@mui/material/OutlinedInput";
+import swal from 'sweetalert';
 import { ToastContainer, toast, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -361,6 +361,7 @@ export default function App() {
                     handleFailedToast();
                     return null;
                   }
+                  swal("Satış", "Başarıyla Kaydedildi!", "success");
                   setSubmit(true);
                   window.setTimeout(function () {
                     window.location.reload();
