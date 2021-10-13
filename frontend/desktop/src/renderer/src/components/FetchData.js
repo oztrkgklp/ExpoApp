@@ -182,19 +182,21 @@ export const updateEndorsement = async (
   return data;
 };
 
-export const createGuest = async (companyName, phone, eMail) => {
+export const createGuest = async (companyName, phone, eMail,endorsement) => {
+  
   const url =
     domain +
     "companies?CompanyName='" +
-    companyName +
+    companyName.toUpperCase() +
     "'&Phone='" +
     phone +
     "'&EMail='" +
     eMail +
-    "'&Endorsement=0&IsEntered=true&IsGuest=true";
+    "'&Endorsement=" + endorsement+"&IsEntered=true&IsGuest=true";
   const { data } = await axios.post(url);
   return data;
 };
+
 
 export const getCompanyIdByName = async (name) => {
   console.log(name);

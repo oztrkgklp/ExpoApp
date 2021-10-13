@@ -34,6 +34,13 @@ import { Link } from "react-router-dom";
 import { Routes } from "../routes";
 import { getCompanies } from "./FetchData";
 
+var formatter = new Intl.NumberFormat('tr-TR', {
+  style: 'currency',
+  currency: 'TRY',
+
+  
+});
+
 export const ProfileCardWidget = () => {
   return (
     <Card border="light" className="text-center p-0 mb-4">
@@ -256,7 +263,7 @@ export const ProgressTrackWidget = () => {
             <div className="progress-info">
               <h6 className="mb-0">{title}</h6>
               <small className="fw-bold text-dark">
-                <span>{percentage} ₺</span>
+                <span>{percentage}</span>
               </small>
             </div>
             <ProgressBar variant={color} now={percentage} min={0} max={100} />
@@ -277,7 +284,7 @@ export const ProgressTrackWidget = () => {
             title={r.companyName}
             color="blue"
             icon={faBuilding}
-            percentage={r.endorsement}
+            percentage={ formatter.format(r.endorsement)}
           />
           
         ))}

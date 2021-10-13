@@ -156,7 +156,8 @@ export default function App() {
           const Purchaser = await createGuest(
             purchaserName,
             phone === null || phone === "" ? " " : phone.substring(1),
-            eMail === null || eMail === "" ? " " : eMail
+            eMail === null || eMail === "" ? " " : eMail,
+            -parseFloat(count)
           );
           var id = await getIdByName(purchaserName);
           const purchase = await createPurchase(
@@ -185,6 +186,16 @@ export default function App() {
               product
             );
             const cmp = await getCompanyById(sellerId);
+            const prc = await getCompanyById(purchaserId);
+            const update1 = await updateEndorsement(
+              purchaserId,
+              purchaserName,
+              prc.result.phone,
+              prc.result.eMail,
+              parseFloat(prc.result.endorsement) - parseFloat(count),
+              prc.result.isEntered,
+              prc.result.isGuest
+            );
             const update = await updateEndorsement(
               sellerId,
               sellerName,
@@ -301,12 +312,7 @@ export default function App() {
                     {companies.map((company) => {
                       return <MenuItem value={company}>{company}</MenuItem>;
                     })}
-                    {/* <MenuItem disabled value="">
-                      <em>Satış Yapan Firma</em>
-                    </MenuItem>
-                    <MenuItem value={"aaaa"}>aaaa</MenuItem>
-                    <MenuItem value={"AA"}>AA</MenuItem>
-                    <MenuItem value={"b"}>b</MenuItem> */}
+                    
                   </Select>
                 </FormControl>
               </Box>

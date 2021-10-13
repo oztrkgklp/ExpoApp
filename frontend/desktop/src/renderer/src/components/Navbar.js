@@ -3,12 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { faUserCircle } from "@fortawesome/free-regular-svg-icons";
 import {
   Row,
   Col,
   Nav,
-  Form,
   Image,
   Navbar,
   Dropdown,
@@ -19,7 +17,8 @@ import { Link } from "react-router-dom";
 import NOTIFICATIONS_DATA from "../data/notifications";
 import Profile3 from "../assets/img/technologies/logo.jpg";
 import { Routes } from "../routes";
-import Signin from "../pages/examples/Signin"
+import IconButton from '@mui/material/IconButton';
+import RefreshIcon from '@mui/icons-material/Refresh';
 export default (props) => {
   const [notifications, setNotifications] = useState(NOTIFICATIONS_DATA);
   const areNotificationsRead = notifications.reduce(
@@ -65,6 +64,9 @@ export default (props) => {
     <Navbar variant="dark" expanded className="ps-0 pe-2 pb-0">
       <Container fluid className="px-0">
         <div className="d-flex justify-content-between w-100">
+        <IconButton aria-label="refresh" onClick={()=>window.location.reload()}>
+        <RefreshIcon />
+      </IconButton>
           <div className="d-flex align-items-center"></div>
           <Nav className="align-items-center">
             <Dropdown as={Nav.Item}>

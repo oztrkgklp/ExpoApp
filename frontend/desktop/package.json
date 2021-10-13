@@ -87,6 +87,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@material-ui/pickers": "^3.3.10",
+    "@mui/icons-material": "^5.0.3",
     "@mui/material": "^5.0.1",
     "@mui/x-data-grid": "^4.0.0",
     "@mui/x-data-grid-generator": "^4.0.0",
@@ -107,9 +108,12 @@
     "react-admin": "^3.18.1",
     "react-content-loader": "^6.0.3",
     "react-dom": "^16.14.0",
+    "react-phone-input-2": "^2.14.0",
     "react-toastify": "^8.0.3",
     "recharts": "^2.1.2",
     "regenerator-runtime": "^0.13.9",
+    "sweetalert": "^2.1.2",
+    "sweetalert2": "^11.1.7",
     "swr": "^1.0.1"
   }
 }

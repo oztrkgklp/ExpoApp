@@ -494,7 +494,7 @@ namespace ExpoAPI.Infrastructure.Repositories
         public async Task<decimal?> GetTotalEndorsementAsync(CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.Append(@"select SUM(CAST(Endorsement AS decimal(19,4))) from COMPANY");
+            queryBuilder.Append(@"select SUM(CAST(Endorsement AS decimal(19,4))) from COMPANY where IsGuest = 0");
             using(Database)
             {
                 var getTotalEndorsement = await _dapperPolly.QueryAsyncWithRetry<decimal?>(Database, queryBuilder.ToString());

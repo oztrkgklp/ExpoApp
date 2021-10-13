@@ -23,6 +23,7 @@ import {
   enteredCompany,
   notEnteredCompany,
   noPurchaseCount,
+  getGuests
 } from "../../components/FetchData";
 var companiesEndorsement;
 var companiesCount;
@@ -50,11 +51,19 @@ axios.get(domain + "guests/count").then(function ({ data }) {
   guestCount = data.result;
   // handle success
 });
+var formatter = new Intl.NumberFormat('tr-TR', {
+  style: 'currency',
+  currency: 'TRY',
+
+  
+});
 
 export default () => {
   const [entered, setEntered] = React.useState([]);
   const [notEntered, setNotEntered] = React.useState([]);
   const [noPurchaseount, setNoPurchaseount] = React.useState([]);
+  const [guests, setGuests] = React.useState(0.0);
+
 
   React.useEffect(() => {
     const entered = async () => {
@@ -63,6 +72,19 @@ export default () => {
     };
 
     entered();
+  }, []);
+  React.useEffect(() => {
+    const guest = async () => {
+      const company = await getGuests();
+      var total = 0.0;
+      company.result.map(c => {
+        const {endorsement} = c
+         total += -parseFloat(endorsement)
+      })
+      setGuests(total);
+    };
+
+    guest();
   }, []);
   React.useEffect(() => {
     const notEntered = async () => {
@@ -80,6 +102,7 @@ export default () => {
 
     noPurchase();
   }, []);
+
   return (
     <>
       <Row style={{ marginTop: "50px" }} className="justify-content-md-center">
@@ -120,7 +143,7 @@ export default () => {
           <CounterWidget
             category="Ciro"
             title={
-              companiesEndorsement == null ? "0" : companiesEndorsement + "₺"
+              formatter.format(companiesEndorsement)
             }
             period="5 Ekim - 8 Ekim"
             percentage={28.4}
@@ -138,6 +161,7 @@ export default () => {
             iconColor="shape-tertiary"
           />
         </Col>
+
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
             category="Katılmayan Firma"
@@ -150,8 +174,8 @@ export default () => {
         </Col>
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
-            category="Harcama Yapmayanlar"
-            title={noPurchaseount == null ? "0" : noPurchaseount}
+            category="Toplam Satın Alma"
+            title={formatter.format(guests)}
             period="5 Ekim - 8 Ekim"
             percentage={28.4}
             icon={faCoins}
