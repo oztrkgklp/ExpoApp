@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
@@ -38,16 +38,14 @@ import Stack from "@mui/material/Stack";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
-import alertify from "alertifyjs";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import { timeFormat } from "../assets/dateTime";
-import { ToastContainer, toast, Zoom } from "react-toastify";
+import { ToastContainer  } from "react-toastify";
 import swal from "sweetalert";
 import "react-toastify/dist/ReactToastify.css";
 import PhoneInput from 'react-phone-input-2'
@@ -748,6 +746,7 @@ export const PageVisitsTable = () => {
         components={{
           Toolbar: GridToolbar,
         }}
+        style={{ minHeight:"725px",marginTop:"115px" }}
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
@@ -1448,17 +1447,18 @@ export const CompanyTable = () => {
           </form>
         </Dialog>
       </Stack>
-      <SettingsPanel
+      {/* <SettingsPanel
         onApply={handleApplyClick}
         size={size}
         type={type}
         theme={getActiveTheme()}
-      />
+      /> */}
       <DataGrid
         className={isAntDesign ? antDesignClasses.root : undefined}
         components={{
           Toolbar: GridToolbar,
         }}
+        style={{ minHeight:"900px",marginTop:"20px" }}
         checkboxSelection
         disableSelectionOnClick
         utf8WithBom
@@ -2331,13 +2331,14 @@ export const GuestsTable = () => {
       >
         <Button style={{ backgroundColor: "#7389F7" }}>TÜM MİSAFİRLER</Button>
       </Stack>
-      <SettingsPanel
+      {/* <SettingsPanel
         onApply={handleApplyClick}
         size={size}
         type={type}
         theme={getActiveTheme()}
-      />
+      /> */}
       <DataGrid
+       style={{ minHeight:"900px",marginTop:"20px" }}
         className={isAntDesign ? antDesignClasses.root : undefined}
         components={{
           Toolbar: GridToolbar,

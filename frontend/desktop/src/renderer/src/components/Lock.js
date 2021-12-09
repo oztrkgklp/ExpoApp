@@ -61,6 +61,7 @@ import {
   accommodations,
   createAccommodation,
   deleteAccommodations,
+  updateAcc
 } from "./FetchData";
 import Stack from "@mui/material/Stack";
 import Dialog from "@material-ui/core/Dialog";
@@ -316,7 +317,21 @@ export default () => {
   const [deletedAccommodation, setDeletedAccommodation] = React.useState();
   const [open, setOpen] = React.useState(false);
   const [isSubmit, setSubmit] = React.useState(false);
-  const [no, setNo] = React.useState(1);
+  const [editRowsModel, setEditRowsModel] = React.useState({});
+
+  const handleEditRowsModelChange = React.useCallback((model) => {
+    setEditRowsModel(model);
+    console.log(editRowsModel)
+  }, []);
+
+  React.useEffect(() => {
+    const editRow = async () => {
+      const company = await updateAcc(editRowsModel);
+      // window.setTimeout(function(){window.location.reload()},1500)
+
+    };
+    if (editRowsModel) editRow();
+  }, [editRowsModel]);
   const handleDelete = (clickedUser) => {
     setDeletedAccommodation(clickedUser.id);
     setaccommodation(
@@ -455,19 +470,19 @@ export default () => {
       field: "companyName",
       headerName: "Şirket Adı ",
       width: 160,
-      editable: false,
+      editable: true,
     },
     {
       field: "hotel",
       headerName: "Hotel",
       width: 160,
-      editable: false,
+      editable: true,
     },
     {
       field: "checkInDate",
       headerName: "Check-in Tarihi",
       width: 160,
-      editable: false,
+      editable: true
     },
 
     {
@@ -475,78 +490,91 @@ export default () => {
       headerName: "Misafir Adı",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "secondGuest",
       headerName: "Misafir Adı",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "thirdGuest",
       headerName: "Misafir Adı",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "guestCompanyName",
       headerName: "Firma Adı",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "phone",
       headerName: "Telefon",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "SNG",
       headerName: "SNG",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "DBL",
       headerName: "DBL",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "TRPL",
       headerName: "TRPL",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "QUAT",
       headerName: "QUAT",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "SNGCHD",
       headerName: "SNG+CHD",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "DBLCHD",
       headerName: "DBL+CHD",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "TRPLCHD",
       headerName: "TRPL+CHD",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "checkOutDate",
       headerName: "Check-out Date",
       width: 150,
       sortable: true,
+      editable: true
     },
 
     {
@@ -554,54 +582,63 @@ export default () => {
       headerName: "Check-out Date",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "_SNG",
       headerName: "SNG",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "_DBL",
       headerName: "DBL",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "_TRPL",
       headerName: "TRPL",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "_QUAT",
       headerName: "QUAT",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "_SNGCHD",
       headerName: "SNG+CHD",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "_DBLCHD",
       headerName: "DBL+CHD",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "_TRPLCHD",
       headerName: "TRPL+CHD",
       width: 150,
       sortable: true,
+      editable: true
     },
     {
       field: "description",
       headerName: "Açıklama",
       width: 150,
       sortable: true,
+      editable: true
     },
   ];
   const [accommodationInfo, setAccommodationInfo] = React.useState([
@@ -986,7 +1023,10 @@ export default () => {
         columns={columns}
         rowLength={10}
         localeText={trTR.props.MuiDataGrid.localeText}
-      />
+        editMode="row"
+        editRowsModel={editRowsModel}
+        onEditRowsModelChange={handleEditRowsModelChange}
+        />
       
      
       <ToastContainer/>

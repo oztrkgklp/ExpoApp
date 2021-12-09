@@ -10,13 +10,9 @@ import {
 import { Col, Row } from "@themesberg/react-bootstrap";
 import {
   CounterWidget,
-  CircleChartWidget,
   ProgressTrackWidget,
-  SalesValueWidget,
-  SalesValueWidgetPhone,
-} from "../../components/Widgets";
+  } from "../../components/Widgets";
 import { PageVisitsTable } from "../../components/Tables";
-import { trafficShares } from "../../data/charts";
 import { domain } from "../../assets/domain";
 import axios from "axios";
 import {
@@ -205,9 +201,9 @@ export default () => {
             <Col xs={12} xl={8} className="mb-4">
               <Row>
                 <Col xs={12} className="mb-4">
-                  <PageVisitsTable />
+                  <PageVisitsTable style={{ height:"700px" }}/>
                 </Col>
-                <Col xs={12} lg={6} className="mb-4"></Col>
+                <Col  xs={12} lg={6} className="mb-4"></Col>
               </Row>
             </Col>
             <Col xs={12} xl={4}>

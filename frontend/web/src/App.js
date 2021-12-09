@@ -94,7 +94,6 @@ export default function App() {
       progress: undefined,
     });
   };
-
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

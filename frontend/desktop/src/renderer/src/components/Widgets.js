@@ -276,10 +276,10 @@ export const ProgressTrackWidget = () => {
   return (
     <Card border="light" className="shadow-sm">
       <Card.Header className="border-bottom border-light">
-        <h5 className="mb-0">Şirket Karları</h5>
+        <h5 className="mb-0">En Yüksek Cirolar</h5>
       </Card.Header>
       <Card.Body>
-        {companies.sort((a,b)=>{return parseFloat(b.endorsement)-parseFloat(a.endorsement)}).slice(0,5).map((r, i) => (
+        {companies.sort((a,b)=>{return parseFloat(b.endorsement)-parseFloat(a.endorsement)}).slice(0,10).map((r, i) => (
           <Progress
             title={r.companyName}
             color="blue"

@@ -152,6 +152,74 @@ export const createAccommodation = async (params) => {
   );
   return data;
 };
+export const updateAcc = async (params) => {
+  var [key, value] = Object.entries(params)[0];
+  console.log(key)
+  console.log(value)
+
+  var i = 1
+  if(params.secondGuest)
+    i++
+  if(params.thirdGuest)
+    i++
+  
+const { data } = await axios.put(
+  domain +
+    "accommodations/"+ key + "?CompanyName='" +
+    value.companyName.value + "'"+
+    "&Hotel='" +
+    value.hotel.value + "'" +
+    "&CheckIn=" +
+    value.checkInDate.value+ " 00:00:00" + 
+    "&FirstGuest='"+
+    value.firstGuest.value+ "'"+
+    "&SecondGuest='"+
+    value.secondGuest.value+ "'"+
+    "&ThirdGuest='"+
+    value.thirdGuest.value+ "'"+
+    "&NumberOfGuests="+
+    i+
+    "&GuestCompanyName='"+
+    value.guestCompanyName.value+ "'"+
+    "&Phone='"+
+    value.phone.value+ "'"+
+    "&SNG='"+
+    value.SNG.value+ "'"+
+    "&DBL='"+
+    value.DBL.value+ "'"+
+    "&TRPL='"+
+    value.TRPL.value+ "'"+
+    "&QUAT='"+
+    value.QUAT.value+ "'"+
+    "&SNGCHD='"+
+    value.SNGCHD.value+ "'"+
+    "&DBLCHD='"+
+    value.DBLCHD.value+ "'"+
+    "&TRPLCHD='"+
+    value.TRPLCHD.value+ "'"+
+    "&CheckOut=" +
+    value.checkOutDate.value+ " 00:00:00" +
+    "&SNG_='"+
+    value._SNG.value+ "'"+
+    "&DBL_='"+
+    value._DBL.value+ "'"+
+    "&TRPL_='"+
+    value._TRPL.value+ "'"+
+    "&QUAT_='"+
+    value._QUAT.value+ "'"+
+    "&SNG_CHD='"+
+    value._SNGCHD.value+ "'"+
+    "&DBL_CHD='"+
+    value._DBLCHD.value+ "'"+
+    "&TRPL_CHD='"+
+    value._TRPLCHD.value+ "'"+
+    "&Description='" +
+    value.description.value+"'"
+
+    
+);
+return data;
+};
 export const updateEndorsement = async (
   companyID,
   companyName,

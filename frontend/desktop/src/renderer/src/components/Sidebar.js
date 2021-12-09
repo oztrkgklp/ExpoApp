@@ -99,11 +99,19 @@ export default (props = {}) => {
             <Nav className="flex-column pt-3 pt-md-0">
               {/* <NavItem title="Garanti Kongre" link={Routes.Presentation.path} image={ReactHero} /> */}
               <NavItem title="Gösterge Paneli" link={Routes.DashboardOverview.path} icon={faChartPie} />
-              <NavItem title="Misafirler" link={Routes.NewCompany.path} icon={faUsers} />
+              <NavItem title="Tüm Katılımcılar" icon={faCog} link={Routes.CompanyTable.path} />
+              <NavItem title="Tüm Misafirler" link={Routes.GuestTable.path} icon={faUsers} />
+              <NavItem title="Harcama Yapmayanlar" link={Routes.NoAttendTable.path} icon={faUsers} />
+              {/* <NavItem title="Tüm Misafirler" link={Routes.NewCompany.path} icon={faUsers} /> */}
+
+
+
+              
               <NavItem title="Konaklama" link={Routes.Acconmodation.path} icon={faBed} />
 
-              {/* <NavItem title="Ayarlar" icon={faCog} link={Routes.Settings.path} />
+              
 
+              {/* 
               <CollapsableNavItem eventKey="tables/" title="Tablolar" icon={faTable}>
                 <NavItem title="Bootstrap Table" link={Routes.BootstrapTables.path} />
               </CollapsableNavItem> */}
