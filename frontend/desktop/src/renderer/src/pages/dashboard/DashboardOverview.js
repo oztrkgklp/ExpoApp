@@ -199,15 +199,15 @@ export default () => {
         <Col xs={12} xl={12} className="mb-4">
           <Row style={{ marginTop: "70px" }}>
             <Col xs={12} xl={8} className="mb-4">
-              <Row>
+              {/* <Row>
                 <Col xs={12} className="mb-4">
                   <PageVisitsTable style={{ height:"700px" }}/>
                 </Col>
                 <Col  xs={12} lg={6} className="mb-4"></Col>
-              </Row>
+              </Row> */}
             </Col>
-            <Col xs={12} xl={4}>
-              <Row style={{ marginTop: "120px" }}>
+            <Col xs={12} xl={11}>
+              <Row style={{ marginTop: "3%",marginLeft:"10%" }}>
                 <Col xs={12} className="mb-4">
                   <ProgressTrackWidget />
                 </Col>

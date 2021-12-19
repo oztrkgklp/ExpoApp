@@ -11,13 +11,12 @@ import NotFoundPage from "./examples/NotFound";
 import ServerError from "./examples/ServerError";
 import Signup from "./examples/Signup";
 // import {AccomomdationTable} from "../components/AccomomdationTable"
-
 // components
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Preloader from "../components/Preloader";
-import {CompanyTable, GuestsTable, NotAttendTable} from "../components/Tables"
+import {CompanyTable, GuestsTable, NoPurchaseCompany, NotAttendTable, PageVisitsTable} from "../components/Tables"
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
 
@@ -82,8 +81,8 @@ export default () => (
     <RouteWithSidebar exact path={Routes.Acconmodation.path} component={Lock} />
     <RouteWithSidebar exact path={Routes.CompanyTable.path} component={CompanyTable} />
     <RouteWithSidebar exact path={Routes.GuestTable.path} component={GuestsTable} />
-    {/* <RouteWithSidebar exact path={Routes.NoAttendTable.path} component={NotAttendTable} /> */}
-
+    <RouteWithSidebar exact path={Routes.NoAttendTable.path} component={NoPurchaseCompany} />
+    <RouteWithSidebar exact path={Routes.SellTaable.path} component={PageVisitsTable} />
 
 
     <Redirect to={Routes.NotFound.path} />

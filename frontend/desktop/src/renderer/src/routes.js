@@ -42,4 +42,5 @@ export const Routes = {
     AttendTable: { path: "/attend-table" },
     NoAttendTable: { path: "/no-attend-table" },
     GuestTable: { path: "/guest-table" },
+    SellTaable : {path: "/sell-table"},
 };

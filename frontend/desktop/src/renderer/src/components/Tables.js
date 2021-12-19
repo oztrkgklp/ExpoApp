@@ -25,7 +25,11 @@ import { pageTraffic, pageRanking } from "../data/tables";
 import transactions from "../data/transactions";
 import commands from "../data/commands";
 import PropTypes from "prop-types";
-import { DataGrid, GridToolbar, trTR } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar, trTR,GridToolbarContainer,
+  GridToolbarExport,
+  gridClasses,
+  GridPrintExportOptions,
+GridCsvExportOptions } from "@mui/x-data-grid";
 import { makeStyles } from "@material-ui/styles";
 import { createTheme } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
@@ -222,6 +226,9 @@ const useStyles = makeStyles(
         },
       },
     },
+   block:{
+    display: "block",
+   }
   }),
   { defaultTheme }
 );
@@ -489,13 +496,13 @@ export const PageVisitsTable = () => {
     {
       field: "sellerName",
       headerName: "Satıcı Firma ",
-      width: 160,
+      width: 300,
       editable: false,
     },
     {
       field: "purchaserName",
       headerName: "Alan Misafir ",
-      width: 160,
+      width: 300,
       editable: false,
     },
     {
@@ -513,7 +520,7 @@ export const PageVisitsTable = () => {
     {
       field: "product",
       headerName: "Ürün",
-      width: 150,
+      width: 200,
       sortable: true,
     },
     {
@@ -610,6 +617,15 @@ export const PageVisitsTable = () => {
     setDeletedPurchaseId(clickedUser.id);
     setPurchase(purchase.filter((user) => user.purchaseID !== clickedUser.id));
   };
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbar/>
+        
+      </GridToolbarContainer>
+    );
+  }
+  console.log(trTR)
   return (
     <div className={classes.root}>
       <Stack
@@ -619,6 +635,7 @@ export const PageVisitsTable = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          padding: "30px",
         }}
       >
         <Button style={{ backgroundColor: "#7389F7" }}>SATIŞ LİSTESİ</Button>
@@ -740,13 +757,12 @@ export const PageVisitsTable = () => {
         type={type}
         theme={getActiveTheme()}
       />
-
       <DataGrid
         className={isAntDesign ? antDesignClasses.root : undefined}
         components={{
-          Toolbar: GridToolbar,
+          Toolbar: CustomToolbar ,
         }}
-        style={{ minHeight:"725px",marginTop:"115px" }}
+        style={{ minHeight:"725px",marginTop:"115px", width: '100%' }}
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
@@ -754,9 +770,10 @@ export const PageVisitsTable = () => {
         rows={rows.reverse()}
         columns={columns}
         rowLength={10}
-        localeText={trTR.props.MuiDataGrid.localeText}
+        localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
       />
       <ToastContainer />
+      
     </div>
   );
 };
@@ -1183,13 +1200,13 @@ export const CompanyTable = () => {
     {
       field: "companyName",
       headerName: "Katılımcı Adı",
-      width: 150,
+      width: 350,
       editable: true,
     },
     {
       field: "phone",
       headerName: "Tel No",
-      width: 140,
+      width: 150,
       editable: false,
     },
     {
@@ -1197,13 +1214,13 @@ export const CompanyTable = () => {
       headerName: "E-Mail",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 180,
+      width: 270,
       editable: false,
     },
     {
       field: "endorsement",
       headerName: "Ciro",
-      width: 110,
+      width: 250,
       sortable: true,
     },
     {
@@ -1221,7 +1238,7 @@ export const CompanyTable = () => {
     {
       field: "event",
       headerName: " ",
-      width: 190,
+      width: 120,
       sortable: false,
       renderCell: (id) => (
         <>
@@ -1466,7 +1483,7 @@ export const CompanyTable = () => {
         rows={rows.reverse()}
         columns={columns}
         rowLength={10}
-        localeText={trTR.props.MuiDataGrid.localeText}
+        localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
       />
     </div>
   );
@@ -1621,7 +1638,7 @@ export const AttendTable = () => {
         rows={rows.reverse()}
         columns={columns}
         rowLength={10}
-        localeText={trTR.props.MuiDataGrid.localeText}
+        localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
       />
     </div>
   );
@@ -1652,7 +1669,7 @@ export const NoPurchaseCompany = () => {
     {
       field: "companyName",
       headerName: "Misafir Adı",
-      width: 150,
+      width: 400,
       editable: false,
     },
     {
@@ -1666,7 +1683,7 @@ export const NoPurchaseCompany = () => {
       headerName: "E-Mail",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 130,
+      width: 400,
       editable: false,
     },
     {
@@ -1768,7 +1785,7 @@ export const NoPurchaseCompany = () => {
         rows={rows.reverse()}
         columns={columns}
         rowLength={10}
-        localeText={trTR.props.MuiDataGrid.localeText}
+        localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
       />
     </div>
   );
@@ -2014,7 +2031,7 @@ export const NotAttendTable = () => {
         columns={columns}
         utf8WithBom
         rowLength={10}
-        localeText={trTR.props.MuiDataGrid.localeText}
+        localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
       />
     </div>
   );
@@ -2234,7 +2251,7 @@ export const GuestsTable = () => {
     {
       field: "companyName",
       headerName: "Misafir Adı",
-      width: 150,
+      width: 350,
       editable: false,
     },
     {
@@ -2248,7 +2265,7 @@ export const GuestsTable = () => {
       headerName: "E-Mail",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 130,
+      width: 300,
       editable: false,
     },
 
@@ -2350,7 +2367,7 @@ export const GuestsTable = () => {
         rows={rows.reverse()}
         columns={columns}
         rowLength={10}
-        localeText={trTR.props.MuiDataGrid.localeText}
+        localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
       />
     </div>
   );
@@ -2498,7 +2515,7 @@ export const AccTable = () => {
         rows={rows.reverse()}
         columns={columns}
         rowLength={10}
-        localeText={trTR.props.MuiDataGrid.localeText}
+        localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
       />
     </div>
   );
