@@ -17,6 +17,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Preloader from "../components/Preloader";
 import {CompanyTable, GuestsTable, NoPurchaseCompany, NotAttendTable, PageVisitsTable} from "../components/Tables"
+import Accommodation from '../components/Accommodation';
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
 
@@ -78,7 +79,7 @@ export default () => (
     <RouteWithSidebar exact path={Routes.DashboardOverview.path} component={DashboardOverview} />
     <RouteWithSidebar exact path={Routes.BootstrapTables.path} component={BootstrapTables} />
     <RouteWithSidebar exact path={Routes.NewCompany.path} component={Signup} />
-    <RouteWithSidebar exact path={Routes.Acconmodation.path} component={Lock} />
+    <RouteWithSidebar exact path={Routes.Acconmodation.path} component={Accommodation} />
     <RouteWithSidebar exact path={Routes.CompanyTable.path} component={CompanyTable} />
     <RouteWithSidebar exact path={Routes.GuestTable.path} component={GuestsTable} />
     <RouteWithSidebar exact path={Routes.NoAttendTable.path} component={NoPurchaseCompany} />
