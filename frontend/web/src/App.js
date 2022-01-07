@@ -65,6 +65,7 @@ export default function App() {
   const [purchaserName, setpurchaserName] = React.useState("");
   const [purchaserId, setpurchaserId] = React.useState(0);
   const [eMail, setemail] = React.useState("");
+  const [guest, setGuests] = React.useState([]);
   const [phone, setphone] = React.useState("");
   const [count, setcount] = React.useState(0);
   const [product, setProduct] = React.useState("");
@@ -120,14 +121,15 @@ export default function App() {
   React.useEffect(() => {
     const purchaser = async () => {
       const id = await getIdByName(purchaserName);
+
       setpurchaserId(id.result);
-      console.log(id.result);
     };
     purchaser();
   }, [purchaserName]);
   React.useEffect(() => {
     const purchaser = async () => {
       const companyName = await getCompanyName();
+      console.log(companyName.result)
       setCompanyNames(companyName.result);
     };
     purchaser();
@@ -143,6 +145,15 @@ export default function App() {
       console.log(arr);
     };
     companies();
+  }, []);
+  React.useEffect(() => {
+    const guests = async () => {
+      const id = await getGuests();
+
+      setGuests(id.result);
+      console.log(id.result);
+    };
+    guests();
   }, []);
   React.useEffect(
     (e) => {
@@ -293,7 +304,7 @@ export default function App() {
               </Menu>
             </Stack>
             <Box component="form" noValidate sx={{ mt: 1 }}>
-              <Box sx={{ maxWidth: 200, minWidth: 200 ,marginTop:4}}>
+              <Box sx={{ maxWidth: 200, minWidth: 200, marginTop: 4 }}>
                 <FormControl fullWidth>
                   <Select
                     labelId="demo-simple-select-label"
@@ -311,7 +322,29 @@ export default function App() {
                     {companies.map((company) => {
                       return <MenuItem value={company}>{company}</MenuItem>;
                     })}
-                    
+
+                  </Select>
+                </FormControl>
+              </Box>
+              <Box sx={{ maxWidth: 200, minWidth: 200, marginTop: 4 }}>
+                <FormControl fullWidth>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={purchaserName}
+                    displayEmpty
+                    sx={{ maxWidth: 200, minWidth: 200 }}
+                    onChange={(e) => {
+                      setpurchaserName(e.target.value);
+                    }}
+                  >
+                    <MenuItem disabled value="">
+                      <em>Alım Yapan Misafir</em>
+                    </MenuItem>
+                    {guest.map((purchaser) => {
+                      return <MenuItem value={purchaser.companyName}>{purchaser.companyName}</MenuItem>;
+                    })}
+
                   </Select>
                 </FormControl>
               </Box>
@@ -341,7 +374,8 @@ export default function App() {
               <PhoneInput
                 country={"tr"}
                 onChange={(e) => {
-                  setphone(e)}}
+                  setphone(e)
+                }}
                 variant="outlined"
                 fullWidth
               />
@@ -391,15 +425,15 @@ export default function App() {
                 sx={{ mt: 3, mb: 2 }}
                 onClick={(e) => {
                   e.preventDefault();
-                  console.log("count:" +count)
-                  if(sellerName=="" || count==0 || product =="")
-                  swal("Satış Başarısız", "Gerekli Alanları Doldurunuz!", "error");
-                  else{
-                  swal("Satış", "Başarıyla Kaydedildi!", "success");
-                  setSubmit(true);
-                  window.setTimeout(function () {
-                    window.location.reload();
-                  }, 2500);
+                  console.log("count:" + count)
+                  if (sellerName == "" || count == 0 || product == "")
+                    swal("Satış Başarısız", "Gerekli Alanları Doldurunuz!", "error");
+                  else {
+                    swal("Satış", "Başarıyla Kaydedildi!", "success");
+                    setSubmit(true);
+                    window.setTimeout(function () {
+                      window.location.reload();
+                    }, 2500);
                   }
                 }}
               >
