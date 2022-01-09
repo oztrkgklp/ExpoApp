@@ -78,8 +78,7 @@ const Accommodation = () => {
 
         let result = 0;
         for(var i = 0; i < resultArray.length; i++)
-            result += resultArray[i]; 
-
+            result += resultArray[i];  
         return result;
     }
     return (
