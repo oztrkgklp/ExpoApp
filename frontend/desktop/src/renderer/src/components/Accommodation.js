@@ -68,7 +68,20 @@ const Accommodation = () => {
     const cost = { sng: 100, dbl: 200, trpl: 300, quat: 400, sngchd: 500, dblchd: 600, trplchd: 700 };
 
 
+    const getTotalValues =(colNo) => {
+        const resultArray = grid.map((item,index) => {
+            if(index === 0)
+                return 0;
 
+            return parseInt(item[colNo].value)
+        })
+
+        let result = 0;
+        for(var i = 0; i < resultArray.length; i++)
+            result += resultArray[i]; 
+
+        return result;
+    }
     return (
         <div>
             
@@ -77,9 +90,7 @@ const Accommodation = () => {
           <CounterWidget
             category={"Toplam SNG "}
             
-            title={grid.map(result=>(
-                result[17].value += result[17].value.slice(7)
-            ))}
+            title={getTotalValues(17)}
             percentage={18.2}
             icon={faBuilding}
             iconColor="shape-secondary"
@@ -88,9 +99,7 @@ const Accommodation = () => {
           <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
             category={"TOPLAM DBL "}
-            title={grid.map(result=>(
-                result[18].value += result[18].value.slice(7)
-            ))}
+            title={getTotalValues(18)}
             percentage={18.2}
             icon={faBuilding}
             iconColor="shape-secondary"
@@ -100,9 +109,7 @@ const Accommodation = () => {
           <CounterWidget
             category={"Toplam TRPL "}
             
-            title={grid.map(result=>(
-                result[19].value += result[19].value.slice(7)
-            ))}
+            title={getTotalValues(19)}
             percentage={18.2}
             icon={faBuilding}
             iconColor="shape-secondary"
@@ -113,9 +120,7 @@ const Accommodation = () => {
           <CounterWidget
             category={"Toplam QUAT "}
             
-            title={grid.map(result=>(
-                result[20].value += result[20].value.slice(7)
-            ))}
+            title={getTotalValues(20)}
             percentage={18.2}
             icon={faBuilding}
             iconColor="shape-secondary"
@@ -124,9 +129,7 @@ const Accommodation = () => {
           <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
             category={"TOPLAM SNG+CHD "}
-            title={grid.map(result=>(
-                result[21].value += result[21].value.slice(7)
-            ))}
+            title={getTotalValues(21)}
             percentage={18.2}
             icon={faBuilding}
             iconColor="shape-secondary"
@@ -136,9 +139,7 @@ const Accommodation = () => {
           <CounterWidget
             category={"Toplam DBL+CHD "}
             
-            title={grid.map(result=>(
-                result[22].value += result[22].value.slice(7)
-            ))}
+            title={getTotalValues(22)}
             percentage={18.2}
             icon={faBuilding}
             iconColor="shape-secondary"
@@ -148,10 +149,7 @@ const Accommodation = () => {
           <CounterWidget
             category={"Toplam TRPL+CHD "}
             
-            title={grid.map(result=>(
-                result[23].value += result[23].value.slice(8)
-                
-            ))}
+            title={getTotalValues(23)}
             percentage={18.2}
             icon={faBuilding}
             iconColor="shape-secondary"
