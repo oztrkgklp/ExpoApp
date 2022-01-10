@@ -62,6 +62,67 @@ const Accommodation = () => {
       { value: "" },
     ],
   ]);
+  var formatter = new Intl.NumberFormat("tr-TR", {
+    style: "currency",
+    currency: "TRY",
+  });
+  const [isChanged,setIsChanged] = React.useState(false);
+  const [totalValues, setTotalValues] = React.useState([
+      {SNG: 0},
+      {SNGCost: formatter.format(0)},
+      {DBL: 0},
+      {DBLCost: formatter.format(0)},
+      {TRPL: 0},
+      {TRPLCost: formatter.format(0)},
+      {QUAT: 0},
+      {QUATCost: formatter.format(0)},
+      {SNGCHD: 0},
+      {SNGCHDCost: formatter.format(0)},
+      {DBLCHD: 0},
+      {DBLCHDCost: formatter.format(0)},
+      {TRPLCHD: 0},
+      {TRPLCHDCost: formatter.format(0)},
+  ]);
+
+  var _totalValues = [
+    {SNG: 0},
+    {SNGCost: formatter.format(0)},
+    {DBL: 0},
+    {DBLCost: formatter.format(0)},
+    {TRPL: 0},
+    {TRPLCost: formatter.format(0)},
+    {QUAT: 0},
+    {QUATCost: formatter.format(0)},
+    {SNGCHD: 0},
+    {SNGCHDCost: formatter.format(0)},
+    {DBLCHD: 0},
+    {DBLCHDCost: formatter.format(0)},
+    {TRPLCHD: 0},
+    {TRPLCHDCost: formatter.format(0)},
+];
+
+  React.useEffect(() => {
+
+    _totalValues[0].SNG = getTotalValues(9,false);
+    _totalValues[2].DBL = getTotalValues(10,false);
+    _totalValues[4].TRPL = getTotalValues(11,false);
+    _totalValues[6].QUAT = getTotalValues(12,false);
+    _totalValues[8].SNGCHD = getTotalValues(13,false);
+    _totalValues[10].DBLCHD = getTotalValues(14,false);
+    _totalValues[12].TRPLCHD = getTotalValues(15,false);
+
+    _totalValues[1].SNGCost = getTotalValues(17,true);
+    _totalValues[3].DBLCost = getTotalValues(18,true);
+    _totalValues[5].TRPLCost = getTotalValues(19,true);
+    _totalValues[7].QUATCost = getTotalValues(20,true);
+    _totalValues[9].SNGCHDCost = getTotalValues(21,true);
+    _totalValues[11].DBLCHDCost = getTotalValues(22,true);
+    _totalValues[13].TRPLCHDCost = getTotalValues(23,true);
+    
+    setTotalValues(_totalValues);
+    setIsChanged(false);
+  },[isChanged]);
+
   const cost = {
     sng: 100,
     dbl: 200,
@@ -71,99 +132,163 @@ const Accommodation = () => {
     dblchd: 600,
     trplchd: 700,
   };
-  var formatter = new Intl.NumberFormat("tr-TR", {
-    style: "currency",
-    currency: "TRY",
-  });
-  const getTotalValues = (colNo) => {
-    const resultArray = grid.map((item, index) => {
-      if (index === grid.length - 1) return 0;
-
-      return parseInt(item[colNo].value);
-    });
-
-    let newResultArray = resultArray.slice(1, resultArray.length);
+  
+  const getTotalValues = (colNo,format) => {
+    const resultArray = grid.slice(1, grid.length-1).map(item => isNaN(parseInt(item[colNo].value)) ? 0 : parseInt(item[colNo].value));
+    
     let result = 0;
-    for (var i = 0; i < newResultArray.length; i++) result += newResultArray[i];
-
-    if (typeof grid[1][17].value !== "string") {
-      return 0;
-    } else return formatter.format(result);
+    for (var i = 0; i < resultArray.length; i++) 
+        result += resultArray[i];
+       
+    if(format === true)
+        return formatter.format(result);
+    else 
+        return result;
   };
 
   return (
     <div>
       <Row>
-        <Col xs={12} sm={6} xl={4} className="mb-4">
+        <Col xs={12} sm={6} xl={3} className="mb-4">
           <CounterWidget
             category={"Toplam SNG "}
-            title={`${getTotalValues(17)}`}
+            title={`${totalValues[0].SNG}`}
             percentage={18.2}
             icon={faBuilding}
             iconColor="shape-secondary"
           />
         </Col>
-        <Col xs={12} sm={6} xl={4} className="mb-4">
+        <Col xs={12} sm={6} xl={3} className="mb-4">
+          <CounterWidget
+            category={"Toplam SNG "}
+            title={`${totalValues[1].SNGCost}`}
+            percentage={18.2}
+            icon={faBuilding}
+            iconColor="shape-secondary"
+          />
+        </Col>
+
+        <Col xs={12} sm={6} xl={3} className="mb-4">
           <CounterWidget
             category={"TOPLAM DBL "}
-            title={getTotalValues(18)}
+            title={`${totalValues[2].DBL}`}
             percentage={18.2}
             icon={faBuilding}
             iconColor="shape-secondary"
           />
         </Col>
-        <Col xs={12} sm={6} xl={4} className="mb-4">
+        <Col xs={12} sm={6} xl={3} className="mb-4">
+          <CounterWidget
+            category={"TOPLAM DBL "}
+            title={`${totalValues[3].DBLCost}`}
+            percentage={18.2}
+            icon={faBuilding}
+            iconColor="shape-secondary"
+          />
+        </Col>
+
+        <Col xs={12} sm={6} xl={3} className="mb-4">
           <CounterWidget
             category={"Toplam TRPL "}
-            title={getTotalValues(19)}
+            title={`${totalValues[4].TRPL}`}
             percentage={18.2}
             icon={faBuilding}
             iconColor="shape-secondary"
           />
         </Col>
-        <Row>
-          <Col xs={12} sm={6} xl={4} className="mb-4">
+        <Col xs={12} sm={6} xl={3} className="mb-4">
+          <CounterWidget
+            category={"Toplam TRPL "}
+            title={`${totalValues[5].TRPLCost}`}
+            percentage={18.2}
+            icon={faBuilding}
+            iconColor="shape-secondary"
+          />
+        </Col>
+
+          <Col xs={12} sm={6} xl={3} className="mb-4">
             <CounterWidget
               category={"Toplam QUAT "}
-              title={getTotalValues(20)}
+              title={`${totalValues[6].QUAT}`}
               percentage={18.2}
               icon={faBuilding}
               iconColor="shape-secondary"
             />
           </Col>
-          <Col xs={12} sm={6} xl={4} className="mb-4">
+          <Col xs={12} sm={6} xl={3} className="mb-4">
+            <CounterWidget
+              category={"Toplam QUAT "}
+              title={`${totalValues[7].QUATCost}`}
+              percentage={18.2}
+              icon={faBuilding}
+              iconColor="shape-secondary"
+            />
+          </Col>
+
+          <Col xs={12} sm={6} xl={3} className="mb-4">
             <CounterWidget
               category={"TOPLAM SNG+CHD "}
-              title={getTotalValues(21)}
+              title={`${totalValues[8].SNGCHD}`}
               percentage={18.2}
               icon={faBuilding}
               iconColor="shape-secondary"
             />
           </Col>
-          <Col xs={12} sm={6} xl={4} className="mb-4">
+          <Col xs={12} sm={6} xl={3} className="mb-4">
+            <CounterWidget
+              category={"TOPLAM SNG+CHD "}
+              title={`${totalValues[9].SNGCHDCost}`}
+              percentage={18.2}
+              icon={faBuilding}
+              iconColor="shape-secondary"
+            />
+          </Col>
+
+          <Col xs={12} sm={6} xl={3} className="mb-4">
             <CounterWidget
               category={"Toplam DBL+CHD "}
-              title={getTotalValues(22)}
+              title={`${totalValues[10].DBLCHD}`}
               percentage={18.2}
               icon={faBuilding}
               iconColor="shape-secondary"
             />
           </Col>
-          <Col xs={12} sm={6} xl={4} className="mb-4">
+          <Col xs={12} sm={6} xl={3} className="mb-4">
+            <CounterWidget
+              category={"Toplam DBL+CHD "}
+              title={`${totalValues[11].DBLCHDCost}`}
+              percentage={18.2}
+              icon={faBuilding}
+              iconColor="shape-secondary"
+            />
+          </Col>
+
+          <Col xs={12} sm={6} xl={3} className="mb-4">
             <CounterWidget
               category={"Toplam TRPL+CHD "}
-              title={getTotalValues(23)}
+              title={`${totalValues[12].TRPLCHD}`}
               percentage={18.2}
               icon={faBuilding}
               iconColor="shape-secondary"
             />
           </Col>
-        </Row>
+          <Col xs={12} sm={6} xl={3} className="mb-4">
+            <CounterWidget
+              category={"Toplam TRPL+CHD "}
+              title={`${totalValues[13].TRPLCHDCost}`}
+              percentage={18.2}
+              icon={faBuilding}
+              iconColor="shape-secondary"
+            />
+          </Col>
+
       </Row>
       <ReactDataSheet
+        style={{marginBottom:'2%'}}
         data={grid}
         valueRenderer={(cell) => cell.value}
         onCellsChanged={(changes) => {
+          setIsChanged(true);
           const grid_ = grid.map((row) => [...row]);
           changes.forEach(({ cell, row, col, value }) => {
             grid_[row][col] = { ...grid_[row][col], value };
