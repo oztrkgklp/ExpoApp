@@ -2,7 +2,6 @@ import React from "react";
 import ReactDataSheet from "react-datasheet";
 import "react-datasheet/lib/react-datasheet.css";
 import { CounterWidget } from "./Widgets.js";
-import { faBuilding } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row } from "@themesberg/react-bootstrap";
 import { propTypes } from "@themesberg/react-bootstrap/lib/esm/Image";
 const Accommodation = () => {
@@ -66,62 +65,61 @@ const Accommodation = () => {
     style: "currency",
     currency: "TRY",
   });
-  const [isChanged,setIsChanged] = React.useState(false);
+  const [isChanged, setIsChanged] = React.useState(false);
   const [totalValues, setTotalValues] = React.useState([
-      {SNG: 0},
-      {SNGCost: formatter.format(0)},
-      {DBL: 0},
-      {DBLCost: formatter.format(0)},
-      {TRPL: 0},
-      {TRPLCost: formatter.format(0)},
-      {QUAT: 0},
-      {QUATCost: formatter.format(0)},
-      {SNGCHD: 0},
-      {SNGCHDCost: formatter.format(0)},
-      {DBLCHD: 0},
-      {DBLCHDCost: formatter.format(0)},
-      {TRPLCHD: 0},
-      {TRPLCHDCost: formatter.format(0)},
+    { SNG: 0 },
+    { SNGCost: formatter.format(0) },
+    { DBL: 0 },
+    { DBLCost: formatter.format(0) },
+    { TRPL: 0 },
+    { TRPLCost: formatter.format(0) },
+    { QUAT: 0 },
+    { QUATCost: formatter.format(0) },
+    { SNGCHD: 0 },
+    { SNGCHDCost: formatter.format(0) },
+    { DBLCHD: 0 },
+    { DBLCHDCost: formatter.format(0) },
+    { TRPLCHD: 0 },
+    { TRPLCHDCost: formatter.format(0) },
   ]);
 
   var _totalValues = [
-    {SNG: 0},
-    {SNGCost: formatter.format(0)},
-    {DBL: 0},
-    {DBLCost: formatter.format(0)},
-    {TRPL: 0},
-    {TRPLCost: formatter.format(0)},
-    {QUAT: 0},
-    {QUATCost: formatter.format(0)},
-    {SNGCHD: 0},
-    {SNGCHDCost: formatter.format(0)},
-    {DBLCHD: 0},
-    {DBLCHDCost: formatter.format(0)},
-    {TRPLCHD: 0},
-    {TRPLCHDCost: formatter.format(0)},
-];
+    { SNG: 0 },
+    { SNGCost: formatter.format(0) },
+    { DBL: 0 },
+    { DBLCost: formatter.format(0) },
+    { TRPL: 0 },
+    { TRPLCost: formatter.format(0) },
+    { QUAT: 0 },
+    { QUATCost: formatter.format(0) },
+    { SNGCHD: 0 },
+    { SNGCHDCost: formatter.format(0) },
+    { DBLCHD: 0 },
+    { DBLCHDCost: formatter.format(0) },
+    { TRPLCHD: 0 },
+    { TRPLCHDCost: formatter.format(0) },
+  ];
 
   React.useEffect(() => {
+    _totalValues[0].SNG = getTotalValues(9, false);
+    _totalValues[2].DBL = getTotalValues(10, false);
+    _totalValues[4].TRPL = getTotalValues(11, false);
+    _totalValues[6].QUAT = getTotalValues(12, false);
+    _totalValues[8].SNGCHD = getTotalValues(13, false);
+    _totalValues[10].DBLCHD = getTotalValues(14, false);
+    _totalValues[12].TRPLCHD = getTotalValues(15, false);
 
-    _totalValues[0].SNG = getTotalValues(9,false);
-    _totalValues[2].DBL = getTotalValues(10,false);
-    _totalValues[4].TRPL = getTotalValues(11,false);
-    _totalValues[6].QUAT = getTotalValues(12,false);
-    _totalValues[8].SNGCHD = getTotalValues(13,false);
-    _totalValues[10].DBLCHD = getTotalValues(14,false);
-    _totalValues[12].TRPLCHD = getTotalValues(15,false);
+    _totalValues[1].SNGCost = getTotalValues(17, true);
+    _totalValues[3].DBLCost = getTotalValues(18, true);
+    _totalValues[5].TRPLCost = getTotalValues(19, true);
+    _totalValues[7].QUATCost = getTotalValues(20, true);
+    _totalValues[9].SNGCHDCost = getTotalValues(21, true);
+    _totalValues[11].DBLCHDCost = getTotalValues(22, true);
+    _totalValues[13].TRPLCHDCost = getTotalValues(23, true);
 
-    _totalValues[1].SNGCost = getTotalValues(17,true);
-    _totalValues[3].DBLCost = getTotalValues(18,true);
-    _totalValues[5].TRPLCost = getTotalValues(19,true);
-    _totalValues[7].QUATCost = getTotalValues(20,true);
-    _totalValues[9].SNGCHDCost = getTotalValues(21,true);
-    _totalValues[11].DBLCHDCost = getTotalValues(22,true);
-    _totalValues[13].TRPLCHDCost = getTotalValues(23,true);
-    
     setTotalValues(_totalValues);
     setIsChanged(false);
-  },[isChanged]);
+  }, [isChanged]);
 
   const cost = {
     sng: 100,
@@ -132,159 +130,192 @@ const Accommodation = () => {
     dblchd: 600,
     trplchd: 700,
   };
-  
-  const getTotalValues = (colNo,format) => {
-    const resultArray = grid.slice(1, grid.length-1).map(item => isNaN(parseInt(item[colNo].value)) ? 0 : parseInt(item[colNo].value));
-    
+
+  const getTotalValues = (colNo, format) => {
+    const resultArray = grid
+      .slice(1, grid.length - 1)
+      .map((item) =>
+        isNaN(parseInt(item[colNo].value)) ? 0 : parseInt(item[colNo].value)
+      );
+
     let result = 0;
-    for (var i = 0; i < resultArray.length; i++) 
-        result += resultArray[i];
-       
-    if(format === true)
-        return formatter.format(result);
-    else 
-        return result;
+    for (var i = 0; i < resultArray.length; i++) result += resultArray[i];
+
+    if (format === true) return result;
+    else return result;
   };
+  const getTotalRoom =()=>{
+    var total = 0;
+    for (var i = 9; i <= 15; i++) {
+      total += getTotalValues(i, false);
+    }
+    return total;
+  }
+  const getTotalCost =()=>{
+    var total = 0;
+    var totalCost = 0
+    for (var i = 17; i <= 23; i++) {
+      total += (getTotalValues(i, true));
+    }
+    console.log(total);
+    return total;
+  }
 
   return (
     <div>
       <Row>
-        <Col xs={12} sm={6} xl={3} className="mb-4">
+        <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#0328C0 "}}>
           <CounterWidget
             category={"Toplam SNG "}
             title={`${totalValues[0].SNG}`}
             percentage={18.2}
-            icon={faBuilding}
             iconColor="shape-secondary"
           />
         </Col>
-        <Col xs={12} sm={6} xl={3} className="mb-4">
-          <CounterWidget
-            category={"Toplam SNG "}
-            title={`${totalValues[1].SNGCost}`}
-            percentage={18.2}
-            icon={faBuilding}
-            iconColor="shape-secondary"
-          />
-        </Col>
-
-        <Col xs={12} sm={6} xl={3} className="mb-4">
+        <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#0328C0 "}}>
           <CounterWidget
             category={"TOPLAM DBL "}
             title={`${totalValues[2].DBL}`}
             percentage={18.2}
-            icon={faBuilding}
             iconColor="shape-secondary"
           />
         </Col>
-        <Col xs={12} sm={6} xl={3} className="mb-4">
-          <CounterWidget
-            category={"TOPLAM DBL "}
-            title={`${totalValues[3].DBLCost}`}
-            percentage={18.2}
-            icon={faBuilding}
-            iconColor="shape-secondary"
-          />
-        </Col>
-
-        <Col xs={12} sm={6} xl={3} className="mb-4">
+        <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#0328C0 "}}>
           <CounterWidget
             category={"Toplam TRPL "}
             title={`${totalValues[4].TRPL}`}
             percentage={18.2}
-            icon={faBuilding}
             iconColor="shape-secondary"
           />
         </Col>
-        <Col xs={12} sm={6} xl={3} className="mb-4">
+        <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#0328C0 "}}>
+          <CounterWidget
+            category={"Toplam QUAT "}
+            title={`${totalValues[6].QUAT}`}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
+        <Col></Col>
+        <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#0328C0 "}}>
+          <CounterWidget
+            category={"TOPLAM SNG+CHD "}
+            title={`${totalValues[8].SNGCHD}`}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
+        <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#0328C0 "}}>
+          <CounterWidget
+            category={"Toplam DBL+CHD "}
+            title={`${totalValues[10].DBLCHD}`}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
+        <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#0328C0 "}}>
+          <CounterWidget
+            category={"Toplam TRPL+CHD "}
+            title={`${totalValues[12].TRPLCHD}`}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
+        <Col></Col>
+        </Row>
+        <Row>
+        <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#038C17 "}}>
+          <CounterWidget
+            category={"Toplam SNG "}
+            title={`${formatter.format(totalValues[1].SNGCost)}`}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
+
+        
+        <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#038C17 "}}>
+          <CounterWidget
+            category={"TOPLAM DBL "}
+            title={`${formatter.format( totalValues[3].DBLCost)}`}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
+
+        
+        <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#038C17 "}}>
           <CounterWidget
             category={"Toplam TRPL "}
-            title={`${totalValues[5].TRPLCost}`}
+            title={`${formatter.format (totalValues[5].TRPLCost)}`}
             percentage={18.2}
-            icon={faBuilding}
             iconColor="shape-secondary"
           />
         </Col>
 
-          <Col xs={12} sm={6} xl={3} className="mb-4">
-            <CounterWidget
-              category={"Toplam QUAT "}
-              title={`${totalValues[6].QUAT}`}
-              percentage={18.2}
-              icon={faBuilding}
-              iconColor="shape-secondary"
-            />
-          </Col>
-          <Col xs={12} sm={6} xl={3} className="mb-4">
-            <CounterWidget
-              category={"Toplam QUAT "}
-              title={`${totalValues[7].QUATCost}`}
-              percentage={18.2}
-              icon={faBuilding}
-              iconColor="shape-secondary"
-            />
-          </Col>
+        
+        <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#038C17 "}}>
+          <CounterWidget
+            category={"Toplam QUAT "}
+            title={`${formatter.format (totalValues[7].QUATCost)}`}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
 
-          <Col xs={12} sm={6} xl={3} className="mb-4">
-            <CounterWidget
-              category={"TOPLAM SNG+CHD "}
-              title={`${totalValues[8].SNGCHD}`}
-              percentage={18.2}
-              icon={faBuilding}
-              iconColor="shape-secondary"
-            />
-          </Col>
-          <Col xs={12} sm={6} xl={3} className="mb-4">
-            <CounterWidget
-              category={"TOPLAM SNG+CHD "}
-              title={`${totalValues[9].SNGCHDCost}`}
-              percentage={18.2}
-              icon={faBuilding}
-              iconColor="shape-secondary"
-            />
-          </Col>
+        <Col></Col>
+        <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#038C17 "}}>
+          <CounterWidget
+            category={"TOPLAM SNG+CHD "}
+            title={`${formatter.format (totalValues[9].SNGCHDCost)}`}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
 
-          <Col xs={12} sm={6} xl={3} className="mb-4">
-            <CounterWidget
-              category={"Toplam DBL+CHD "}
-              title={`${totalValues[10].DBLCHD}`}
-              percentage={18.2}
-              icon={faBuilding}
-              iconColor="shape-secondary"
-            />
-          </Col>
-          <Col xs={12} sm={6} xl={3} className="mb-4">
-            <CounterWidget
-              category={"Toplam DBL+CHD "}
-              title={`${totalValues[11].DBLCHDCost}`}
-              percentage={18.2}
-              icon={faBuilding}
-              iconColor="shape-secondary"
-            />
-          </Col>
+        
+        <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#038C17 "}}>
+          <CounterWidget
+            category={"Toplam DBL+CHD "}
+            title={`${formatter.format (totalValues[11].DBLCHDCost)}`}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
 
-          <Col xs={12} sm={6} xl={3} className="mb-4">
-            <CounterWidget
-              category={"Toplam TRPL+CHD "}
-              title={`${totalValues[12].TRPLCHD}`}
-              percentage={18.2}
-              icon={faBuilding}
-              iconColor="shape-secondary"
-            />
-          </Col>
-          <Col xs={12} sm={6} xl={3} className="mb-4">
-            <CounterWidget
-              category={"Toplam TRPL+CHD "}
-              title={`${totalValues[13].TRPLCHDCost}`}
-              percentage={18.2}
-              icon={faBuilding}
-              iconColor="shape-secondary"
-            />
-          </Col>
-
+        
+        <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#038C17 "}}>
+          <CounterWidget
+            category={"Toplam TRPL+CHD "}
+            title={`${formatter.format (totalValues[13].TRPLCHDCost)}`}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
+        <Col></Col>
+        <Row>
+          <Col></Col>
+        <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor: "#C70039"}}>
+          <CounterWidget
+            category={"Toplam Tutulan Oda "}
+            title={getTotalRoom()}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
+        <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#C70039"}}>
+          <CounterWidget
+            category={"Toplam Oda Fiyatı "}
+            title={formatter.format(getTotalCost())}
+            percentage={18.2}
+            iconColor="shape-secondary"
+          />
+        </Col>
+        <Col></Col>
+        </Row>
       </Row>
       <ReactDataSheet
-        style={{marginBottom:'2%'}}
+        style={{marginBottom: "2%" }}
         data={grid}
         valueRenderer={(cell) => cell.value}
         onCellsChanged={(changes) => {

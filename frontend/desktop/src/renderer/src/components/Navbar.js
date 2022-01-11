@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSignOutAlt,
+  faTrash,
+  faSave
 } from "@fortawesome/free-solid-svg-icons";
 import {
   Row,
@@ -58,7 +60,7 @@ export default (props) => {
       </ListGroup.Item>
     );
   };
-  const userName = "TEST";
+  const userName = "İDEAL";
   
   return (
     <Navbar variant="dark" expanded className="ps-0 pe-2 pb-0">
@@ -109,6 +111,26 @@ export default (props) => {
                     className="text-danger me-2"
                   />{" "}
                   Çıkış Yap
+                </Dropdown.Item>
+                <Dropdown.Item
+                  className="fw-bold"
+                  as={Link} to={Routes.Presentation.path}
+                >
+                  <FontAwesomeIcon
+                    icon={faSave}
+                    className="text-danger me-2"
+                  />{" "}
+                  Fuarı Bitir (Tabloları Kaydet)
+                </Dropdown.Item>
+                <Dropdown.Item
+                  className="fw-bold"
+                  as={Link} to={Routes.Presentation.path}
+                >
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    className="text-danger me-2"
+                  />{" "}
+                  Verileri Sıfırla
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>

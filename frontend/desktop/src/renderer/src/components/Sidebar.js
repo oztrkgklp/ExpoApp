@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import { CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers, faBed, faChartPie, faCog, faFileAlt, faHandHoldingUsd, faSignOutAlt, faTable, faTimes, faCalendarAlt, faMapPin, faInbox, faRocket } from "@fortawesome/free-solid-svg-icons";
-import { Nav, Badge, Image, Button, Dropdown, Accordion, Navbar } from '@themesberg/react-bootstrap';
+import { Card,Col,Nav, Badge, Image, Button, Dropdown, Accordion, Navbar } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { Routes } from "../routes";
@@ -128,6 +128,23 @@ export default (props = {}) => {
                 <NavItem title="404 Not Found" link={Routes.NotFound.path} />
                 <NavItem title="500 Server Error" link={Routes.ServerError.path} />
               </CollapsableNavItem> */}
+              <NavItem></NavItem>
+              <NavItem></NavItem>
+              <NavItem></NavItem>
+              <NavItem></NavItem>
+              <NavItem></NavItem>
+              <NavItem></NavItem>
+              <NavItem></NavItem>
+              <NavItem></NavItem>
+              <NavItem></NavItem>
+              <Col className="mb-md-2">
+              <Card.Link href="#" target="_blank" className="d-flex justify-content-center">
+                <Image src={ThemesbergLogo} height={35} className="d-block mx-auto mb-3" alt="Themesberg Logo" />
+              </Card.Link>
+              <div className="d-flex text-center justify-content-center align-items-center" role="contentinfo">
+                <p className="font-weight-small font-small mb-3">Copyright © CSoft. All rights reserved</p>
+              </div>
+            </Col>
               <Dropdown.Divider className="my-3 border-indigo" />
             </Nav>
           </div>
