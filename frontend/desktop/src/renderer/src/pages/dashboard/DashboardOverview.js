@@ -75,7 +75,7 @@ export default () => {
       var total = 0.0;
       company.result.map(c => {
         const {endorsement} = c
-         total += -parseFloat(endorsement)
+         total += parseFloat(endorsement)
       })
       setGuests(total);
     };

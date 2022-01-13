@@ -25,6 +25,10 @@ export const deleteAccommodations = async (id) => {
   const { data } = await axios.delete(domain + "accommodations/"+id);
   return data;
 };
+export const getAccommodationById = async (id) => {
+  const result = await axios.get(domain + "accommodations/"+id);
+  return result;
+};
 
 export const enteredCompany = async () => {
   const { data } = await axios.get(domain + "companies/entered");
@@ -95,7 +99,7 @@ export const createAccommodation = async (params) => {
     if(params.thirdGuest.length>1)
       i++
     
-  const { data } = await axios.post(
+  const {data} = await axios.post(
     domain +
       "accommodations?CompanyName='" +
       params.companyName + "'"+
@@ -147,16 +151,10 @@ export const createAccommodation = async (params) => {
       params._TRPLCHD+ "'"+
       "&Description='" +
       params.description+"'"
-
-      
   );
   return data;
 };
 export const updateAcc = async (params) => {
-  var [key, value] = Object.entries(params)[0];
-  console.log(key)
-  console.log(value)
-
   var i = 1
   if(params.secondGuest)
     i++
@@ -165,58 +163,56 @@ export const updateAcc = async (params) => {
   
 const { data } = await axios.put(
   domain +
-    "accommodations/"+ key + "?CompanyName='" +
-    value.companyName.value + "'"+
+    "accommodations/"+ params.accommodationID + "?CompanyName='" +
+    params.companyName + "'"+
     "&Hotel='" +
-    value.hotel.value + "'" +
+    params.hotel + "'"+
     "&CheckIn=" +
-    value.checkInDate.value+ " 00:00:00" + 
+    params.checkInDate+ " 00:00:00" + 
     "&FirstGuest='"+
-    value.firstGuest.value+ "'"+
+    params.firstGuest+"'"+
     "&SecondGuest='"+
-    value.secondGuest.value+ "'"+
+    params.secondGuest+"'"+
     "&ThirdGuest='"+
-    value.thirdGuest.value+ "'"+
+    params.thirdGuest+"'"+
     "&NumberOfGuests="+
     i+
     "&GuestCompanyName='"+
-    value.guestCompanyName.value+ "'"+
+    params.guestCompanyName+"'"+
     "&Phone='"+
-    value.phone.value+ "'"+
+    params.phone+"'"+
     "&SNG='"+
-    value.SNG.value+ "'"+
+    params.SNG+"'"+
     "&DBL='"+
-    value.DBL.value+ "'"+
+    params.DBL+"'"+
     "&TRPL='"+
-    value.TRPL.value+ "'"+
+    params.TRPL+"'"+
     "&QUAT='"+
-    value.QUAT.value+ "'"+
+    params.QUAT+"'"+
     "&SNGCHD='"+
-    value.SNGCHD.value+ "'"+
+    params.SNGCHD+"'"+
     "&DBLCHD='"+
-    value.DBLCHD.value+ "'"+
+    params.DBLCHD+"'"+
     "&TRPLCHD='"+
-    value.TRPLCHD.value+ "'"+
+    params.TRPLCHD+"'"+
     "&CheckOut=" +
-    value.checkOutDate.value+ " 00:00:00" +
+    params.checkOutDate+ " 00:00:00" +
     "&SNG_='"+
-    value._SNG.value+ "'"+
+    params._SNG+"'"+
     "&DBL_='"+
-    value._DBL.value+ "'"+
+    params._DBL+"'"+
     "&TRPL_='"+
-    value._TRPL.value+ "'"+
+    params._TRPL+"'"+
     "&QUAT_='"+
-    value._QUAT.value+ "'"+
+    params._QUAT+"'"+
     "&SNG_CHD='"+
-    value._SNGCHD.value+ "'"+
+    params._SNGCHD+"'"+
     "&DBL_CHD='"+
-    value._DBLCHD.value+ "'"+
+    params._DBLCHD+"'"+
     "&TRPL_CHD='"+
-    value._TRPLCHD.value+ "'"+
+    params._TRPLCHD+"'"+
     "&Description='" +
-    value.description.value+"'"
-
-    
+    params.description+"'"   
 );
 return data;
 };
