@@ -514,7 +514,6 @@ const Accommodation = () => {
                   grid_[row][2].value !== "" &&
                   grid_[row][3].value !== "" &&
                   grid_[row][4].value !== "" &&
-                  grid_[row][16].value !== "" &&
                   (
                     grid_[row][9].value !== "" ||
                     grid_[row][10].value !== "" ||
