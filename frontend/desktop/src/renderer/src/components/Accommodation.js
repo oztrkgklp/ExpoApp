@@ -105,24 +105,9 @@ const Accommodation = () => {
 
 
   React.useEffect(() => {
-    _totalValues[0].SNG = getTotalValues(9, false);
-    _totalValues[2].DBL = getTotalValues(10, false);
-    _totalValues[4].TRPL = getTotalValues(11, false);
-    _totalValues[6].QUAT = getTotalValues(12, false);
-    _totalValues[8].SNGCHD = getTotalValues(13, false);
-    _totalValues[10].DBLCHD = getTotalValues(14, false);
-    _totalValues[12].TRPLCHD = getTotalValues(15, false);
-
-    _totalValues[1].SNGCost = getTotalValues(17, true);
-    _totalValues[3].DBLCost = getTotalValues(18, true);
-    _totalValues[5].TRPLCost = getTotalValues(19, true);
-    _totalValues[7].QUATCost = getTotalValues(20, true);
-    _totalValues[9].SNGCHDCost = getTotalValues(21, true);
-    _totalValues[11].DBLCHDCost = getTotalValues(22, true);
-    _totalValues[13].TRPLCHDCost = getTotalValues(23, true);
-
-    setTotalValues(_totalValues);
-    setIsChanged(false);
+    getTotalValuesString()
+    console.log(totalValues)
+    setIsChanged(false);  
   }, [isChanged]);
 
 
@@ -184,6 +169,7 @@ const Accommodation = () => {
           _DBLCHD,
           _TRPLCHD,
           description } = c;
+          
         const row = [
           { value: accommodationID, readOnly: true },
           { value: companyName, readOnly: false },
@@ -201,7 +187,7 @@ const Accommodation = () => {
           { value: sngchd, readOnly: false },
           { value: dblchd, readOnly: false },
           { value: trplchd, readOnly: false },
-          { value: dateFormat2(checkOut), readOnly: false },
+          { value: dateFormat2(checkOut) === '11.11.1111' ? "":dateFormat2(checkOut), readOnly: false },
           { value: _SNG, readOnly: true },
           { value: _DBL, readOnly: true },
           { value: _TRPL, readOnly: true },
@@ -243,7 +229,6 @@ const Accommodation = () => {
       ]);
       setGrid(header)
     };
-
   React.useEffect(() => {
     accs();
     setCreated(false);
@@ -260,32 +245,101 @@ const Accommodation = () => {
     trplchd: 700,
   };
 
-  const getTotalValues = (colNo, format) => {
+  const getTotalValues = (colNo) => {
     const resultArray = grid
       .slice(1, grid.length - 1)
       .map((item) =>
         isNaN(parseInt(item[colNo].value)) ? 0 : parseInt(item[colNo].value)
       );
-
     let result = 0;
     for (var i = 0; i < resultArray.length; i++) result += resultArray[i];
-
-    if (format === true) return result;
-    else return result;
+    console.log(result)
+    return result;
   };
   const getTotalRoom =()=>{
     var total = 0;
     for (var i = 9; i <= 15; i++) {
-      total += getTotalValues(i, false);
+      const value = getTotalValues(i);
+      total += value;
+      switch (i) {
+        case 9:
+          totalValues[0].SNG = value;      
+          break;
+        case 10:
+          totalValues[2].DBL = value;       
+          break;
+        case 11: 
+          totalValues[4].TRPL = value;      
+          break;
+        case 12:  
+          totalValues[6].QUAT = value;     
+          break;
+        case 13:   
+          totalValues[8].SNGCHD = value; 
+          break;
+        case 14: 
+          totalValues[10].DBLCHD = value;      
+          break;
+        case 15:  
+          totalValues[12].TRPLCHD = value;     
+          break;
+        default:
+          break;
+      }
     }
     return total;
   }
   const getTotalCost =()=>{
     var total = 0;
     for (var i = 17; i <= 23; i++) {
-      total += (getTotalValues(i, true));
+      const value = getTotalValues(i);
+      total += value;
+      switch (i) {
+        case 17:
+          totalValues[1].SNGCost = value;      
+          break;
+        case 18:
+          totalValues[3].DBLCost = value;       
+          break;
+        case 19: 
+          totalValues[5].TRPLCost = value;      
+          break;
+        case 20:  
+          totalValues[7].QUATCost = value;     
+          break;
+        case 21:   
+          totalValues[9].SNGCHDCost = value; 
+          break;
+        case 22: 
+          totalValues[11].DBLCHDCost = value;      
+          break;
+        case 23:  
+          totalValues[13].TRPLCHDCost = value;     
+          break;
+        default:
+          break;
+      }
     }
     return total;
+  }
+  const getTotalValuesString = () => {
+    _totalValues[0].SNG = getTotalValues(9);
+    _totalValues[2].DBL = getTotalValues(10);
+    _totalValues[4].TRPL = getTotalValues(11);
+    _totalValues[6].QUAT = getTotalValues(12);
+    _totalValues[8].SNGCHD = getTotalValues(13);
+    _totalValues[10].DBLCHD = getTotalValues(14);
+    _totalValues[12].TRPLCHD = getTotalValues(15);
+
+    _totalValues[1].SNGCost = getTotalValues(17);
+    _totalValues[3].DBLCost = getTotalValues(18);
+    _totalValues[5].TRPLCost = getTotalValues(19);
+    _totalValues[7].QUATCost = getTotalValues(20);
+    _totalValues[9].SNGCHDCost = getTotalValues(21);
+    _totalValues[11].DBLCHDCost = getTotalValues(22);
+    _totalValues[13].TRPLCHDCost = getTotalValues(23);
+
+    setTotalValues(_totalValues);
   }
 
   
@@ -302,7 +356,7 @@ const Accommodation = () => {
         </Col>
         <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#0328C0 "}}>
           <CounterWidget
-            category={"TOPLAM DBL "}
+            category={"Toplam DBL "}
             title={`${totalValues[2].DBL}`}
             percentage={18.2}
           />
@@ -324,7 +378,7 @@ const Accommodation = () => {
         <Col></Col>
         <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#0328C0 "}}>
           <CounterWidget
-            category={"TOPLAM SNG+CHD "}
+            category={"Toplam SNG+CHD "}
             title={`${totalValues[8].SNGCHD}`}
             percentage={18.2}
           />
@@ -357,7 +411,7 @@ const Accommodation = () => {
         
         <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#038C17 "}}>
           <CounterWidget
-            category={"TOPLAM DBL "}
+            category={"Toplam DBL "}
             title={`${formatter.format( totalValues[3].DBLCost)}`}
             percentage={18.2}
           />
@@ -384,7 +438,7 @@ const Accommodation = () => {
         <Col></Col>
         <Col xs={12} sm={6} xl={3} className="mb-4" style={{backgroundColor:"#038C17 "}}>
           <CounterWidget
-            category={"TOPLAM SNG+CHD "}
+            category={"Toplam SNG+CHD "}
             title={`${formatter.format (totalValues[9].SNGCHDCost)}`}
             percentage={18.2}
           />
@@ -472,13 +526,13 @@ const Accommodation = () => {
                 parseInt(grid_[row][15].value) * cost.trplchd
               } `;
             }
-            
             const getAcc = async () => getAccommodationById(grid_[row][0].value).then(response => response.status).catch(e => e.response.status);
-
+            
             getAcc().then(status => {
               console.log(status)
               if(status === 200)
               {
+                grid_[row][16].value = grid_[row][16].value === "" ? "11.11.1111": grid_[row][16].value;
                 updateAcc({
                   accommodationID: grid_[row][0].value,
                   companyName : grid_[row][1].value ===  grid[row][1].value ? grid[row][1].value : grid_[row][1].value ,
@@ -497,13 +551,13 @@ const Accommodation = () => {
                   DBLCHD : grid_[row][14].value === grid[row][14].value ? grid[row][14].value : grid_[row][14].value ,
                   TRPLCHD : grid_[row][15].value === grid[row][15].value ? grid[row][15].value : grid_[row][15].value ,
                   checkOutDate : grid_[row][16].value === grid[row][16].value ? dateFormat3(grid[row][16].value) : dateFormat3(grid_[row][16].value) ,
-                  _SNG : grid_[row][17].value === grid[row][17].value ? grid[row][17].value : grid_[row][17].value ,
-                  _DBL : grid_[row][18].value === grid[row][18].value ? grid[row][18].value : grid_[row][18].value ,
-                  _TRPL : grid_[row][19].value === grid[row][19].value ? grid[row][19].value : grid_[row][19].value ,
-                  _QUAT : grid_[row][20].value === grid[row][20].value ? grid[row][20].value : grid_[row][20].value ,
-                  _SNGCHD : grid_[row][21].value === grid[row][21].value ? grid[row][21].value : grid_[row][21].value ,
-                  _DBLCHD : grid_[row][22].value === grid[row][22].value ? grid[row][22].value : grid_[row][22].value ,
-                  _TRPLCHD : grid_[row][23].value === grid[row][23].value ? grid[row][23].value : grid_[row][23].value ,
+                  _SNG : grid_[row][9].value === grid[row][9].value ? `${isNaN(parseInt(grid[row][9].value)*cost.sng) ? "" : parseInt(grid[row][9].value)*cost.sng}` : `${isNaN(parseInt(grid_[row][9].value)*cost.sng) ? "" : parseInt(grid_[row][9].value)*cost.sng}` ,
+                  _DBL : grid_[row][10].value === grid[row][10].value ? `${isNaN(parseInt(grid[row][10].value)*cost.dbl) ? "" : parseInt(grid[row][10].value)*cost.dbl}` : `${isNaN(parseInt(grid_[row][10].value)*cost.dbl) ? "" : parseInt(grid_[row][10].value)*cost.dbl}` ,
+                  _TRPL : grid_[row][11].value === grid[row][11].value ? `${isNaN(parseInt(grid[row][11].value)*cost.trpl) ? "" : parseInt(grid[row][11].value)*cost.trpl}` : `${isNaN(parseInt(grid_[row][11].value)*cost.trpl) ? "" : parseInt(grid_[row][11].value)*cost.trpl}` ,
+                  _QUAT : grid_[row][12].value === grid[row][12].value ? `${isNaN(parseInt(grid[row][12].value)*cost.quat) ? "" : parseInt(grid[row][12].value)*cost.quat}` : `${isNaN(parseInt(grid_[row][12].value)*cost.quat) ? "" : parseInt(grid_[row][12].value)*cost.quat}` ,
+                  _SNGCHD : grid_[row][13].value === grid[row][13].value ? `${isNaN(parseInt(grid[row][13].value)*cost.sngchd) ? "" : parseInt(grid[row][13].value)*cost.sngchd}` : `${isNaN(parseInt(grid_[row][13].value)*cost.sngchd) ? "" : parseInt(grid_[row][13].value)*cost.sngchd}` ,
+                  _DBLCHD : grid_[row][14].value === grid[row][14].value ? `${isNaN(parseInt(grid[row][14].value)*cost.dblchd) ? "" : parseInt(grid[row][14].value)*cost.dblchd}` : `${isNaN(parseInt(grid_[row][14].value)*cost.dblchd) ? "" : parseInt(grid_[row][14].value)*cost.dblchd}` ,
+                  _TRPLCHD : grid_[row][15].value === grid[row][15].value ? `${isNaN(parseInt(grid[row][15].value)*cost.trplchd) ? "" : parseInt(grid[row][15].value)*cost.trplchd}` : `${isNaN(parseInt(grid_[row][15].value)*cost.trplchd) ? "" : parseInt(grid_[row][15].value)*cost.trplchd}` ,
                   description : grid_[row][24].value === grid[row][24].value ? grid[row][24].value : grid_[row][24].value ,
                 })
               }
@@ -541,22 +595,21 @@ const Accommodation = () => {
                     SNGCHD : grid_[row][13].value,
                     DBLCHD : grid_[row][14].value,
                     TRPLCHD : grid_[row][15].value,
-                    checkOutDate : dateFormat3(grid_[row][16].value),
-                    _SNG : grid_[row][17].value,
-                    _DBL : grid_[row][18].value,
-                    _TRPL : grid_[row][19].value,
-                    _QUAT : grid_[row][20].value,
-                    _SNGCHD : grid_[row][21].value,
-                    _DBLCHD : grid_[row][22].value,
-                    _TRPLCHD : grid_[row][23].value,
+                    checkOutDate : grid_[row][16].value === "" ? '11.11.1111': dateFormat3(grid_[row][16].value),
+                    _SNG : grid_[row][17].value*cost.sng,
+                    _DBL : grid_[row][18].value*cost.dbl,
+                    _TRPL : grid_[row][19].value*cost.trpl,
+                    _QUAT : grid_[row][20].value*cost.quat,
+                    _SNGCHD : grid_[row][21].value*cost.sngchd,
+                    _DBLCHD : grid_[row][22].value*cost.dblchd,
+                    _TRPLCHD : grid_[row][23].value*cost.trplchd,
                     description : grid_[row][24].value,
                   })
                     setCreated(true);
                 }
               }
             });
-            
-            
+              
 
 
             if (row === grid_.length - 1) {

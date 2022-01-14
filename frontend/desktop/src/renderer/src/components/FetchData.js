@@ -197,19 +197,19 @@ const { data } = await axios.put(
     params.TRPLCHD+"'"+
     "&CheckOut=" +
     params.checkOutDate+ " 00:00:00" +
-    "&SNG_='"+
+    "&_SNG='"+
     params._SNG+"'"+
-    "&DBL_='"+
+    "&_DBL='"+
     params._DBL+"'"+
-    "&TRPL_='"+
+    "&_TRPL='"+
     params._TRPL+"'"+
-    "&QUAT_='"+
+    "&_QUAT='"+
     params._QUAT+"'"+
-    "&SNG_CHD='"+
+    "&_SNGCHD='"+
     params._SNGCHD+"'"+
-    "&DBL_CHD='"+
+    "&_DBLCHD='"+
     params._DBLCHD+"'"+
-    "&TRPL_CHD='"+
+    "&_TRPLCHD='"+
     params._TRPLCHD+"'"+
     "&Description='" +
     params.description+"'"   
