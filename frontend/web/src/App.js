@@ -35,6 +35,8 @@ import {
 } from "./Data";
 import SellerTable from "./SellerTable";
 import PurchaseTable from "./PurchaseTable";
+import Autocomplete from "@mui/material/Autocomplete";
+
 function Copyright(props) {
   return (
     <Typography
@@ -46,10 +48,10 @@ function Copyright(props) {
       {"Copyright © "}
       <Link
         color="inherit"
-        href="http://idealorganizasyon.org/"
+        href="#"
         target="_blank"
       >
-        İdeal Organizasyon
+        CSoft All rights reserved.
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -73,6 +75,8 @@ export default function App() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [companyNames, setCompanyNames] = React.useState([]);
   const [companies, setCompanies] = React.useState([]);
+  const [value, setValue] = React.useState(null);
+
   const handleFailedToast = () => {
     toast.error("🦄 Eksik/Hatalı Satıcı Firma Adı ", {
       position: "top-center",
@@ -129,7 +133,7 @@ export default function App() {
   React.useEffect(() => {
     const purchaser = async () => {
       const companyName = await getCompanyName();
-      console.log(companyName.result)
+      console.log(companyName.result);
       setCompanyNames(companyName.result);
     };
     purchaser();
@@ -142,7 +146,6 @@ export default function App() {
         return companyName;
       });
       setCompanies(arr);
-      console.log(arr);
     };
     companies();
   }, []);
@@ -151,7 +154,6 @@ export default function App() {
       const id = await getGuests();
 
       setGuests(id.result);
-      console.log(id.result);
     };
     guests();
   }, []);
@@ -224,6 +226,8 @@ export default function App() {
     [isSubmit]
   );
 
+  var search = guest.map((guest) => guest.companyName).includes(purchaserName);
+  console.log(search);
   return (
     <ThemeProvider theme={theme}>
       <Grid
@@ -322,11 +326,10 @@ export default function App() {
                     {companies.map((company) => {
                       return <MenuItem value={company}>{company}</MenuItem>;
                     })}
-
                   </Select>
                 </FormControl>
               </Box>
-              <Box sx={{ maxWidth: 200, minWidth: 200, marginTop: 4 }}>
+              {/* <Box sx={{ maxWidth: 200, minWidth: 200, marginTop: 4 }}>
                 <FormControl fullWidth>
                   <Select
                     labelId="demo-simple-select-label"
@@ -347,8 +350,51 @@ export default function App() {
 
                   </Select>
                 </FormControl>
-              </Box>
-              <TextField
+              </Box> */}
+              <Autocomplete
+                freeSolo
+                id="combo-box-demo"
+                options={guest.map((option) => option.companyName)}
+                sx={{ width: 300 }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Alım Yapan Misafir"
+                    onChange={(e) => {
+                      setpurchaserName(e.target.value);
+                    }}
+                  />
+                )}
+              />
+              {!search ? (
+                <div>
+                  <TextField
+                    margin="normal"
+                    fullWidth
+                    onChange={(e) => {
+                      setemail(e.target.value);
+                    }}
+                    name="email"
+                    label="Alıcı Email Adresi"
+                    id="email"
+                  />
+                  <TextField
+                    margin="normal"
+                    // required
+                    fullWidth
+                    onChange={(e) => {
+                      setphone(e.target.value);
+                    }}
+                    name="phone"
+                    label="Alıcı Telefon Numarası"
+                    id="phone"
+                  />
+                </div>
+              ) : (
+                console.log("")
+              )}
+
+              {/* <TextField
                 margin="normal"
                 required
                 fullWidth
@@ -359,38 +405,8 @@ export default function App() {
                 label="Alım Yapan Misafir Adı"
                 name="purchaserName"
                 autoFocus
-              />
-              <TextField
-                margin="normal"
-                // required
-                fullWidth
-                onChange={(e) => {
-                  setemail(e.target.value);
-                }}
-                name="email"
-                label="Alıcı Email Adresi"
-                id="email"
-              />
-              <PhoneInput
-                country={"tr"}
-                onChange={(e) => {
-                  setphone(e)
-                }}
-                variant="outlined"
-                fullWidth
-              />
-
-              {/* <TextField
-                margin="normal"
-                // required
-                fullWidth
-                onChange={(e) => {
-                  setphone(e.target.value);
-                }}
-                name="phone"
-                label="Alıcı Telefon Numarası"
-                id="phone"
               /> */}
+
               <TextField
                 margin="normal"
                 required
@@ -425,9 +441,13 @@ export default function App() {
                 sx={{ mt: 3, mb: 2 }}
                 onClick={(e) => {
                   e.preventDefault();
-                  console.log("count:" + count)
+                  console.log("count:" + count);
                   if (sellerName == "" || count == 0 || product == "")
-                    swal("Satış Başarısız", "Gerekli Alanları Doldurunuz!", "error");
+                    swal(
+                      "Satış Başarısız",
+                      "Gerekli Alanları Doldurunuz!",
+                      "error"
+                    );
                   else {
                     swal("Satış", "Başarıyla Kaydedildi!", "success");
                     setSubmit(true);
