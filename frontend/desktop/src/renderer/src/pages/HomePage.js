@@ -17,6 +17,8 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Preloader from "../components/Preloader";
 import {CompanyTable, GuestsTable, NoPurchaseCompany, NotAttendTable, PageVisitsTable} from "../components/Tables"
+import DailyAccommodations from '../components/DailyAccommodations';
+import Proforma from '../components/Proforma';
 import Accommodation from '../components/Accommodation';
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -84,6 +86,8 @@ export default () => (
     <RouteWithSidebar exact path={Routes.GuestTable.path} component={GuestsTable} />
     <RouteWithSidebar exact path={Routes.NoAttendTable.path} component={NoPurchaseCompany} />
     <RouteWithSidebar exact path={Routes.SellTaable.path} component={PageVisitsTable} />
+    <RouteWithSidebar exact path={Routes.DailyAccommodations.path} component={DailyAccommodations} />
+    <RouteWithSidebar exact path={Routes.Proforma.path} component={Proforma} />
 
 
     <Redirect to={Routes.NotFound.path} />

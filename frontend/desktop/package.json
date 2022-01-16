@@ -10,7 +10,7 @@
     "server": "json-server --watch ./src/mockserver/DB.json --port 5000 --middlewares ./src/mockserver/Range.js",
     "prod": "run-electron .",
     "scss": "node-sass --watch src/renderer/src/scss -o css",
-    "build": "npm run clear && npm-run-all --parallel build-main build-renderer",
+    "build": "npm-run-all --parallel build-main build-renderer",
     "windows-build": "npm run windows-clear && npm-run-all --parallel build-main build-renderer",
     "build-main": "webpack --config webpack/main.config.js",
     "build-renderer": "webpack --config webpack/renderer.prod.config.js",
@@ -19,7 +19,7 @@
     "publish-windows": "npm run build && electron-packager . Fuar_Otomasyon --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=release-builds ",
     "publish-mac": "npm run build && electron-packager . Fuar_Otomasyon --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds",
     "publish-linux": "npm run build && electron-packager . Fuar_Otomasyon --overwrite --asar=true --platform=linux --arch=x64 --prune=true --out=release-builds",
-    "windows-publish-windows": "npm run windows-build && electron-packager . Fuar_Otomasyon --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=release-builds ",
+    "windows-publish-windows": "electron-packager . Fuar_Otomasyon --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=release-builds ",
     "windows-publish-mac": "npm run windows-build && electron-packager . Fuar_Otomasyon --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds",
     "windows-publish-linux": "npm run windows-build && electron-packager . Fuar_Otomasyon --overwrite --asar=true --platform=linux --arch=x64 --prune=true --out=release-builds"
   },

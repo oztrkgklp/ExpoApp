@@ -22,11 +22,11 @@ export const accommodations = async () => {
   return data;
 };
 export const deleteAccommodations = async (id) => {
-  const { data } = await axios.delete(domain + "accommodations/"+id);
+  const { data } = await axios.delete(domain + "accommodations/" + id);
   return data;
 };
 export const getAccommodationById = async (id) => {
-  const result = await axios.get(domain + "accommodations/"+id);
+  const result = await axios.get(domain + "accommodations/" + id);
   return result;
 };
 
@@ -53,25 +53,32 @@ export const deleteCompany = async (id) => {
   const { data } = await axios.delete(domain + "companies/" + id);
   return data;
 };
-export const createCompany = async (companyName,phone,eMail,isEntered,endorsement,isGuest) => {
-  console.log(typeof(isEntered))
-  console.log(typeof(isGuest))
-  console.log(isGuest)
-  console.log(isEntered)
+export const createCompany = async (
+  companyName,
+  phone,
+  eMail,
+  isEntered,
+  endorsement,
+  isGuest
+) => {
+  console.log(typeof isEntered);
+  console.log(typeof isGuest);
+  console.log(isGuest);
+  console.log(isEntered);
   const url =
     domain +
-    "companies?CompanyName=\'" +
+    "companies?CompanyName='" +
     companyName +
     "'&Phone='" +
     phone +
     "'&EMail='" +
     eMail +
     "'&IsEntered=" +
-    (isEntered === true ?"true":"false") +
+    (isEntered === true ? "true" : "false") +
     "&Endorsement=" +
     endorsement +
-    "&IsGuest="+
-    (isGuest === true ? "true":"false");
+    "&IsGuest=" +
+    (isGuest === true ? "true" : "false");
   console.log(url);
   const { data } = await axios.post(url);
   return data;
@@ -84,137 +91,183 @@ export const createPurchases = async (params) => {
       "&PurchaserId=" +
       params.purchaserId +
       "&Amount=" +
-      params.amount+
-      "&Product='"+
-      params.product+
+      params.amount +
+      "&Product='" +
+      params.product +
       "'"
   );
   return data;
 };
 
 export const createAccommodation = async (params) => {
-    var i = 1
-    if(params.secondGuest.length>1)
-      i++
-    if(params.thirdGuest.length>1)
-      i++
-    
-  const {data} = await axios.post(
+  var i = 1;
+  if (params.secondGuest.length > 1) i++;
+  if (params.thirdGuest.length > 1) i++;
+
+  const { data } = await axios.post(
     domain +
       "accommodations?CompanyName='" +
-      params.companyName + "'"+
+      params.companyName +
+      "'" +
       "&Hotel='" +
-      params.hotel + "'" +
+      params.hotel +
+      "'" +
       "&CheckIn=" +
-      params.checkInDate+ " 00:00:00" + 
-      "&FirstGuest='"+
-      params.firstGuest+ "'"+
-      "&SecondGuest='"+
-      params.secondGuest+ "'"+
-      "&ThirdGuest='"+
-      params.thirdGuest+ "'"+
-      "&NumberOfGuests="+
-      i+
-      "&GuestCompanyName='"+
-      params.guestCompanyName+ "'"+
-      "&Phone='"+
-      params.phone+ "'"+
-      "&SNG='"+
-      params.SNG+ "'"+
-      "&DBL='"+
-      params.DBL+ "'"+
-      "&TRPL='"+
-      params.TRPL+ "'"+
-      "&QUAT='"+
-      params.QUAT+ "'"+
-      "&SNGCHD='"+
-      params.SNGCHD+ "'"+
-      "&DBLCHD='"+
-      params.DBLCHD+ "'"+
-      "&TRPLCHD='"+
-      params.TRPLCHD+ "'"+
+      params.checkInDate +
+      " 00:00:00" +
+      "&FirstGuest='" +
+      params.firstGuest +
+      "'" +
+      "&SecondGuest='" +
+      params.secondGuest +
+      "'" +
+      "&ThirdGuest='" +
+      params.thirdGuest +
+      "'" +
+      "&NumberOfGuests=" +
+      i +
+      "&GuestCompanyName='" +
+      params.guestCompanyName +
+      "'" +
+      "&Phone='" +
+      params.phone +
+      "'" +
+      "&SNG='" +
+      params.SNG +
+      "'" +
+      "&DBL='" +
+      params.DBL +
+      "'" +
+      "&TRPL='" +
+      params.TRPL +
+      "'" +
+      "&QUAT='" +
+      params.QUAT +
+      "'" +
+      "&SNGCHD='" +
+      params.SNGCHD +
+      "'" +
+      "&DBLCHD='" +
+      params.DBLCHD +
+      "'" +
+      "&TRPLCHD='" +
+      params.TRPLCHD +
+      "'" +
       "&CheckOut=" +
-      params.checkOutDate+ " 00:00:00" +
-      "&SNG_='"+
-      params._SNG+ "'"+
-      "&DBL_='"+
-      params._DBL+ "'"+
-      "&TRPL_='"+
-      params._TRPL+ "'"+
-      "&QUAT_='"+
-      params._QUAT+ "'"+
-      "&SNG_CHD='"+
-      params._SNGCHD+ "'"+
-      "&DBL_CHD='"+
-      params._DBLCHD+ "'"+
-      "&TRPL_CHD='"+
-      params._TRPLCHD+ "'"+
+      params.checkOutDate +
+      " 00:00:00" +
+      "&SNG_='" +
+      params._SNG +
+      "'" +
+      "&DBL_='" +
+      params._DBL +
+      "'" +
+      "&TRPL_='" +
+      params._TRPL +
+      "'" +
+      "&QUAT_='" +
+      params._QUAT +
+      "'" +
+      "&SNG_CHD='" +
+      params._SNGCHD +
+      "'" +
+      "&DBL_CHD='" +
+      params._DBLCHD +
+      "'" +
+      "&TRPL_CHD='" +
+      params._TRPLCHD +
+      "'" +
       "&Description='" +
-      params.description+"'"
+      params.description +
+      "'"
   );
   return data;
 };
 export const updateAcc = async (params) => {
-  var i = 1
-  if(params.secondGuest)
-    i++
-  if(params.thirdGuest)
-    i++
-  
-const { data } = await axios.put(
-  domain +
-    "accommodations/"+ params.accommodationID + "?CompanyName='" +
-    params.companyName + "'"+
-    "&Hotel='" +
-    params.hotel + "'"+
-    "&CheckIn=" +
-    params.checkInDate+ " 00:00:00" + 
-    "&FirstGuest='"+
-    params.firstGuest+"'"+
-    "&SecondGuest='"+
-    params.secondGuest+"'"+
-    "&ThirdGuest='"+
-    params.thirdGuest+"'"+
-    "&NumberOfGuests="+
-    i+
-    "&GuestCompanyName='"+
-    params.guestCompanyName+"'"+
-    "&Phone='"+
-    params.phone+"'"+
-    "&SNG='"+
-    params.SNG+"'"+
-    "&DBL='"+
-    params.DBL+"'"+
-    "&TRPL='"+
-    params.TRPL+"'"+
-    "&QUAT='"+
-    params.QUAT+"'"+
-    "&SNGCHD='"+
-    params.SNGCHD+"'"+
-    "&DBLCHD='"+
-    params.DBLCHD+"'"+
-    "&TRPLCHD='"+
-    params.TRPLCHD+"'"+
-    "&CheckOut=" +
-    params.checkOutDate+ " 00:00:00" +
-    "&_SNG='"+
-    params._SNG+"'"+
-    "&_DBL='"+
-    params._DBL+"'"+
-    "&_TRPL='"+
-    params._TRPL+"'"+
-    "&_QUAT='"+
-    params._QUAT+"'"+
-    "&_SNGCHD='"+
-    params._SNGCHD+"'"+
-    "&_DBLCHD='"+
-    params._DBLCHD+"'"+
-    "&_TRPLCHD='"+
-    params._TRPLCHD+"'"+
-    "&Description='" +
-    params.description+"'"   
-);
-return data;
+  var i = 1;
+  if (params.secondGuest) i++;
+  if (params.thirdGuest) i++;
+
+  const { data } = await axios.put(
+    domain +
+      "accommodations/" +
+      params.accommodationID +
+      "?CompanyName='" +
+      params.companyName +
+      "'" +
+      "&Hotel='" +
+      params.hotel +
+      "'" +
+      "&CheckIn=" +
+      params.checkInDate +
+      " 00:00:00" +
+      "&FirstGuest='" +
+      params.firstGuest +
+      "'" +
+      "&SecondGuest='" +
+      params.secondGuest +
+      "'" +
+      "&ThirdGuest='" +
+      params.thirdGuest +
+      "'" +
+      "&NumberOfGuests=" +
+      i +
+      "&GuestCompanyName='" +
+      params.guestCompanyName +
+      "'" +
+      "&Phone='" +
+      params.phone +
+      "'" +
+      "&SNG='" +
+      params.SNG +
+      "'" +
+      "&DBL='" +
+      params.DBL +
+      "'" +
+      "&TRPL='" +
+      params.TRPL +
+      "'" +
+      "&QUAT='" +
+      params.QUAT +
+      "'" +
+      "&SNGCHD='" +
+      params.SNGCHD +
+      "'" +
+      "&DBLCHD='" +
+      params.DBLCHD +
+      "'" +
+      "&TRPLCHD='" +
+      params.TRPLCHD +
+      "'" +
+      "&CheckOut=" +
+      params.checkOutDate +
+      " 00:00:00" +
+      "&_SNG='" +
+      params._SNG +
+      "'" +
+      "&_DBL='" +
+      params._DBL +
+      "'" +
+      "&_TRPL='" +
+      params._TRPL +
+      "'" +
+      "&_QUAT='" +
+      params._QUAT +
+      "'" +
+      "&_SNGCHD='" +
+      params._SNGCHD +
+      "'" +
+      "&_DBLCHD='" +
+      params._DBLCHD +
+      "'" +
+      "&_TRPLCHD='" +
+      params._TRPLCHD +
+      "'" +
+      "&Description='" +
+      params.description +
+      "'"
+  );
+  return data;
 };
 export const updateEndorsement = async (
   companyID,
@@ -241,13 +294,12 @@ export const updateEndorsement = async (
     (isEntered === true ? "true" : "false") +
     "&IsGuest=" +
     (isGuest === true ? "true" : "false");
-    console.log(url)
+  console.log(url);
   const { data } = await axios.put(url);
   return data;
 };
 
-export const createGuest = async (companyName, phone, eMail,endorsement) => {
-  
+export const createGuest = async (companyName, phone, eMail, endorsement) => {
   const url =
     domain +
     "companies?CompanyName='" +
@@ -256,11 +308,12 @@ export const createGuest = async (companyName, phone, eMail,endorsement) => {
     phone +
     "'&EMail='" +
     eMail +
-    "'&Endorsement=" + endorsement+"&IsEntered=true&IsGuest=true";
+    "'&Endorsement=" +
+    endorsement +
+    "&IsEntered=true&IsGuest=true";
   const { data } = await axios.post(url);
   return data;
 };
-
 
 export const getCompanyIdByName = async (name) => {
   console.log(name);
@@ -296,7 +349,7 @@ export const updateCompany = async (params) => {
     params.isEntered +
     "'&Endorsement=" +
     params.endorsement +
-    "&IsGuest"
+    "&IsGuest";
   console.log(url);
   const { data } = await axios.put(url);
   return data;

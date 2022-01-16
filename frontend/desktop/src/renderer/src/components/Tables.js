@@ -25,11 +25,16 @@ import { pageTraffic, pageRanking } from "../data/tables";
 import transactions from "../data/transactions";
 import commands from "../data/commands";
 import PropTypes from "prop-types";
-import { DataGrid, GridToolbar, trTR,GridToolbarContainer,
+import {
+  DataGrid,
+  GridToolbar,
+  trTR,
+  GridToolbarContainer,
   GridToolbarExport,
   gridClasses,
   GridPrintExportOptions,
-GridCsvExportOptions } from "@mui/x-data-grid";
+  GridCsvExportOptions,
+} from "@mui/x-data-grid";
 import { makeStyles } from "@material-ui/styles";
 import { createTheme } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
@@ -49,11 +54,11 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import { timeFormat } from "../assets/dateTime";
-import { ToastContainer  } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import swal from "sweetalert";
 import "react-toastify/dist/ReactToastify.css";
-import PhoneInput from 'react-phone-input-2'
-import 'react-phone-input-2/lib/style.css'
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import {
   purchases,
   companies,
@@ -70,13 +75,12 @@ import {
   createGuest,
   getGuests,
   updateEndorsement,
-  getCompanies
+  getCompanies,
 } from "./FetchData";
 
-var formatter = new Intl.NumberFormat('tr-TR', {
-  style: 'currency',
-  currency: 'TRY',
-  
+var formatter = new Intl.NumberFormat("tr-TR", {
+  style: "currency",
+  currency: "TRY",
 });
 const defaultTheme = createTheme();
 const useStylesAntDesign = makeStyles(
@@ -226,9 +230,9 @@ const useStyles = makeStyles(
         },
       },
     },
-   block:{
-    display: "block",
-   }
+    block: {
+      display: "block",
+    },
   }),
   { defaultTheme }
 );
@@ -346,12 +350,12 @@ export const PageVisitsTable = () => {
             -parseFloat(amount)
           );
           var id = await getCompanyIdByName(purchaserName);
-          const purchase = await createPurchases(
-            {sellerId,
-            purchaserId:id.result,
-            amount:amount,
-            product}
-          );
+          const purchase = await createPurchases({
+            sellerId,
+            purchaserId: id.result,
+            amount: amount,
+            product,
+          });
           const cmp = await getCompanyById(sellerId);
           const update = await updateEndorsement(
             sellerId,
@@ -363,35 +367,32 @@ export const PageVisitsTable = () => {
             cmp.result.isGuest
           );
         } else {
-          
-          
-            const purchase = await createPurchases(
-              {sellerId,
-              purchaserId,
-              amount: amount,
-              product}
-            );
-            const cmp = await getCompanyById(sellerId);
-            const prc = await getCompanyById(purchaserId);
-            const update1 = await updateEndorsement(
-              purchaserId,
-              purchaserName,
-              prc.result.phone,
-              prc.result.eMail,
-              parseFloat(prc.result.endorsement) - parseFloat(amount),
-              prc.result.isEntered,
-              prc.result.isGuest
-            );
-            const update = await updateEndorsement(
-              sellerId,
-              sellerName,
-              cmp.result.phone,
-              cmp.result.eMail,
-              parseFloat(cmp.result.endorsement) + parseFloat(amount),
-              cmp.result.isEntered,
-              cmp.result.isGuest
-            );
-          
+          const purchase = await createPurchases({
+            sellerId,
+            purchaserId,
+            amount: amount,
+            product,
+          });
+          const cmp = await getCompanyById(sellerId);
+          const prc = await getCompanyById(purchaserId);
+          const update1 = await updateEndorsement(
+            purchaserId,
+            purchaserName,
+            prc.result.phone,
+            prc.result.eMail,
+            parseFloat(prc.result.endorsement) - parseFloat(amount),
+            prc.result.isEntered,
+            prc.result.isGuest
+          );
+          const update = await updateEndorsement(
+            sellerId,
+            sellerName,
+            cmp.result.phone,
+            cmp.result.eMail,
+            parseFloat(cmp.result.endorsement) + parseFloat(amount),
+            cmp.result.isEntered,
+            cmp.result.isGuest
+          );
         }
       };
 
@@ -620,12 +621,11 @@ export const PageVisitsTable = () => {
   function CustomToolbar() {
     return (
       <GridToolbarContainer>
-        <GridToolbar/>
-        
+        <GridToolbar />
       </GridToolbarContainer>
     );
   }
-  console.log(trTR)
+  console.log(trTR);
   return (
     <div className={classes.root}>
       <Stack
@@ -658,56 +658,56 @@ export const PageVisitsTable = () => {
         <DialogTitle id="form-dialog-title">Yeni Satış Ekleme</DialogTitle>
         <form noValidate>
           <DialogContent>
-          <FormControl fullWidth>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={sellerName}
-                    displayEmpty
-                    sx={{ maxWidth: 200, minWidth: 200 }}
-                    onChange={(e) => {
-                      setsellerName(e.target.value);
-                    }}
-                  >
-                    <MenuItem disabled value="">
-                      <em>Satış Yapan Firma</em>
-                    </MenuItem>
-                    {companies.map((company) => {
-                      return <MenuItem value={company}>{company}</MenuItem>;
-                    })}
-                    
-                  </Select>
-                </FormControl>
-            
+            <FormControl fullWidth>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={sellerName}
+                displayEmpty
+                sx={{ maxWidth: 200, minWidth: 200 }}
+                onChange={(e) => {
+                  setsellerName(e.target.value);
+                }}
+              >
+                <MenuItem disabled value="">
+                  <em>Satış Yapan Firma</em>
+                </MenuItem>
+                {companies.map((company) => {
+                  return <MenuItem value={company}>{company}</MenuItem>;
+                })}
+              </Select>
+            </FormControl>
+
             <TextField
-                margin="normal"
-                required
-                fullWidth
-                onChange={(e) => {
-                  setpurchaserName(e.target.value.toUpperCase());
-                }}
-                id="purchaserName"
-                label="Alım Yapan Misafir Adı"
-                name="purchaserName"
-                autoFocus
-              />
-              <TextField
-                margin="normal"
-                fullWidth
-                onChange={(e) => {
-                  setemail(e.target.value);
-                }}
-                name="email"
-                label="Alıcı Email Adresi"
-                id="email"
-              />
-              <PhoneInput
-                country={"tr"}
-                onChange={(e) => {
-                  setphone(e)}}
-                variant="outlined"
-                fullWidth
-              />
+              margin="normal"
+              required
+              fullWidth
+              onChange={(e) => {
+                setpurchaserName(e.target.value.toUpperCase());
+              }}
+              id="purchaserName"
+              label="Alım Yapan Misafir Adı"
+              name="purchaserName"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              fullWidth
+              onChange={(e) => {
+                setemail(e.target.value);
+              }}
+              name="email"
+              label="Alıcı Email Adresi"
+              id="email"
+            />
+            <PhoneInput
+              country={"tr"}
+              onChange={(e) => {
+                setphone(e);
+              }}
+              variant="outlined"
+              fullWidth
+            />
             <TextField
               value={amount}
               onChange={(event) => setamount(event.target.value)}
@@ -733,19 +733,27 @@ export const PageVisitsTable = () => {
             <Button onClick={handleClose} color="primary">
               Vazgeç
             </Button>
-            <Button onClick={(e) => {
-                  e.preventDefault();
-                  if(sellerName=="" || amount==0 || product =="")
-                  swal("Satış Başarısız", "Gerekli Alanları Doldurunuz!", "error");
-                  else{
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                if (sellerName == "" || amount == 0 || product == "")
+                  swal(
+                    "Satış Başarısız",
+                    "Gerekli Alanları Doldurunuz!",
+                    "error"
+                  );
+                else {
                   swal("Satış", "Başarıyla Kaydedildi!", "success");
                   setSubmit(true);
 
                   window.setTimeout(function () {
                     window.location.reload();
                   }, 1000);
-                  }
-                }} color="primary" type="submit">
+                }
+              }}
+              color="primary"
+              type="submit"
+            >
               Ekle
             </Button>
           </DialogActions>
@@ -760,9 +768,9 @@ export const PageVisitsTable = () => {
       <DataGrid
         className={isAntDesign ? antDesignClasses.root : undefined}
         components={{
-          Toolbar: CustomToolbar ,
+          Toolbar: CustomToolbar,
         }}
-        style={{ minHeight:"725px",marginTop:"115px", width: '100%' }}
+        style={{ minHeight: "725px", marginTop: "115px", width: "100%" }}
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
@@ -773,7 +781,6 @@ export const PageVisitsTable = () => {
         localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
       />
       <ToastContainer />
-      
     </div>
   );
 };
@@ -1139,9 +1146,9 @@ export const CompanyTable = () => {
       eMail: eMail,
       endorsement: endorsement,
       isEntered: isEntered,
-      isGuest: isGuest
+      isGuest: isGuest,
     };
-    handleSuccessToast("KATILIMCI BAŞARIYLA EKLENDİ !")
+    handleSuccessToast("KATILIMCI BAŞARIYLA EKLENDİ !");
     setSubmit(true);
     setCompany([...company, newCustomer]);
     window.setTimeout(function () {
@@ -1154,7 +1161,7 @@ export const CompanyTable = () => {
   };
   React.useEffect(() => {
     const createCmp = async () => {
-      console.log(isGuest)
+      console.log(isGuest);
       const company = await createCompany(
         companyName,
         phone,
@@ -1187,7 +1194,6 @@ export const CompanyTable = () => {
 
     companiesData();
   }, []);
-
 
   const columns = [
     {
@@ -1274,7 +1280,7 @@ export const CompanyTable = () => {
       companyName,
       phone,
       eMail,
-      endorsement : formatter.format(endorsement),
+      endorsement: formatter.format(endorsement),
       isEntered: isEntered === true ? "Katıldı" : "Katılmadı",
       isGuest: isGuest === true ? "Misafir" : "Firma",
     };
@@ -1344,7 +1350,7 @@ export const CompanyTable = () => {
     } else if (val === "0") {
       // setIsGuest(true)
       globalIsGuest = true;
-      console.log("klsakasldjaksjkasd")
+      console.log("klsakasldjaksjkasd");
     }
   };
 
@@ -1457,7 +1463,13 @@ export const CompanyTable = () => {
               <Button onClick={handleClose} color="primary">
                 Vazgeç
               </Button>
-              <Button onClick={(e)=>{handleClose()}} color="primary" type="submit">
+              <Button
+                onClick={(e) => {
+                  handleClose();
+                }}
+                color="primary"
+                type="submit"
+              >
                 Ekle
               </Button>
             </DialogActions>
@@ -1475,7 +1487,7 @@ export const CompanyTable = () => {
         components={{
           Toolbar: GridToolbar,
         }}
-        style={{ minHeight:"900px",marginTop:"20px" }}
+        style={{ minHeight: "900px", marginTop: "20px" }}
         checkboxSelection
         disableSelectionOnClick
         utf8WithBom
@@ -1553,7 +1565,7 @@ export const AttendTable = () => {
       companyName,
       phone,
       eMail,
-      endorsement : formatter.format(endorsement),
+      endorsement: formatter.format(endorsement),
       isEntered: isEntered === true ? "Katıldı" : "Katılmadı",
     };
   });
@@ -2355,7 +2367,7 @@ export const GuestsTable = () => {
         theme={getActiveTheme()}
       /> */}
       <DataGrid
-       style={{ minHeight:"900px",marginTop:"20px" }}
+        style={{ minHeight: "900px", marginTop: "20px" }}
         className={isAntDesign ? antDesignClasses.root : undefined}
         components={{
           Toolbar: GridToolbar,

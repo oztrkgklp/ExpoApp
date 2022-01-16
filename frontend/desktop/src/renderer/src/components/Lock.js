@@ -1,53 +1,17 @@
 import * as React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { domain } from "../assets/domain";
-import {
-  faCoins,
-  faUserCheck,
-  faUserSlash,
-  faUsers,
-  faBed,
-  faBuilding,
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  faEdit,
-  faEllipsisH,
-  faExternalLinkAlt,
-  faEye,
-  faTrashAlt,
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  CounterWidget,
-  CircleChartWidget,
-  ProgressTrackWidget,
-  SalesValueWidget,
-  SalesValueWidgetPhone,
-} from "./Widgets";
-import {
-  Col,
-  Row,
-  Nav,
-  Card,
-  Image,
-  Table,
-  Dropdown,
-  ProgressBar,
-  Pagination,
-  ButtonGroup,
-} from "@themesberg/react-bootstrap";
-import { Link } from "react-router-dom";
 
-import { Routes } from "../routes";
-import { pageTraffic, pageRanking } from "../data/tables";
-import regeneratorRuntime from "regenerator-runtime";
-import Grid from "@mui/material/Grid";
-import { ToastContainer, toast, Zoom } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import transactions from "../data/transactions";
 import commands from "../data/commands";
 import PropTypes from "prop-types";
-import { DataGrid, GridToolbar, trTR } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridToolbar,
+  GridToolbarExport,
+  trTR,
+} from "@mui/x-data-grid";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import { makeStyles } from "@material-ui/styles";
 import { createTheme } from "@material-ui/core/styles";
@@ -57,34 +21,17 @@ import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+
 import {
   accommodations,
   createAccommodation,
   deleteAccommodations,
-  updateAcc
+  updateAcc,
 } from "./FetchData";
 import Stack from "@mui/material/Stack";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
-import { dateFormat } from "../assets/dateTime";
-import { AccTable } from "./Tables";
+import { dateFormat, dateFormat2 } from "../assets/dateTime";
 const handleSuccessToast = (mes) => {
   toast("🦄" + mes, {
-    position: "top-center",
-    autoClose: 1500,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
-};
-const handleFailedToast = (mes) => {
-  toast.error("🦄" + mes, {
     position: "top-center",
     autoClose: 1500,
     hideProgressBar: false,
@@ -307,158 +254,24 @@ SettingsPanel.propTypes = {
   type: PropTypes.oneOf(["Commodity", "Employee"]).isRequired,
 };
 
-export default () => {
+export default (props) => {
   const classes = useStyles();
   const antDesignClasses = useStylesAntDesign();
   const [isAntDesign, setIsAntDesign] = React.useState(false);
   const [type, setType] = React.useState("Commodity");
   const [size, setSize] = React.useState(100);
   const [accommodation, setaccommodation] = React.useState([]);
-  const [deletedAccommodation, setDeletedAccommodation] = React.useState();
-  const [open, setOpen] = React.useState(false);
-  const [isSubmit, setSubmit] = React.useState(false);
-  const [editRowsModel, setEditRowsModel] = React.useState({});
 
-  const handleEditRowsModelChange = React.useCallback((model) => {
-    setEditRowsModel(model);
-    console.log(editRowsModel)
-  }, []);
-
-  React.useEffect(() => {
-    const editRow = async () => {
-      const company = await updateAcc(editRowsModel);
-      // window.setTimeout(function(){window.location.reload()},1500)
-
-    };
-    if (editRowsModel) editRow();
-  }, [editRowsModel]);
-  const handleDelete = (clickedUser) => {
-    setDeletedAccommodation(clickedUser.id);
-    setaccommodation(
-      accommodation.filter((user) => user.accommodationID !== clickedUser.id)
-    );
-    console.log(clickedUser);
-  };
   React.useEffect(() => {
     const accommodation = async () => {
       const guest = await accommodations();
-      console.log(guest.result);
       setaccommodation(guest.result);
     };
 
     accommodation();
   }, []);
-  React.useEffect(() => {
-    const deleteAcc = async () => {
-      const company = await deleteAccommodations(deletedAccommodation);
-      handleSuccessToast("Kayıt Başarıyla Silindi")
-      window.setTimeout(function(){window.location.reload()},1500)
 
-    };
-    if (deletedAccommodation) deleteAcc();
-  }, [deletedAccommodation]);
-  React.useEffect(() => {
-    const createAcc = async () => {
-      const company = await createAccommodation({
-        companyName: accommodationInfo[0],
-        hotel: accommodationInfo[1],
-        checkInDate: accommodationInfo[2],
-        checkInTime: accommodationInfo[3],
-        firstGuest: accommodationInfo[4],
-        secondGuest: accommodationInfo[5],
-        thirdGuest: accommodationInfo[6],
-        numberOfGuests: accommodationInfo[26],
-        guestCompanyName: accommodationInfo[7],
-        phone: accommodationInfo[8],
-        SNG: accommodationInfo[9],
-        DBL: accommodationInfo[10],
-        TRPL: accommodationInfo[11],
-        QUAT: accommodationInfo[12],
-        SNGCHD: accommodationInfo[13],
-        DBLCHD: accommodationInfo[14],
-        TRPLCHD: accommodationInfo[15],
-        checkOutDate: accommodationInfo[16],
-        checkOutTime: accommodationInfo[17],
-        _SNG: accommodationInfo[18],
-        _DBL: accommodationInfo[19],
-        _TRPL: accommodationInfo[20],
-        _QUAT: accommodationInfo[21],
-        _SNGCHD: accommodationInfo[22],
-        _DBLCHD: accommodationInfo[23],
-        _TRPLCHD: accommodationInfo[24],
-        description: accommodationInfo[25],
-      });
-      
-      handleSuccessToast("Giriş Başarılı");
-      window.setTimeout(function () {
-        window.location.reload();
-      }, 1500);
-    };
-    if (isSubmit) createAcc();
-  }, [isSubmit]);
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleSubmit = (e) => {
-    handleClose();
-    const newCustomer = {
-      companyName: accommodationInfo[0],
-      hotel: accommodationInfo[1],
-      checkInDate: accommodationInfo[2],
-      checkInTime: accommodationInfo[3],
-      firstGuest: accommodationInfo[4],
-      secondGuest: accommodationInfo[5],
-      thirdGuest: accommodationInfo[6],
-      numberOfGuests: accommodationInfo[26],
-      guestCompanyName: accommodationInfo[7],
-      phone: accommodationInfo[8],
-      SNG: accommodationInfo[9],
-      DBL: accommodationInfo[10],
-      TRPL: accommodationInfo[11],
-      QUAT: accommodationInfo[12],
-      SNGCHD: accommodationInfo[13],
-      DBLCHD: accommodationInfo[14],
-      TRPLCHD: accommodationInfo[15],
-      checkOutDate: accommodationInfo[16],
-      checkOutTime: accommodationInfo[17],
-      SNG: accommodationInfo[18],
-      _DBL: accommodationInfo[19],
-      _TRPL: accommodationInfo[20],
-      _QUAT: accommodationInfo[21],
-      _SNGCHD: accommodationInfo[22],
-      _DBLCHD: accommodationInfo[23],
-      _TRPLCHD: accommodationInfo[24],
-      description: accommodationInfo[25],
-    };
-    setSubmit(true);
-    console.log(`user data is ${accommodationInfo}`);
-  };
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
   const columns = [
-    {
-      field: "event",
-      headerName: " ",
-      width: 180,
-      sortable: false,
-      renderCell: (id) => (
-        <>
-          <Button
-            style={{
-              backgroundColor: "#e8605d",
-              padding: "3px 35px",
-            }}
-            onClick={() => handleDelete(id)}
-            variant="contained"
-            color="primary"
-            type="submit"
-          >
-            Sil
-          </Button>
-        </>
-      ),
-    },
     {
       field: "id",
       headerName: " ",
@@ -470,19 +283,19 @@ export default () => {
       field: "companyName",
       headerName: "Şirket Adı ",
       width: 160,
-      editable: true,
+      editable: false,
     },
     {
       field: "hotel",
       headerName: "Hotel",
       width: 160,
-      editable: true,
+      editable: false,
     },
     {
       field: "checkInDate",
       headerName: "Check-in Tarihi",
       width: 160,
-      editable: true
+      editable: false,
     },
 
     {
@@ -490,91 +303,91 @@ export default () => {
       headerName: "Misafir Adı",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "secondGuest",
       headerName: "Misafir Adı",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "thirdGuest",
       headerName: "Misafir Adı",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "guestCompanyName",
       headerName: "Firma Adı",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "phone",
       headerName: "Telefon",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "SNG",
       headerName: "SNG",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "DBL",
       headerName: "DBL",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "TRPL",
       headerName: "TRPL",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "QUAT",
       headerName: "QUAT",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "SNGCHD",
       headerName: "SNG+CHD",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "DBLCHD",
       headerName: "DBL+CHD",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "TRPLCHD",
       headerName: "TRPL+CHD",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "checkOutDate",
       headerName: "Check-out Date",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
 
     {
@@ -582,93 +395,66 @@ export default () => {
       headerName: "Check-out Date",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "_SNG",
       headerName: "SNG",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "_DBL",
       headerName: "DBL",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "_TRPL",
       headerName: "TRPL",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "_QUAT",
       headerName: "QUAT",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "_SNGCHD",
       headerName: "SNG+CHD",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "_DBLCHD",
       headerName: "DBL+CHD",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "_TRPLCHD",
       headerName: "TRPL+CHD",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
     {
       field: "description",
       headerName: "Açıklama",
       width: 150,
       sortable: true,
-      editable: true
+      editable: false,
     },
   ];
-  const [accommodationInfo, setAccommodationInfo] = React.useState([
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    " ",
-    1,
-  ]);
+
   var rows = accommodation.map((p) => {
     const {
       accommodationID,
@@ -774,10 +560,8 @@ export default () => {
       return newPaginationSettings;
     });
   };
-
   return (
     <div className={classes.root}>
-      
       <Stack
         direction="row"
         spacing={2}
@@ -788,248 +572,37 @@ export default () => {
         }}
       >
         <Button style={{ backgroundColor: "#7389F7" }}>
-          KONAKLAYAN LİSTESİ
+          {dateFormat2(props.props)} KONAKLAYAN LİSTESİ
         </Button>
-        <Button
-          className={classes.btn}
-          onClick={handleClickOpen}
-          variant="contained"
-          color="primary"
-          type="submit"
-        >
-          Yeni Konaklama Ekle
-        </Button>
-        <Dialog
-          disableBackdropClick
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="form-dialog-title"
-        >
-          <DialogTitle id="form-dialog-title">Yeni Konakalama Ekle</DialogTitle>
-          <form onSubmit={handleSubmit}>
-            <DialogContent>
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[0] = event.target.value)
-                }
-                autoFocus
-                margin="dense"
-                id="companyName"
-                label="Firma Adı"
-                type="text"
-                fullWidth
-                required
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[1] = event.target.value)
-                }
-                autoFocus
-                margin="dense"
-                id="hotel"
-                label="Hotel"
-                type="text"
-                required
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[2] = event.target.value)
-                }
-                autoFocus
-                margin="dense"
-                id="checkInDate"
-                label="Check-in Tarihi"
-                type="text"
-                fullWidth
-                placeholder="GG.AA.YYYY"
-                required
-              />
-
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[4] = event.target.value)
-                }
-                autoFocus
-                required
-                margin="dense"
-                id="firstGuest"
-                label="1. Misafir Adı"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[5] = event.target.value)
-                }
-                autoFocus
-                margin="dense"
-                id="secondGuest"
-                label="2.Misafir Adı"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[6] = event.target.value)
-                }
-                autoFocus
-                margin="dense"
-                id="thirdGuest"
-                label="3. Misafir Adı"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[7] = event.target.value)
-                }
-                margin="dense"
-                id="guestCompanyName"
-                label="Firma Adı"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[8] = event.target.value)
-                }
-                margin="dense"
-                id="phone"
-                label="Telefon"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[9] = event.target.value)
-                }
-                margin="dense"
-                id="SNG"
-                label="SNG"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[10] = event.target.value)
-                }
-                margin="dense"
-                id="DBL"
-                label="DBL"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[11] = event.target.value)
-                }
-                margin="dense"
-                id="TRPL"
-                label="TRPL"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[12] = event.target.value)
-                }
-                margin="dense"
-                id="QUAT"
-                label="QUAT"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[13] = event.target.value)
-                }
-                margin="dense"
-                id="SNGCHD"
-                label="SNG+CHD"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[14] = event.target.value)
-                }
-                margin="dense"
-                id="DBLCHD"
-                label="DBL+CHD"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[15] = event.target.value)
-                }
-                margin="dense"
-                id="TRPLCHD"
-                label="TRPL+CHD"
-                type="text"
-                fullWidth
-              />
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[16] = event.target.value)
-                }
-                margin="dense"
-                id="checkOutDate"
-                label="Check-out Tarihi"
-                type="text"
-                fullWidth
-                placeholder="GG.AA.YYYY"
-                required
-              />
-
-              <TextField
-                onChange={(event) =>
-                  (accommodationInfo[25] = event.target.value)
-                }
-                margin="dense"
-                id="description"
-                label="Açıklama"
-                type="text"
-                fullWidth
-              />
-            </DialogContent>
-
-            <DialogActions>
-              <Button onClick={handleClose} color="primary">
-                Vazgeç
-              </Button>
-              <Button color="primary" type="submit">
-                Ekle
-              </Button>
-            </DialogActions>
-          </form>
-        </Dialog>
       </Stack>
-      <SettingsPanel
-        onApply={handleApplyClick}
-        size={size}
-        type={type}
-        theme={getActiveTheme()}
-      />
+
       <DataGrid
         className={isAntDesign ? antDesignClasses.root : undefined}
         components={{
-          Toolbar: GridToolbar,
+          Toolbar: GridToolbarExport,
         }}
         checkboxSelection
         {...pagination}
         rows={rows.reverse()}
         columns={columns}
         rowLength={10}
-        localeText={trTR.props.MuiDataGrid.localeText}
-        editMode="row"
-        editRowsModel={editRowsModel}
-        onEditRowsModelChange={handleEditRowsModelChange}
-        />
-      
-     
-      <ToastContainer/>
+        localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
+        initialState={{
+          filter: {
+            filterModel: {
+              items: [
+                {
+                  columnField: "checkInDate",
+                  operatorValue: "contains",
+                  value: `${dateFormat2(props.props)}`,
+                },
+              ],
+            },
+          },
+        }}
+      />
+
+      <ToastContainer />
     </div>
   );
 };

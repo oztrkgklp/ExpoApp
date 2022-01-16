@@ -128,8 +128,8 @@ export default (props = {}) => {
                 <NavItem title="404 Not Found" link={Routes.NotFound.path} />
                 <NavItem title="500 Server Error" link={Routes.ServerError.path} />
               </CollapsableNavItem> */}
-              <NavItem></NavItem>
-              <NavItem></NavItem>
+              <NavItem title = "Konaklama Detay" link={Routes.DailyAccommodations.path} icon={faBed}/> 
+              <NavItem title = "Proforma" link={Routes.Proforma.path} icon={faBed}></NavItem>
               <NavItem></NavItem>
               <NavItem></NavItem>
               <NavItem></NavItem>
