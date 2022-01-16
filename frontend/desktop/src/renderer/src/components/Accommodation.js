@@ -10,7 +10,10 @@ import {
   updateAcc,
   deleteAccommodations,
 } from "./FetchData.js";
-import { dateFormat, dateFormat2, dateFormat3 } from "../assets/dateTime.js";
+import { dateFormat, dateFormat2, dateFormat3, strToDate } from "../assets/dateTime.js";
+import CancelTwoToneIcon from '@mui/icons-material/CancelTwoTone';
+
+
 const Accommodation = () => {
   const [created, setCreated] = React.useState();
   const [isChanged, setIsChanged] = React.useState();
@@ -129,10 +132,11 @@ const Accommodation = () => {
 
   var header = [
     [
+      { value: "", readOnly: true },
       { value: "ID", readOnly: true },
       { value: "Şirket Adı ", readOnly: true },
       { value: "Hotel", readOnly: true },
-      { value: "Check-in Tarihi", readOnly: true },
+      { value: "Check-in Tarihi (GG.AA.YYYY)", readOnly: true },
       { value: "Misafir Adı", readOnly: true },
       { value: "Misafir Adı", readOnly: true },
       { value: "Misafir Adı", readOnly: true },
@@ -145,7 +149,7 @@ const Accommodation = () => {
       { value: "SNG+CHD", readOnly: true },
       { value: "DBL+CHD", readOnly: true },
       { value: "TRPL+CHD", readOnly: true },
-      { value: "Check-out Tarihi", readOnly: true },
+      { value: "Check-out Tarihi (GG.AA.YYYY)", readOnly: true },
       { value: "SNG", readOnly: true },
       { value: "DBL", readOnly: true },
       { value: "TRPL", readOnly: true },
@@ -188,6 +192,13 @@ const Accommodation = () => {
       } = c;
 
       const row = [
+        
+        {
+          value: (
+            <CancelTwoToneIcon color="secondary" onClick={() => handleDelete(accommodationID)}/>
+          ),
+          readOnly: true
+        },
         { value: accommodationID, readOnly: true },
         { value: companyName, readOnly: false },
         { value: hotel, readOnly: false },
@@ -221,13 +232,14 @@ const Accommodation = () => {
       header.push(row);
     });
     header.push([
+      { value: "" },
       {
         readOnly: true,
         value:
           Math.max(
             ...header
               .slice(1, header.length)
-              .map((item) => parseInt(item[0].value))
+              .map((item) => parseInt(item[1].value))
           ) + 1,
       },
       { value: "" },
@@ -263,6 +275,21 @@ const Accommodation = () => {
     setIsChanged(true);
   }, [created]);
 
+  const getTotalDay = (start,end) => {
+    if(end === '11.11.1111')
+      return 1;
+
+    const oneDay = 24 * 60 * 60 * 1000;
+    const startDate = strToDate(start);
+    const endDate = strToDate(end);
+
+    // if(endDate < startDate)
+    //   return alert("test");
+
+    const diffDays = Math.round(Math.abs((endDate - startDate) / oneDay));
+
+    return diffDays;
+  }
   const cost = {
     sng: 100,
     dbl: 200,
@@ -279,6 +306,7 @@ const Accommodation = () => {
       .map((item) =>
         isNaN(parseInt(item[colNo].value)) ? 0 : parseInt(item[colNo].value)
       );
+
     let result = 0;
     for (var i = 0; i < resultArray.length; i++) result += resultArray[i];
     console.log(result);
@@ -286,29 +314,29 @@ const Accommodation = () => {
   };
   const getTotalRoom = () => {
     var total = 0;
-    for (var i = 9; i <= 15; i++) {
+    for (var i = 10; i <= 16; i++) {
       const value = getTotalValues(i);
       total += value;
       switch (i) {
-        case 9:
+        case 10:
           totalValues[0].SNG = value;
           break;
-        case 10:
+        case 11:
           totalValues[2].DBL = value;
           break;
-        case 11:
+        case 12:
           totalValues[4].TRPL = value;
           break;
-        case 12:
+        case 13:
           totalValues[6].QUAT = value;
           break;
-        case 13:
+        case 14:
           totalValues[8].SNGCHD = value;
           break;
-        case 14:
+        case 15:
           totalValues[10].DBLCHD = value;
           break;
-        case 15:
+        case 16:
           totalValues[12].TRPLCHD = value;
           break;
         default:
@@ -319,29 +347,29 @@ const Accommodation = () => {
   };
   const getTotalCost = () => {
     var total = 0;
-    for (var i = 17; i <= 23; i++) {
+    for (var i = 18; i <= 24; i++) {
       const value = getTotalValues(i);
       total += value;
       switch (i) {
-        case 17:
+        case 18:
           totalValues[1].SNGCost = value;
           break;
-        case 18:
+        case 19:
           totalValues[3].DBLCost = value;
           break;
-        case 19:
+        case 20:
           totalValues[5].TRPLCost = value;
           break;
-        case 20:
+        case 21:
           totalValues[7].QUATCost = value;
           break;
-        case 21:
+        case 22:
           totalValues[9].SNGCHDCost = value;
           break;
-        case 22:
+        case 23:
           totalValues[11].DBLCHDCost = value;
           break;
-        case 23:
+        case 24:
           totalValues[13].TRPLCHDCost = value;
           break;
         default:
@@ -352,21 +380,23 @@ const Accommodation = () => {
   };
 
   const getTotalValuesString = () => {
-    _totalValues[0].SNG = getTotalValues(9);
-    _totalValues[2].DBL = getTotalValues(10);
-    _totalValues[4].TRPL = getTotalValues(11);
-    _totalValues[6].QUAT = getTotalValues(12);
-    _totalValues[8].SNGCHD = getTotalValues(13);
-    _totalValues[10].DBLCHD = getTotalValues(14);
-    _totalValues[12].TRPLCHD = getTotalValues(15);
+    _totalValues[0].SNG = getTotalValues(10);
+    _totalValues[2].DBL = getTotalValues(11);
+    _totalValues[4].TRPL = getTotalValues(12);
+    _totalValues[6].QUAT = getTotalValues(13);
+    _totalValues[8].SNGCHD = getTotalValues(14);
+    _totalValues[10].DBLCHD = getTotalValues(15);
+    _totalValues[12].TRPLCHD = getTotalValues(16);
 
-    _totalValues[1].SNGCost = getTotalValues(17);
-    _totalValues[3].DBLCost = getTotalValues(18);
-    _totalValues[5].TRPLCost = getTotalValues(19);
-    _totalValues[7].QUATCost = getTotalValues(20);
-    _totalValues[9].SNGCHDCost = getTotalValues(21);
-    _totalValues[11].DBLCHDCost = getTotalValues(22);
-    _totalValues[13].TRPLCHDCost = getTotalValues(23);
+    _totalValues[1].SNGCost = getTotalValues(18);
+    _totalValues[3].DBLCost = getTotalValues(19);
+    _totalValues[5].TRPLCost = getTotalValues(20);
+    _totalValues[7].QUATCost = getTotalValues(21);
+    _totalValues[9].SNGCHDCost = getTotalValues(22);
+    _totalValues[11].DBLCHDCost = getTotalValues(23);
+    _totalValues[13].TRPLCHDCost = getTotalValues(24);
+
+    console.log(_totalValues)
 
     setTotalValues(_totalValues);
   };
@@ -611,250 +641,250 @@ const Accommodation = () => {
           console.log(grid_);
           changes.forEach(({ cell, row, col, value }) => {
             grid_[row][col] = { ...grid_[row][col], value };
-            if (grid_[row][9].value !== "") {
-              grid_[row][17].value = `${
-                parseInt(grid_[row][9].value) * cost.sng
-              } `;
-            }
             if (grid_[row][10].value !== "") {
               grid_[row][18].value = `${
-                parseInt(grid_[row][10].value) * cost.dbl
+                parseInt(grid_[row][10].value) * cost.sng * getTotalDay(grid_[row][4].value,grid_[row][17].value)
               } `;
             }
             if (grid_[row][11].value !== "") {
               grid_[row][19].value = `${
-                parseInt(grid_[row][11].value) * cost.trpl
+                parseInt(grid_[row][11].value) * cost.dbl * getTotalDay(grid_[row][4].value,grid_[row][17].value)
               } `;
             }
             if (grid_[row][12].value !== "") {
               grid_[row][20].value = `${
-                parseInt(grid_[row][12].value) * cost.quat
+                parseInt(grid_[row][12].value) * cost.trpl * getTotalDay(grid_[row][4].value,grid_[row][17].value)
               } `;
             }
             if (grid_[row][13].value !== "") {
               grid_[row][21].value = `${
-                parseInt(grid_[row][13].value) * cost.sngchd
+                parseInt(grid_[row][13].value) * cost.quat * getTotalDay(grid_[row][4].value,grid_[row][17].value)
               } `;
             }
             if (grid_[row][14].value !== "") {
               grid_[row][22].value = `${
-                parseInt(grid_[row][14].value) * cost.dblchd
+                parseInt(grid_[row][14].value) * cost.sngchd * getTotalDay(grid_[row][4].value,grid_[row][17].value)
               } `;
             }
             if (grid_[row][15].value !== "") {
               grid_[row][23].value = `${
-                parseInt(grid_[row][15].value) * cost.trplchd
+                parseInt(grid_[row][15].value) * cost.dblchd * getTotalDay(grid_[row][4].value,grid_[row][17].value)
+              } `;
+            }
+            if (grid_[row][16].value !== "") {
+              grid_[row][24].value = `${
+                parseInt(grid_[row][16].value) * cost.trplchd * getTotalDay(grid_[row][4].value,grid_[row][17].value)
               } `;
             }
             const getAcc = async () =>
-              getAccommodationById(grid_[row][0].value)
+              getAccommodationById(grid_[row][1].value)
                 .then((response) => response.status)
                 .catch((e) => e.response.status);
 
             getAcc().then((status) => {
               console.log(status);
               if (status === 200) {
-                grid_[row][16].value =
-                  grid_[row][16].value === ""
+                grid_[row][17].value =
+                  grid_[row][17].value === ""
                     ? "11.11.1111"
-                    : grid_[row][16].value;
+                    : grid_[row][17].value;
                 updateAcc({
-                  accommodationID: grid_[row][0].value,
+                  accommodationID: grid_[row][1].value,
                   companyName:
-                    grid_[row][1].value === grid[row][1].value
-                      ? grid[row][1].value
-                      : grid_[row][1].value,
-                  hotel:
                     grid_[row][2].value === grid[row][2].value
                       ? grid[row][2].value
                       : grid_[row][2].value,
-                  checkInDate:
+                  hotel:
                     grid_[row][3].value === grid[row][3].value
-                      ? dateFormat3(grid[row][3].value)
-                      : dateFormat3(grid_[row][3].value),
-                  firstGuest:
+                      ? grid[row][3].value
+                      : grid_[row][3].value,
+                  checkInDate:
                     grid_[row][4].value === grid[row][4].value
-                      ? grid[row][4].value
-                      : grid_[row][4].value,
-                  secondGuest:
+                      ? dateFormat3(grid[row][4].value)
+                      : dateFormat3(grid_[row][4].value),
+                  firstGuest:
                     grid_[row][5].value === grid[row][5].value
                       ? grid[row][5].value
                       : grid_[row][5].value,
-                  thirdGuest:
+                  secondGuest:
                     grid_[row][6].value === grid[row][6].value
                       ? grid[row][6].value
                       : grid_[row][6].value,
-                  guestCompanyName:
+                  thirdGuest:
                     grid_[row][7].value === grid[row][7].value
                       ? grid[row][7].value
                       : grid_[row][7].value,
-                  phone:
+                  guestCompanyName:
                     grid_[row][8].value === grid[row][8].value
                       ? grid[row][8].value
                       : grid_[row][8].value,
-                  SNG:
+                  phone:
                     grid_[row][9].value === grid[row][9].value
                       ? grid[row][9].value
                       : grid_[row][9].value,
-                  DBL:
+                  SNG:
                     grid_[row][10].value === grid[row][10].value
                       ? grid[row][10].value
                       : grid_[row][10].value,
-                  TRPL:
+                  DBL:
                     grid_[row][11].value === grid[row][11].value
                       ? grid[row][11].value
                       : grid_[row][11].value,
-                  QUAT:
+                  TRPL:
                     grid_[row][12].value === grid[row][12].value
                       ? grid[row][12].value
                       : grid_[row][12].value,
-                  SNGCHD:
+                  QUAT:
                     grid_[row][13].value === grid[row][13].value
                       ? grid[row][13].value
                       : grid_[row][13].value,
-                  DBLCHD:
+                  SNGCHD:
                     grid_[row][14].value === grid[row][14].value
                       ? grid[row][14].value
                       : grid_[row][14].value,
-                  TRPLCHD:
+                  DBLCHD:
                     grid_[row][15].value === grid[row][15].value
                       ? grid[row][15].value
                       : grid_[row][15].value,
-                  checkOutDate:
+                  TRPLCHD:
                     grid_[row][16].value === grid[row][16].value
-                      ? dateFormat3(grid[row][16].value)
-                      : dateFormat3(grid_[row][16].value),
+                      ? grid[row][16].value
+                      : grid_[row][16].value,
+                  checkOutDate:
+                    grid_[row][17].value === grid[row][17].value
+                      ? dateFormat3(grid[row][17].value)
+                      : dateFormat3(grid_[row][17].value),
                   _SNG:
-                    grid_[row][9].value === grid[row][9].value
-                      ? `${
-                          isNaN(parseInt(grid[row][9].value) * cost.sng)
-                            ? ""
-                            : parseInt(grid[row][9].value) * cost.sng
-                        }`
-                      : `${
-                          isNaN(parseInt(grid_[row][9].value) * cost.sng)
-                            ? ""
-                            : parseInt(grid_[row][9].value) * cost.sng
-                        }`,
-                  _DBL:
                     grid_[row][10].value === grid[row][10].value
                       ? `${
-                          isNaN(parseInt(grid[row][10].value) * cost.dbl)
+                          isNaN(parseInt(grid[row][10].value) * cost.sng * getTotalDay(grid_[row][4].value,grid_[row][17].value))
                             ? ""
-                            : parseInt(grid[row][10].value) * cost.dbl
+                            : parseInt(grid[row][10].value) * cost.sng * getTotalDay(grid_[row][4].value,grid_[row][17].value)
                         }`
                       : `${
-                          isNaN(parseInt(grid_[row][10].value) * cost.dbl)
+                          isNaN(parseInt(grid_[row][10].value) * cost.sng * getTotalDay(grid_[row][4].value,grid_[row][17].value))
                             ? ""
-                            : parseInt(grid_[row][10].value) * cost.dbl
+                            : parseInt(grid_[row][10].value) * cost.sng * getTotalDay(grid_[row][4].value,grid_[row][17].value)
                         }`,
-                  _TRPL:
+                  _DBL:
                     grid_[row][11].value === grid[row][11].value
                       ? `${
-                          isNaN(parseInt(grid[row][11].value) * cost.trpl)
+                          isNaN(parseInt(grid[row][11].value) * cost.dbl * getTotalDay(grid_[row][4].value,grid_[row][17].value))
                             ? ""
-                            : parseInt(grid[row][11].value) * cost.trpl
+                            : parseInt(grid[row][11].value) * cost.dbl * getTotalDay(grid_[row][4].value,grid_[row][17].value)
                         }`
                       : `${
-                          isNaN(parseInt(grid_[row][11].value) * cost.trpl)
+                          isNaN(parseInt(grid_[row][11].value) * cost.dbl * getTotalDay(grid_[row][4].value,grid_[row][17].value))
                             ? ""
-                            : parseInt(grid_[row][11].value) * cost.trpl
+                            : parseInt(grid_[row][11].value) * cost.dbl * getTotalDay(grid_[row][4].value,grid_[row][17].value)
                         }`,
-                  _QUAT:
+                  _TRPL:
                     grid_[row][12].value === grid[row][12].value
                       ? `${
-                          isNaN(parseInt(grid[row][12].value) * cost.quat)
+                          isNaN(parseInt(grid[row][12].value) * cost.trpl * getTotalDay(grid_[row][4].value,grid_[row][17].value))
                             ? ""
-                            : parseInt(grid[row][12].value) * cost.quat
+                            : parseInt(grid[row][12].value) * cost.trpl * getTotalDay(grid_[row][4].value,grid_[row][17].value)
                         }`
                       : `${
-                          isNaN(parseInt(grid_[row][12].value) * cost.quat)
+                          isNaN(parseInt(grid_[row][12].value) * cost.trpl * getTotalDay(grid_[row][4].value,grid_[row][17].value))
                             ? ""
-                            : parseInt(grid_[row][12].value) * cost.quat
+                            : parseInt(grid_[row][12].value) * cost.trpl * getTotalDay(grid_[row][4].value,grid_[row][17].value)
                         }`,
-                  _SNGCHD:
+                  _QUAT:
                     grid_[row][13].value === grid[row][13].value
                       ? `${
-                          isNaN(parseInt(grid[row][13].value) * cost.sngchd)
+                          isNaN(parseInt(grid[row][13].value) * cost.quat * getTotalDay(grid_[row][4].value,grid_[row][17].value))
                             ? ""
-                            : parseInt(grid[row][13].value) * cost.sngchd
+                            : parseInt(grid[row][13].value) * cost.quat * getTotalDay(grid_[row][4].value,grid_[row][17].value)
                         }`
                       : `${
-                          isNaN(parseInt(grid_[row][13].value) * cost.sngchd)
+                          isNaN(parseInt(grid_[row][13].value) * cost.quat * getTotalDay(grid_[row][4].value,grid_[row][17].value))
                             ? ""
-                            : parseInt(grid_[row][13].value) * cost.sngchd
+                            : parseInt(grid_[row][13].value) * cost.quat * getTotalDay(grid_[row][4].value,grid_[row][17].value)
                         }`,
-                  _DBLCHD:
+                  _SNGCHD:
                     grid_[row][14].value === grid[row][14].value
                       ? `${
-                          isNaN(parseInt(grid[row][14].value) * cost.dblchd)
+                          isNaN(parseInt(grid[row][14].value) * cost.sngchd * getTotalDay(grid_[row][4].value,grid_[row][17].value))
                             ? ""
-                            : parseInt(grid[row][14].value) * cost.dblchd
+                            : parseInt(grid[row][14].value) * cost.sngchd * getTotalDay(grid_[row][4].value,grid_[row][17].value)
                         }`
                       : `${
-                          isNaN(parseInt(grid_[row][14].value) * cost.dblchd)
+                          isNaN(parseInt(grid_[row][14].value) * cost.sngchd * getTotalDay(grid_[row][4].value,grid_[row][17].value))
                             ? ""
-                            : parseInt(grid_[row][14].value) * cost.dblchd
+                            : parseInt(grid_[row][14].value) * cost.sngchd * getTotalDay(grid_[row][4].value,grid_[row][17].value)
                         }`,
-                  _TRPLCHD:
+                  _DBLCHD:
                     grid_[row][15].value === grid[row][15].value
                       ? `${
-                          isNaN(parseInt(grid[row][15].value) * cost.trplchd)
+                          isNaN(parseInt(grid[row][15].value) * cost.dblchd * getTotalDay(grid_[row][4].value,grid_[row][17].value))
                             ? ""
-                            : parseInt(grid[row][15].value) * cost.trplchd
+                            : parseInt(grid[row][15].value) * cost.dblchd * getTotalDay(grid_[row][4].value,grid_[row][17].value)
                         }`
                       : `${
-                          isNaN(parseInt(grid_[row][15].value) * cost.trplchd)
+                          isNaN(parseInt(grid_[row][15].value) * cost.dblchd * getTotalDay(grid_[row][4].value,grid_[row][17].value))
                             ? ""
-                            : parseInt(grid_[row][15].value) * cost.trplchd
+                            : parseInt(grid_[row][15].value) * cost.dblchd * getTotalDay(grid_[row][4].value,grid_[row][17].value)
+                        }`,
+                  _TRPLCHD:
+                    grid_[row][16].value === grid[row][16].value
+                      ? `${
+                          isNaN(parseInt(grid[row][16].value) * cost.trplchd * getTotalDay(grid_[row][4].value,grid_[row][17].value))
+                            ? ""
+                            : parseInt(grid[row][16].value) * cost.trplchd * getTotalDay(grid_[row][4].value,grid_[row][17].value)
+                        }`
+                      : `${
+                          isNaN(parseInt(grid_[row][16].value) * cost.trplchd * getTotalDay(grid_[row][4].value,grid_[row][17].value))
+                            ? ""
+                            : parseInt(grid_[row][16].value) * cost.trplchd * getTotalDay(grid_[row][4].value,grid_[row][17].value)
                         }`,
                   description:
-                    grid_[row][24].value === grid[row][24].value
-                      ? grid[row][24].value
-                      : grid_[row][24].value,
+                    grid_[row][25].value === grid[row][25].value
+                      ? grid[row][25].value
+                      : grid_[row][25].value,
                 });
               } else {
                 if (
-                  grid_[row][1].value !== "" &&
                   grid_[row][2].value !== "" &&
                   grid_[row][3].value !== "" &&
                   grid_[row][4].value !== "" &&
-                  (grid_[row][9].value !== "" ||
-                    grid_[row][10].value !== "" ||
+                  grid_[row][5].value !== "" &&
+                  (grid_[row][10].value !== "" ||
                     grid_[row][11].value !== "" ||
                     grid_[row][12].value !== "" ||
                     grid_[row][13].value !== "" ||
                     grid_[row][14].value !== "" ||
-                    grid_[row][15].value !== "")
+                    grid_[row][15].value !== "" ||
+                    grid_[row][16].value !== "")
                 ) {
                   createAccommodation({
-                    companyName: grid_[row][1].value,
-                    hotel: grid_[row][2].value,
-                    checkInDate: dateFormat3(grid_[row][3].value),
-                    firstGuest: grid_[row][4].value,
-                    secondGuest: grid_[row][5].value,
-                    thirdGuest: grid_[row][6].value,
-                    guestCompanyName: grid_[row][7].value,
-                    phone: grid_[row][8].value,
-                    SNG: grid_[row][9].value,
-                    DBL: grid_[row][10].value,
-                    TRPL: grid_[row][11].value,
-                    QUAT: grid_[row][12].value,
-                    SNGCHD: grid_[row][13].value,
-                    DBLCHD: grid_[row][14].value,
-                    TRPLCHD: grid_[row][15].value,
+                    companyName: grid_[row][2].value,
+                    hotel: grid_[row][3].value,
+                    checkInDate: dateFormat3(grid_[row][4].value),
+                    firstGuest: grid_[row][5].value,
+                    secondGuest: grid_[row][6].value,
+                    thirdGuest: grid_[row][7].value,
+                    guestCompanyName: grid_[row][8].value,
+                    phone: grid_[row][9].value,
+                    SNG: grid_[row][10].value,
+                    DBL: grid_[row][11].value,
+                    TRPL: grid_[row][12].value,
+                    QUAT: grid_[row][13].value,
+                    SNGCHD: grid_[row][14].value,
+                    DBLCHD: grid_[row][15].value,
+                    TRPLCHD: grid_[row][16].value,
                     checkOutDate:
-                      grid_[row][16].value === ""
+                      grid_[row][17].value === ""
                         ? "11.11.1111"
-                        : dateFormat3(grid_[row][16].value),
-                    _SNG: grid_[row][17].value * cost.sng,
-                    _DBL: grid_[row][18].value * cost.dbl,
-                    _TRPL: grid_[row][19].value * cost.trpl,
-                    _QUAT: grid_[row][20].value * cost.quat,
-                    _SNGCHD: grid_[row][21].value * cost.sngchd,
-                    _DBLCHD: grid_[row][22].value * cost.dblchd,
-                    _TRPLCHD: grid_[row][23].value * cost.trplchd,
-                    description: grid_[row][24].value,
+                        : dateFormat3(grid_[row][17].value),
+                    _SNG: grid_[row][18].value * cost.sng * getTotalDay(grid_[row][4].value,grid_[row][17].value),
+                    _DBL: grid_[row][19].value * cost.dbl * getTotalDay(grid_[row][4].value,grid_[row][17].value),
+                    _TRPL: grid_[row][20].value * cost.trpl * getTotalDay(grid_[row][4].value,grid_[row][17].value),
+                    _QUAT: grid_[row][21].value * cost.quat * getTotalDay(grid_[row][4].value,grid_[row][17].value),
+                    _SNGCHD: grid_[row][22].value * cost.sngchd * getTotalDay(grid_[row][4].value,grid_[row][17].value),
+                    _DBLCHD: grid_[row][23].value * cost.dblchd * getTotalDay(grid_[row][4].value,grid_[row][17].value),
+                    _TRPLCHD: grid_[row][24].value * cost.trplchd * getTotalDay(grid_[row][4].value,grid_[row][17].value),
+                    description: grid_[row][25].value,
                   });
                   setCreated(true);
                 }
@@ -868,16 +898,18 @@ const Accommodation = () => {
               ) {
               } else
                 grid_.push([
+                  { value: "" },
                   {
                     readOnly: true,
                     value:
                       Math.max(
                         ...grid
                           .slice(1, grid.length)
-                          .map((item) => parseInt(item[0].value))
+                          .map((item) => parseInt(item[1].value))
                       ) + 1,
                   },
                   { value: "" },
+                  
                   { value: "" },
                   { value: "" },
                   { value: "" },

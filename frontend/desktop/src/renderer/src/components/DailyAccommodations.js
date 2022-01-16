@@ -1,4 +1,5 @@
 import React from "react";
+import { strToDate, dateFormat2 } from "../assets/dateTime";
 import { accommodations } from "./FetchData";
 import Lock from "./Lock";
 
@@ -13,7 +14,7 @@ const DailyAccommodations = () => {
     accData();
   }, []);
 
-  const accTable = accommodation.map((checkIn) => checkIn.checkIn);
+  const accTable = accommodation.map((checkIn) => checkIn.checkIn).sort((a,b) => strToDate(dateFormat2(a)) - strToDate(dateFormat2(b)));
   const filitre = accTable.filter((item, index) => {
     return accTable.indexOf(item) === index;
   });

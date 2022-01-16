@@ -26,3 +26,10 @@ export const dateFormat3 = (date) => {
     const Date = dateArr[1]+'.'+dateArr[0]+'.'+dateArr[2]
     return Date
 }
+
+export const strToDate = (date) => {
+    // gg.aa.yyyy
+    const dateArr = date.split('.');
+    var dateObject = new Date(dateArr[2],dateArr[1],dateArr[0])
+    return dateObject;
+}
