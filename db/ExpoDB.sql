@@ -97,5 +97,27 @@ CREATE TABLE OTELINFORMATION (
     TRPLCHD varchar(255),
 );
 
-INSERT INTO OTELINFORMATION (OtelInformationID,SNG,DBL,TRPL,QUAT,SNGCHD,DBLCHD,TRPLCHD) VALUES (1,'100','200','300','400','500','600','700')
+INSERT INTO OTELINFORMATION (OtelInformationID,SNG,DBL,TRPL,QUAT,SNGCHD,DBLCHD,TRPLCHD) VALUES (1,'100','200','300','400','500','600','700');
+
+CREATE TABLE COST (
+	CostID int IDENTITY(1,1) PRIMARY KEY,
+    CostType int,
+    CostDate date,
+    Description varchar(255),
+    PAX int,
+    TotalCost decimal(19,4)
+);
+
+CREATE TABLE EXPENSE (
+	ExpenseID int IDENTITY(1,1) PRIMARY KEY,
+    Amount decimal(19,4),
+);
+
+CREATE TABLE BALANCE (
+	BalanceID int,
+    Amount decimal(19,4),
+);
+
+INSERT INTO BALANCE (BalanceID, Amount) VALUES (1,0);
+
 GO

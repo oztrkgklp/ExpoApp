@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using ExpoAPI.UseCases.Accommodation;
 using ExpoAPI.UseCases.ExternalAttendance;
 using ExpoAPI.UseCases.OtelInformation;
+using ExpoAPI.UseCases.Balance;
 
 namespace ExpoAPI.Infrastructure.Repositories
 {
@@ -64,6 +65,10 @@ namespace ExpoAPI.Infrastructure.Repositories
 
         Task<OtelInformationContract?> GetOtelInformationAsync(CancellationToken cancellationToken);
         Task<object?> UpdateOtelInformationAsync(OtelInformationContract? contract, CancellationToken cancellationToken);
+
+
+        Task<BalanceContract?> GetBalanceAsync(CancellationToken cancellationToken);
+        Task<object?> UpdateBalanceAsync(BalanceContract? contract, CancellationToken cancellationToken);
 
     }
 }

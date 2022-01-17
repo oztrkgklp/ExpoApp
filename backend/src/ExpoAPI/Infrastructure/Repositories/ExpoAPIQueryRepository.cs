@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ExpoAPI.UseCases.Accommodation;
 using ExpoAPI.UseCases.Admin;
+using ExpoAPI.UseCases.Balance;
 using ExpoAPI.UseCases.Company;
 using ExpoAPI.UseCases.ExternalAttendance;
 using ExpoAPI.UseCases.OtelInformation;
@@ -820,6 +821,39 @@ namespace ExpoAPI.Infrastructure.Repositories
                 if (updateOtelInformation.Any())
                 {
                     return updateOtelInformation.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<BalanceContract?> GetBalanceAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT * FROM BALANCE WHERE BalanceID = 1");
+            using(Database)
+            {
+                var getOtelInformation = await _dapperPolly.QueryAsyncWithRetry<BalanceContract?>(Database, queryBuilder.ToString());
+
+                if (getOtelInformation.Any())
+                {
+                    return getOtelInformation.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<object?> UpdateBalanceAsync(BalanceContract? contract, CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"UPDATE BALANCE SET Amount=").Append(contract.Amount).Append(" WHERE BalanceID = ").Append(contract.BalanceID);
+            
+            using(Database)
+            {
+                var updateBalance = await _dapperPolly.QueryAsyncWithRetry<object>(Database, queryBuilder.ToString());
+
+                if (updateBalance.Any())
+                {
+                    return updateBalance.FirstOrDefault();
                 }
                 return null;
             }
