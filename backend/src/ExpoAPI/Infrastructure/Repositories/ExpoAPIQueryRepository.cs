@@ -8,6 +8,7 @@ using ExpoAPI.UseCases.Accommodation;
 using ExpoAPI.UseCases.Admin;
 using ExpoAPI.UseCases.Company;
 using ExpoAPI.UseCases.ExternalAttendance;
+using ExpoAPI.UseCases.OtelInformation;
 using ExpoAPI.UseCases.Purchase;
 using Microsoft.Extensions.Configuration;
 
@@ -744,7 +745,7 @@ namespace ExpoAPI.Infrastructure.Repositories
                                     .Append("ExitTime=\'").Append(contract.ExitTime.ToString()).Append("\',")
                                     .Append("Occupancy=\'").Append(contract.Occupancy.ToString()).Append("\',")
                                     .Append("EntranceDate=").Append("CAST(\'").Append(contract.EntranceDate.Value.ToShortDateString() == null ? "\'\'" : contract.EntranceDate).Append("\' AS DATE)").Append(",")
-                                    .Append("Description=\'").Append(contract.Description).Append("\'");
+                                    .Append("Description=\'").Append(contract.Description).Append("\'").Append(" WHERE ExternalAttendanceID =").Append(contract.ExternalAttendanceID);
             
             using(Database)
             {
@@ -779,6 +780,46 @@ namespace ExpoAPI.Infrastructure.Repositories
                 if (createExternalAttendance.Any())
                 {
                     return createExternalAttendance.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<OtelInformationContract?> GetOtelInformationAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT * FROM OTELINFORMATION WHERE OtelInformationID = 1");
+            using(Database)
+            {
+                var getOtelInformation = await _dapperPolly.QueryAsyncWithRetry<OtelInformationContract>(Database, queryBuilder.ToString());
+
+                if (getOtelInformation.Any())
+                {
+                    return getOtelInformation.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<object?> UpdateOtelInformationAsync(OtelInformationContract? contract, CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"UPDATE OTELINFORMATION SET ")
+                                    .Append("SNG=\'").Append(contract.SNG).Append("\',")
+                                    .Append("DBL=\'").Append(contract.DBL).Append("\',")
+                                    .Append("TRPL=\'").Append(contract.TRPL).Append("\',")
+                                    .Append("QUAT=\'").Append(contract.QUAT.ToString()).Append("\',")
+                                    .Append("SNGCHD=\'").Append(contract.SNGCHD.ToString()).Append("\',")
+                                    .Append("DBLCHD=\'").Append(contract.DBLCHD.ToString()).Append("\',")
+                                    .Append("TRPLCHD=\'").Append(contract.TRPLCHD).Append("\'").Append(" WHERE OtelInformationID = ").Append(contract.OtelInformationID);
+            
+            using(Database)
+            {
+                var updateOtelInformation = await _dapperPolly.QueryAsyncWithRetry<object>(Database, queryBuilder.ToString());
+
+                if (updateOtelInformation.Any())
+                {
+                    return updateOtelInformation.FirstOrDefault();
                 }
                 return null;
             }

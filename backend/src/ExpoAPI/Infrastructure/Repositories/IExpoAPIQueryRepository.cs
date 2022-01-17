@@ -6,6 +6,7 @@ using System.Threading;
 using System.Collections.Generic;
 using ExpoAPI.UseCases.Accommodation;
 using ExpoAPI.UseCases.ExternalAttendance;
+using ExpoAPI.UseCases.OtelInformation;
 
 namespace ExpoAPI.Infrastructure.Repositories
 {
@@ -60,6 +61,9 @@ namespace ExpoAPI.Infrastructure.Repositories
         Task<object?> DeleteExternalAttendanceByIdAsync(int externalAttendanceId, CancellationToken cancellationToken);
         Task<object?> UpdateExternalAttendanceByIdAsync(ExternalAttendanceContract? contract, CancellationToken cancellationToken);
         Task<object?> CreateExternalAttendanceAsync(ExternalAttendanceContract? contract, CancellationToken cancellationToken);
+
+        Task<OtelInformationContract?> GetOtelInformationAsync(CancellationToken cancellationToken);
+        Task<object?> UpdateOtelInformationAsync(OtelInformationContract? contract, CancellationToken cancellationToken);
 
     }
 }

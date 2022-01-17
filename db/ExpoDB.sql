@@ -85,4 +85,17 @@ CREATE TABLE EXTERNALATTENDANCE (
     EntranceDate date,
     Description varchar(255)
 );
+
+CREATE TABLE OTELINFORMATION (
+	OtelInformationID int,
+    SNG varchar(255),
+    DBL varchar(255),
+    TRPL varchar(255),
+    QUAT varchar(255),
+	SNGCHD varchar(255),
+	DBLCHD varchar(255),
+    TRPLCHD varchar(255),
+);
+
+INSERT INTO OTELINFORMATION (OtelInformationID,SNG,DBL,TRPL,QUAT,SNGCHD,DBLCHD,TRPLCHD) VALUES (1,'100','200','300','400','500','600','700')
 GO
