@@ -8,6 +8,8 @@ using ExpoAPI.UseCases.Accommodation;
 using ExpoAPI.UseCases.Admin;
 using ExpoAPI.UseCases.Balance;
 using ExpoAPI.UseCases.Company;
+using ExpoAPI.UseCases.Cost;
+using ExpoAPI.UseCases.Expense;
 using ExpoAPI.UseCases.ExternalAttendance;
 using ExpoAPI.UseCases.OtelInformation;
 using ExpoAPI.UseCases.Purchase;
@@ -854,6 +856,180 @@ namespace ExpoAPI.Infrastructure.Repositories
                 if (updateBalance.Any())
                 {
                     return updateBalance.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<List<CostContract?>?> GetCostsAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT * FROM COST");
+            using(Database)
+            {
+                var getCosts = await _dapperPolly.QueryAsyncWithRetry<CostContract?>(Database, queryBuilder.ToString());
+
+                if (getCosts.Any())
+                {
+                    return getCosts.ToList();
+                }
+                return null;
+            }
+        }
+
+        public async Task<CostContract?> GetCostByIdAsync(int CostId, CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT * FROM COST WHERE CostID = ").Append(CostId);
+            using(Database)
+            {
+                var getCostById = await _dapperPolly.QueryAsyncWithRetry<CostContract?>(Database, queryBuilder.ToString());
+
+                if (getCostById.Any())
+                {
+                    return getCostById.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<object?> DeleteCostByIdAsync(int CostId, CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"DELETE FROM COST WHERE CostID = ").Append(CostId);
+            using(Database)
+            {
+                var deleteCostById = await _dapperPolly.QueryAsyncWithRetry<object?>(Database, queryBuilder.ToString());
+
+                if (deleteCostById.Any())
+                {
+                    return deleteCostById.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<object?> UpdateCostByIdAsync(CostContract? contract, CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"UPDATE COST SET ")
+                                    .Append("CostType=").Append(contract.CostType).Append(",")
+                                    .Append("CostDate=").Append("CAST(\'").Append(contract.CostDate.ToShortDateString() == null ? "\'\'" : contract.CostDate).Append("\' AS DATE)").Append(",")
+                                    .Append("Description=\'").Append(contract.Description).Append("\',")
+                                    .Append("PAX=").Append(contract.PAX).Append(",")
+                                    .Append("TotalCost=").Append(contract.TotalCost).Append(" WHERE CostID = ").Append(contract.CostID);
+            
+            using(Database)
+            {
+                var updateCost = await _dapperPolly.QueryAsyncWithRetry<object>(Database, queryBuilder.ToString());
+
+                if (updateCost.Any())
+                {
+                    return updateCost.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<object?> CreateCostAsync(CostContract? contract, CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"INSERT INTO COST (CostType,CostDate,Description,PAX,TotalCost) VALUES (")
+                                    .Append(contract.CostType).Append(",")
+                                    .Append("CAST(\'").Append(contract.CostDate.ToShortDateString() == null ? "\'\'" : contract.CostDate).Append("\' AS DATE)").Append(",")
+                                    .Append("\'").Append(contract.Description).Append("\',")
+                                    .Append(contract.PAX).Append(",")
+                                    .Append(contract.TotalCost).Append(")");
+            
+            using(Database)
+            {
+                var createCost = await _dapperPolly.QueryAsyncWithRetry<object>(Database, queryBuilder.ToString());
+
+                if (createCost.Any())
+                {
+                    return createCost.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<List<ExpenseContract?>?> GetExpensesAsync(CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT * FROM EXPENSE");
+            using(Database)
+            {
+                var getExpenses = await _dapperPolly.QueryAsyncWithRetry<ExpenseContract?>(Database, queryBuilder.ToString());
+
+                if (getExpenses.Any())
+                {
+                    return getExpenses.ToList();
+                }
+                return null;
+            }
+        }
+
+        public async Task<ExpenseContract?> GetExpenseByIdAsync(int ExpenseId, CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"SELECT * FROM EXPENSE WHERE ExpenseID = ").Append(ExpenseId);
+            using(Database)
+            {
+                var getExpenseById = await _dapperPolly.QueryAsyncWithRetry<ExpenseContract?>(Database, queryBuilder.ToString());
+
+                if (getExpenseById.Any())
+                {
+                    return getExpenseById.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<object?> DeleteExpenseByIdAsync(int ExpenseId, CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"DELETE FROM EXPENSE WHERE ExpenseID = ").Append(ExpenseId);
+            using(Database)
+            {
+                var deleteExpenseById = await _dapperPolly.QueryAsyncWithRetry<object?>(Database, queryBuilder.ToString());
+
+                if (deleteExpenseById.Any())
+                {
+                    return deleteExpenseById.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<object?> UpdateExpenseByIdAsync(ExpenseContract? contract, CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"UPDATE EXPENSE SET ").Append("Amount=").Append(contract.Amount).Append(" WHERE ExpenseID = ").Append(contract.ExpenseID);
+            
+            using(Database)
+            {
+                var updateExpens = await _dapperPolly.QueryAsyncWithRetry<object>(Database, queryBuilder.ToString());
+
+                if (updateExpens.Any())
+                {
+                    return updateExpens.FirstOrDefault();
+                }
+                return null;
+            }
+        }
+
+        public async Task<object?> CreateExpenseAsync(ExpenseContract? contract, CancellationToken cancellationToken)
+        {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.Append(@"INSERT INTO EXPENSE (Amount) VALUES (").Append(contract.Amount).Append(")");
+
+            using(Database)
+            {
+                var createCost = await _dapperPolly.QueryAsyncWithRetry<object>(Database, queryBuilder.ToString());
+
+                if (createCost.Any())
+                {
+                    return createCost.FirstOrDefault();
                 }
                 return null;
             }

@@ -8,6 +8,8 @@ using ExpoAPI.UseCases.Accommodation;
 using ExpoAPI.UseCases.ExternalAttendance;
 using ExpoAPI.UseCases.OtelInformation;
 using ExpoAPI.UseCases.Balance;
+using ExpoAPI.UseCases.Cost;
+using ExpoAPI.UseCases.Expense;
 
 namespace ExpoAPI.Infrastructure.Repositories
 {
@@ -69,6 +71,19 @@ namespace ExpoAPI.Infrastructure.Repositories
 
         Task<BalanceContract?> GetBalanceAsync(CancellationToken cancellationToken);
         Task<object?> UpdateBalanceAsync(BalanceContract? contract, CancellationToken cancellationToken);
+
+
+        Task<List<CostContract?>?> GetCostsAsync(CancellationToken cancellationToken);
+        Task<CostContract?> GetCostByIdAsync(int CostId, CancellationToken cancellationToken);
+        Task<object?> DeleteCostByIdAsync(int CostId, CancellationToken cancellationToken);
+        Task<object?> UpdateCostByIdAsync(CostContract? contract, CancellationToken cancellationToken);
+        Task<object?> CreateCostAsync(CostContract? contract, CancellationToken cancellationToken);
+
+        Task<List<ExpenseContract?>?> GetExpensesAsync(CancellationToken cancellationToken);
+        Task<ExpenseContract?> GetExpenseByIdAsync(int ExpenseId, CancellationToken cancellationToken);
+        Task<object?> DeleteExpenseByIdAsync(int ExpenseId, CancellationToken cancellationToken);
+        Task<object?> UpdateExpenseByIdAsync(ExpenseContract? contract, CancellationToken cancellationToken);
+        Task<object?> CreateExpenseAsync(ExpenseContract? contract, CancellationToken cancellationToken);
 
     }
 }
