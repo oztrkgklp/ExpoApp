@@ -5,6 +5,11 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
 using ExpoAPI.UseCases.Accommodation;
+using ExpoAPI.UseCases.ExternalAttendance;
+using ExpoAPI.UseCases.OtelInformation;
+using ExpoAPI.UseCases.Balance;
+using ExpoAPI.UseCases.Cost;
+using ExpoAPI.UseCases.Expense;
 
 namespace ExpoAPI.Infrastructure.Repositories
 {
@@ -51,6 +56,34 @@ namespace ExpoAPI.Infrastructure.Repositories
         Task<string?> GetCompanyNameByIdAsync(int companyID, CancellationToken cancellationToken);        
 
         Task<decimal?> GetTotalEndorsementAsync(CancellationToken cancellationToken);
+
+
+
+        Task<List<ExternalAttendanceContract?>?> GetExternalAttendancesAsync(CancellationToken cancellationToken);
+        Task<ExternalAttendanceContract?> GetExternalAttendanceByIdAsync(int externalAttendanceId, CancellationToken cancellationToken);
+        Task<object?> DeleteExternalAttendanceByIdAsync(int externalAttendanceId, CancellationToken cancellationToken);
+        Task<object?> UpdateExternalAttendanceByIdAsync(ExternalAttendanceContract? contract, CancellationToken cancellationToken);
+        Task<object?> CreateExternalAttendanceAsync(ExternalAttendanceContract? contract, CancellationToken cancellationToken);
+
+        Task<OtelInformationContract?> GetOtelInformationAsync(CancellationToken cancellationToken);
+        Task<object?> UpdateOtelInformationAsync(OtelInformationContract? contract, CancellationToken cancellationToken);
+
+
+        Task<BalanceContract?> GetBalanceAsync(CancellationToken cancellationToken);
+        Task<object?> UpdateBalanceAsync(BalanceContract? contract, CancellationToken cancellationToken);
+
+
+        Task<List<CostContract?>?> GetCostsAsync(CancellationToken cancellationToken);
+        Task<CostContract?> GetCostByIdAsync(int CostId, CancellationToken cancellationToken);
+        Task<object?> DeleteCostByIdAsync(int CostId, CancellationToken cancellationToken);
+        Task<object?> UpdateCostByIdAsync(CostContract? contract, CancellationToken cancellationToken);
+        Task<object?> CreateCostAsync(CostContract? contract, CancellationToken cancellationToken);
+
+        Task<List<ExpenseContract?>?> GetExpensesAsync(CancellationToken cancellationToken);
+        Task<ExpenseContract?> GetExpenseByIdAsync(int ExpenseId, CancellationToken cancellationToken);
+        Task<object?> DeleteExpenseByIdAsync(int ExpenseId, CancellationToken cancellationToken);
+        Task<object?> UpdateExpenseByIdAsync(ExpenseContract? contract, CancellationToken cancellationToken);
+        Task<object?> CreateExpenseAsync(ExpenseContract? contract, CancellationToken cancellationToken);
 
     }
 }
