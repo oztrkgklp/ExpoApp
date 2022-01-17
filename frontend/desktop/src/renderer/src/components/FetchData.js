@@ -29,7 +29,10 @@ export const getAccommodationById = async (id) => {
   const result = await axios.get(domain + "accommodations/" + id);
   return result;
 };
-
+export const getAccommodationByOrderedDate = async () => {
+  const {data} = await axios.get(domain + "accommodations/ordered-by-date/");
+  return data;
+}
 export const enteredCompany = async () => {
   const { data } = await axios.get(domain + "companies/entered");
   return data;

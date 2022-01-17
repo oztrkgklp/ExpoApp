@@ -7,6 +7,7 @@ import "react-datasheet/lib/react-datasheet.css";
 import transactions from "../data/transactions";
 import commands from "../data/commands";
 import PropTypes from "prop-types";
+import _ from "lodash";
 import {
   DataGrid,
   GridToolbar,
@@ -23,12 +24,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 
-import {
-  accommodations,
-  createAccommodation,
-  deleteAccommodations,
-  updateAcc,
-} from "./FetchData";
+import { accommodations, getAccommodationByOrderedDate } from "./FetchData";
 import Stack from "@mui/material/Stack";
 import { dateFormat, dateFormat2 } from "../assets/dateTime";
 const handleSuccessToast = (mes) => {
@@ -264,14 +260,64 @@ export const ProformaTable = () => {
   const [accommodation, setaccommodation] = React.useState([]);
 
   React.useEffect(() => {
-    const accommodation = async () => {
-      const guest = await accommodations();
+    const getAccommodation = async () => {
+      const guest = await getAccommodationByOrderedDate();
       setaccommodation(guest.result);
     };
 
-    accommodation();
+    getAccommodation();
   }, []);
+  const getTotalValues = (grid, colNo) => {
+    const resultArray = grid.map((item) => {
+      if (isNaN(parseInt(_.values(item)[colNo]))) return 0;
+      else return parseInt(_.values(item)[colNo]);
+    });
 
+    let result = 0;
+    for (var i = 0; i < resultArray.length; i++) result += resultArray[i];
+
+    return result;
+  };
+
+  const newAcc = accommodation.map(
+    (item) =>{
+        console.log(item)
+        var total = 0;
+        for (var i = 10; i <= 16; i++) {
+            const value = getTotalValues(item,i);
+            total += value;
+            switch (i) {
+              case 10:
+                item.sng = value;
+                break;
+              case 11:
+                item.dbl = value;
+                break;
+              case 12:
+                item.trpl = value;
+                break;
+              case 13:
+                item.quat = value;
+                break;
+              case 14:
+                item.sngchd = value;
+                break;
+              case 15:
+                item.dblchd = value;
+                break;
+              case 16:
+                item.trplchd = value;
+                break;
+              default:
+                break;
+            }
+          }
+          return total;
+  
+    }
+    
+  );
+  console.log(newAcc);
   const columns = [
     {
       field: "id",
@@ -455,7 +501,7 @@ export const ProformaTable = () => {
       editable: false,
     },
   ];
-
+  console.log(accommodation);
   var rows = accommodation.map((p) => {
     const {
       accommodationID,
@@ -587,8 +633,6 @@ export const ProformaTable = () => {
         rowLength={10}
         localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
       />
-
-      <ToastContainer />
     </div>
   );
 };
@@ -634,18 +678,16 @@ export const ExternalTable = () => {
     ],
   ]);
   return (
-    
-      <ReactDataSheet
-        data={grid}
-        valueRenderer={(cell) => cell.value}
-        onCellsChanged={(changes) => {
-          const grid = grid.map((row) => [...row]);
-          changes.forEach(({ cell, row, col, value }) => {
-            grid[row][col] = { ...grid[row][col], value };
-          });
-          setGrid({ grid });
-        }}
-      />
-    
+    <ReactDataSheet
+      data={grid}
+      valueRenderer={(cell) => cell.value}
+      onCellsChanged={(changes) => {
+        const grid = grid.map((row) => [...row]);
+        changes.forEach(({ cell, row, col, value }) => {
+          grid[row][col] = { ...grid[row][col], value };
+        });
+        setGrid({ grid });
+      }}
+    />
   );
 };
