@@ -77,6 +77,7 @@ CREATE TABLE EXTERNALATTENDANCE (
     ExternalAttendanceID int IDENTITY(1,1) PRIMARY KEY,
     NameSurname varchar(255),
     TCID decimal(19,4),
+    CompanyName varchar(255),   
     NumberOfPeople int,
 	Phone varchar(255),
 	EntranceTime time,

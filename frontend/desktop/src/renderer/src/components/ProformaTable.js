@@ -26,7 +26,7 @@ import Select from "@material-ui/core/Select";
 
 import { accommodations, getAccommodationByOrderedDate } from "./FetchData";
 import Stack from "@mui/material/Stack";
-import { dateFormat, dateFormat2 } from "../assets/dateTime";
+import { dateFormat, dateFormat2,strToDate } from "../assets/dateTime";
 const handleSuccessToast = (mes) => {
   toast("🦄" + mes, {
     position: "top-center",
@@ -278,12 +278,11 @@ export const ProformaTable = () => {
 
     return result;
   };
-
+console.log(accommodation);
   const newAcc = accommodation.map(
     (item) =>{
-        console.log(item)
         var total = 0;
-        for (var i = 10; i <= 16; i++) {
+        for (var i = 10; i <= 24; i++) {
             const value = getTotalValues(item,i);
             total += value;
             switch (i) {
@@ -308,6 +307,27 @@ export const ProformaTable = () => {
               case 16:
                 item.trplchd = value;
                 break;
+              case 18:
+                item._SNG = value;
+                break;
+              case 19:
+                item._DBL = value;
+                break;
+              case 20:
+                item._TRPL = value;
+                break;
+              case 21:
+                item._QUAT = value;
+                break;
+              case 22:
+                item._SNGCHD = value;
+                break;
+              case 23:
+                item._DBLCHD = value;
+                break;
+              case 24:
+                item._TRPLCHD = value;
+                break;
               default:
                 break;
             }
@@ -317,71 +337,34 @@ export const ProformaTable = () => {
     }
     
   );
+
   console.log(newAcc);
   const columns = [
+
     {
       field: "id",
-      headerName: " ",
-      width: 100,
+      headerName: "",
+      width: 50,
       editable: false,
     },
-
-    {
-      field: "companyName",
-      headerName: "Şirket Adı ",
-      width: 160,
-      editable: false,
-    },
-    {
-      field: "hotel",
-      headerName: "Hotel",
-      width: 160,
-      editable: false,
-    },
+    
     {
       field: "checkInDate",
-      headerName: "Check-in Tarihi",
+      headerName: "Tarih",
       width: 160,
       editable: false,
     },
 
-    {
-      field: "firstGuest",
-      headerName: "Misafir Adı",
-      width: 150,
-      sortable: true,
-      editable: false,
-    },
-    {
-      field: "secondGuest",
-      headerName: "Misafir Adı",
-      width: 150,
-      sortable: true,
-      editable: false,
-    },
-    {
-      field: "thirdGuest",
-      headerName: "Misafir Adı",
-      width: 150,
-      sortable: true,
-      editable: false,
-    },
-    {
-      field: "guestCompanyName",
-      headerName: "Firma Adı",
-      width: 150,
-      sortable: true,
-      editable: false,
-    },
-    {
-      field: "phone",
-      headerName: "Telefon",
-      width: 150,
-      sortable: true,
-      editable: false,
-    },
+    
     {
       field: "SNG",
+      headerName: "SNG",
+      width: 150,
+      sortable: true,
+      editable: false,
+    },
+    {
+      field: "_SNG",
       headerName: "SNG",
       width: 150,
       sortable: true,
@@ -395,7 +378,21 @@ export const ProformaTable = () => {
       editable: false,
     },
     {
+      field: "_DBL",
+      headerName: "DBL",
+      width: 150,
+      sortable: true,
+      editable: false,
+    },
+    {
       field: "TRPL",
+      headerName: "TRPL",
+      width: 150,
+      sortable: true,
+      editable: false,
+    },
+    {
+      field: "_TRPL",
       headerName: "TRPL",
       width: 150,
       sortable: true,
@@ -409,7 +406,21 @@ export const ProformaTable = () => {
       editable: false,
     },
     {
+      field: "_QUAT",
+      headerName: "QUAT",
+      width: 150,
+      sortable: true,
+      editable: false,
+    },
+    {
       field: "SNGCHD",
+      headerName: "SNG+CHD",
+      width: 150,
+      sortable: true,
+      editable: false,
+    },
+    {
+      field: "_SNGCHD",
       headerName: "SNG+CHD",
       width: 150,
       sortable: true,
@@ -423,65 +434,15 @@ export const ProformaTable = () => {
       editable: false,
     },
     {
-      field: "TRPLCHD",
-      headerName: "TRPL+CHD",
-      width: 150,
-      sortable: true,
-      editable: false,
-    },
-    {
-      field: "checkOutDate",
-      headerName: "Check-out Date",
-      width: 150,
-      sortable: true,
-      editable: false,
-    },
-
-    {
-      field: "checkOutDate",
-      headerName: "Check-out Date",
-      width: 150,
-      sortable: true,
-      editable: false,
-    },
-    {
-      field: "_SNG",
-      headerName: "SNG",
-      width: 150,
-      sortable: true,
-      editable: false,
-    },
-    {
-      field: "_DBL",
-      headerName: "DBL",
-      width: 150,
-      sortable: true,
-      editable: false,
-    },
-    {
-      field: "_TRPL",
-      headerName: "TRPL",
-      width: 150,
-      sortable: true,
-      editable: false,
-    },
-    {
-      field: "_QUAT",
-      headerName: "QUAT",
-      width: 150,
-      sortable: true,
-      editable: false,
-    },
-    {
-      field: "_SNGCHD",
-      headerName: "SNG+CHD",
-      width: 150,
-      sortable: true,
-      editable: false,
-    },
-    {
       field: "_DBLCHD",
       headerName: "DBL+CHD",
+      width: 150,
+      sortable: true,
+      editable: false,
+    },
+    {
+      field: "TRPLCHD",
+      headerName: "TRPL+CHD",
       width: 150,
       sortable: true,
       editable: false,
@@ -494,70 +455,58 @@ export const ProformaTable = () => {
       editable: false,
     },
     {
-      field: "description",
-      headerName: "Açıklama",
+      field: "totalRoom",
+      headerName: "Toplam Oda",
+      width: 150,
+      sortable: true,
+      editable: false,
+    },
+    {
+      field: "totalCost",
+      headerName: "Toplam Fiyat",
       width: 150,
       sortable: true,
       editable: false,
     },
   ];
   console.log(accommodation);
-  var rows = accommodation.map((p) => {
+  var rows = _.uniqBy(accommodation, a => a[0].checkIn).sort((a,b) => strToDate(dateFormat2(a[0].checkIn)) - strToDate(dateFormat2(b[0].checkIn))).map((p,i) => {
     const {
-      accommodationID,
-      companyName,
-      hotel,
-      checkIn,
-      firstGuest,
-      secondGuest,
-      thirdGuest,
-      guestCompanyName,
-      phone,
       sng,
-      dbl,
-      trpl,
-      quat,
-      sngchd,
-      dblchd,
-      trplchd,
-      checkOut,
       _SNG,
+      dbl,
       _DBL,
+      trpl,
       _TRPL,
+      quat,
       _QUAT,
+      sngchd,
       _SNGCHD,
+      dblchd,
       _DBLCHD,
+      trplchd,
       _TRPLCHD,
-      description,
     } = p;
+    console.log(p);
     return {
-      id: accommodationID,
-      companyName: companyName,
-      hotel: hotel,
-      checkInDate: dateFormat(checkIn.split("T")[0]),
-      checkInTime: checkIn.split("T")[1],
-      firstGuest: firstGuest,
-      secondGuest: secondGuest,
-      thirdGuest: thirdGuest,
-      guestCompanyName: guestCompanyName,
-      phone: phone,
+      id: i+1,
+      checkInDate: dateFormat2(p[0].checkIn),
       SNG: sng,
-      DBL: dbl,
-      TRPL: trpl,
-      QUAT: quat,
-      SNGCHD: sngchd,
-      DBLCHD: dblchd,
-      TRPLCHD: trplchd,
-      checkOutDate: dateFormat(checkOut.split("T")[0]),
-      checkOutTime: checkOut.split("T")[1],
-      _SNG: _SNG,
-      _DBL: _DBL,
-      _TRPL: _TRPL,
-      _QUAT: _QUAT,
-      _SNGCHD: _SNGCHD,
-      _DBLCHD: _DBLCHD,
-      _TRPLCHD: _TRPLCHD,
-      description,
+      DBL : dbl,
+      TRPL : trpl,
+      QUAT : quat,
+      SNGCHD : sngchd,
+      DBLCHD : dblchd,
+      TRPLCHD : trplchd,
+      _SNG : _SNG,
+      _DBL : _DBL,
+      _TRPL : _TRPL,
+      _QUAT : _QUAT,
+      _SNGCHD : _SNGCHD,
+      _DBLCHD : _DBLCHD,
+      _TRPLCHD : _TRPLCHD,
+      totalRoom : parseInt(sng) + parseInt(dbl) + parseInt(trpl) + parseInt(quat) + parseInt(sngchd) + parseInt(dblchd) + parseInt(trplchd),
+      totalCost : parseInt(_SNG) + parseInt(_DBL) + parseInt(_TRPL) + parseInt(_QUAT) + parseInt(_SNGCHD) + parseInt(_DBLCHD) + parseInt(_TRPLCHD),
     };
   });
   const [pagination, setPagination] = React.useState({
@@ -607,6 +556,7 @@ export const ProformaTable = () => {
       return newPaginationSettings;
     });
   };
+  
   return (
     <div className={classes.root}>
       <Stack
@@ -628,7 +578,7 @@ export const ProformaTable = () => {
         }}
         checkboxSelection
         {...pagination}
-        rows={rows.reverse()}
+        rows={rows}
         columns={columns}
         rowLength={10}
         localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
@@ -682,11 +632,11 @@ export const ExternalTable = () => {
       data={grid}
       valueRenderer={(cell) => cell.value}
       onCellsChanged={(changes) => {
-        const grid = grid.map((row) => [...row]);
+        const grid_ = grid.map((row) => [...row]);
         changes.forEach(({ cell, row, col, value }) => {
-          grid[row][col] = { ...grid[row][col], value };
+          grid_[row][col] = { ...grid_[row][col], value };
         });
-        setGrid({ grid });
+        setGrid(grid_ );
       }}
     />
   );

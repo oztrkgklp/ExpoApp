@@ -740,16 +740,17 @@ namespace ExpoAPI.Infrastructure.Repositories
         {
             StringBuilder queryBuilder = new StringBuilder();
             queryBuilder.Append(@"UPDATE EXTERNALATTENDANCE SET ")
-                                    .Append("NameSurname=\'").Append(contract.NameSurname).Append("\',")
-                                    .Append("TCID=").Append(contract.TCID).Append(",")
-                                    .Append("NumberOfPeople=").Append(contract.NumberOfPeople).Append(",")
-                                    .Append("Phone=").Append(contract.Phone).Append(",")
+                                    .Append("NameSurname=\'").Append(contract.NameSurname == null ? "\'\'" : contract.NameSurname).Append("\',")
+                                    .Append("TCID=").Append(contract.TCID == null ? 0: contract.TCID).Append(",")
+                                    .Append("NumberOfPeople=").Append(contract.NumberOfPeople == null ? 0 : contract.NumberOfPeople).Append(",")
+                                    .Append("CompanyName=\'").Append(contract.CompanyName).Append("\',")
+                                    .Append("Phone=\'").Append(contract.Phone).Append("\',")
                                     .Append("EntranceTime=\'").Append(contract.EntranceTime.ToString()).Append("\',")
                                     .Append("ExitTime=\'").Append(contract.ExitTime.ToString()).Append("\',")
                                     .Append("Occupancy=\'").Append(contract.Occupancy.ToString()).Append("\',")
                                     .Append("EntranceDate=").Append("CAST(\'").Append(contract.EntranceDate.Value.ToShortDateString() == null ? "\'\'" : contract.EntranceDate).Append("\' AS DATE)").Append(",")
                                     .Append("Description=\'").Append(contract.Description).Append("\'").Append(" WHERE ExternalAttendanceID =").Append(contract.ExternalAttendanceID);
-            
+            Console.WriteLine(queryBuilder.ToString());
             using(Database)
             {
                 var createExternalAttendance = await _dapperPolly.QueryAsyncWithRetry<object>(Database, queryBuilder.ToString());
@@ -765,17 +766,18 @@ namespace ExpoAPI.Infrastructure.Repositories
         public async Task<object?> CreateExternalAttendanceAsync(ExternalAttendanceContract? contract, CancellationToken cancellationToken)
         {
             StringBuilder queryBuilder = new StringBuilder();
-            queryBuilder.Append(@"INSERT INTO EXTERNALATTENDANCE (NameSurname,TCID,NumberOfPeople,Phone,EntranceTime,ExitTime,Occupancy,EntranceDate,Description) VALUES (")
-                                    .Append("\'").Append(contract.NameSurname).Append("\',")
-                                    .Append(contract.TCID).Append(",")
-                                    .Append(contract.NumberOfPeople).Append(",")
-                                    .Append(contract.Phone).Append(",")
+            queryBuilder.Append(@"INSERT INTO EXTERNALATTENDANCE (NameSurname,TCID,NumberOfPeople,Phone,CompanyName,EntranceTime,ExitTime,Occupancy,EntranceDate,Description) VALUES (")
+                                    .Append("\'").Append(contract.NameSurname == null ? "\'\'" : contract.NameSurname).Append("\',")
+                                    .Append(contract.TCID == null ? 0: contract.TCID).Append(",")
+                                    .Append(contract.NumberOfPeople == null ? 0 : contract.NumberOfPeople).Append(",")
+                                    .Append(contract.Phone == null ? "\'\'": contract.Phone).Append(",")
+                                    .Append("\'").Append(contract.CompanyName).Append("\',")
                                     .Append("\'").Append(contract.EntranceTime.ToString()).Append("\',")
                                     .Append("\'").Append(contract.ExitTime.ToString()).Append("\',")
                                     .Append("\'").Append(contract.Occupancy.ToString()).Append("\',")
                                     .Append("CAST(\'").Append(contract.EntranceDate.Value.ToShortDateString() == null ? "\'\'" : contract.EntranceDate).Append("\' AS DATE)").Append(",")
                                     .Append("\'").Append(contract.Description).Append("\')");
-
+            
             using(Database)
             {
                 var createExternalAttendance = await _dapperPolly.QueryAsyncWithRetry<object>(Database, queryBuilder.ToString());

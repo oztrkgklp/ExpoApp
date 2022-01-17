@@ -130,7 +130,7 @@ export default (props = {}) => {
               </CollapsableNavItem> */}
               <NavItem title = "Konaklama Detay" link={Routes.DailyAccommodations.path} icon={faBed}/> 
               <NavItem title = "Proforma" link={Routes.Proforma.path} icon={faBed}></NavItem>
-              <NavItem></NavItem>
+              <NavItem title = "Dış Katılım Detay" link={Routes.ExternalDetail.path} icon={faBed}></NavItem>
               <NavItem></NavItem>
               <NavItem></NavItem>
               <NavItem></NavItem>

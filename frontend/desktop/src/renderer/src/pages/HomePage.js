@@ -19,6 +19,7 @@ import Preloader from "../components/Preloader";
 import {CompanyTable, GuestsTable, NoPurchaseCompany, NotAttendTable, PageVisitsTable} from "../components/Tables"
 import DailyAccommodations from '../components/DailyAccommodations';
 import Proforma from '../components/Proforma';
+import ExternalTableDetail from '../components/ExternalTableDetail';
 import Accommodation from '../components/Accommodation';
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
@@ -88,6 +89,8 @@ export default () => (
     <RouteWithSidebar exact path={Routes.SellTaable.path} component={PageVisitsTable} />
     <RouteWithSidebar exact path={Routes.DailyAccommodations.path} component={DailyAccommodations} />
     <RouteWithSidebar exact path={Routes.Proforma.path} component={Proforma} />
+    <RouteWithSidebar exact path={Routes.ExternalDetail.path} component={ExternalTableDetail} />
+
 
 
     <Redirect to={Routes.NotFound.path} />

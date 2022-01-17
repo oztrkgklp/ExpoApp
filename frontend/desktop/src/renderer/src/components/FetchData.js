@@ -30,14 +30,277 @@ export const getAccommodationById = async (id) => {
   return result;
 };
 export const getAccommodationByOrderedDate = async () => {
-  const {data} = await axios.get(domain + "accommodations/ordered-by-date/");
+  const { data } = await axios.get(domain + "accommodations/ordered-by-date/");
   return data;
-}
+};
 export const enteredCompany = async () => {
   const { data } = await axios.get(domain + "companies/entered");
   return data;
 };
-
+/* yeni gelenler*/
+/**********Balance************ */
+export const getBalance = async () => {
+  const { data } = await axios.get(domain + "balance");
+  return data;
+};
+export const updateBalance = async (amount) => {
+  const { data } = await axios.put(domain + "balance?amount=" + amount);
+  return data;
+};
+/**********OtelInformation************ */
+export const getOtelInformation = async () => {
+  const { data } = await axios.get(domain + "otel-info");
+  return data;
+};
+export const updateOtelInformation = async (infos) => {
+  console.log(infos);
+  var url =
+    domain +
+    "otel-info?OtelInformationID=" +
+    infos.OtelInformationID +
+    "&" +
+    "SNG=" +
+    (infos.SNG === "undefined" || infos.SNG === undefined || infos.SNG === null
+      ? ""
+      : infos.SNG) +
+    "&" +
+    "DBL=" +
+    (infos.DBL === "undefined" || infos.DBL === undefined || infos.DBL === null
+      ? ""
+      : infos.DBL) +
+    "&" +
+    "TRPL=" +
+    (infos.TRPL === "undefined" ||
+    infos.TRPL === undefined ||
+    infos.TRPL === null
+      ? ""
+      : infos.TRPL) +
+    "&" +
+    "QUAT=" +
+    (infos.QUAT === "undefined" ||
+    infos.QUAT === undefined ||
+    infos.QUAT === null
+      ? ""
+      : infos.QUAT) +
+    "&" +
+    "SNGCHD=" +
+    (infos.SNGCHD === "undefined" ||
+    infos.SNGCHD === undefined ||
+    infos.SNGCHD === null
+      ? ""
+      : infos.SNGCHD) +
+    "&" +
+    "DBLCHD=" +
+    (infos.DBLCHD === "undefined" ||
+    infos.DBLCHD === undefined ||
+    infos.DBLCHD === null
+      ? ""
+      : infos.DBLCHD) +
+    "&" +
+    "TRPLCHD=" +
+    (infos.TRPLCHD === "undefined" ||
+    infos.TRPLCHD === undefined ||
+    infos.TRPLCHD === null
+      ? ""
+      : infos.TRPLCHD) +
+    "&";
+  console.log(url);
+  const { data } = await axios.put(url);
+  return data;
+};
+/**************Expenses***************** */
+export const getExpenses = async () => {
+  const { data } = await axios.get(domain + "expenses");
+  return data;
+};
+export const getExpenseById = async (id) => {
+  const { data } = await axios.get(domain + "expenses/" + id);
+  return data;
+};
+export const deleteExpenseById = async (id) => {
+  const { data } = await axios.delete(domain + "expenses/" + id);
+  return data;
+};
+export const updateExpenseById = async (infos) => {
+  const { data } = await axios.put(
+    domain + "expenses/ " + infos.id + "?amount=" + infos.amount
+  );
+  return data;
+};
+export const createExpense = async (infos) => {
+  const { data } = await axios.post(domain + "expenses?amount=" + infos.amount);
+  return data;
+};
+/**************Cost***************** */
+export const getCosts = async () => {
+  const { data } = await axios.get(domain + "costs");
+  return data;
+};
+export const getCostById = async (id) => {
+  const { data } = await axios.get(domain + "costs/" + id);
+  return data;
+};
+export const deleteCostById = async (id) => {
+  const { data } = await axios.delete(domain + "costs/" + id);
+  return data;
+};
+export const updateCostById = async (infos) => {
+  const { data } = await axios.put(
+    domain +
+      "costs/ " +
+      infos.id +
+      "?costType=" +
+      infos.costType +
+      "&description=" +
+      infos.description +
+      "&costDate=" +
+      infos.costDate +
+      "&PAX=" +
+      infos.PAX +
+      "&totalCost=" +
+      infos.totalCost
+  );
+  return data;
+};
+export const createCost = async (infos) => {
+  const { data } = await axios.post(
+    domain +
+      "?costType=" +
+      infos.costType +
+      "&description=" +
+      infos.description +
+      "&costDate=" +
+      infos.costDate +
+      "&PAX=" +
+      infos.PAX +
+      "&totalCost=" +
+      infos.totalCost
+  );
+  return data;
+};
+/**************External Attendance***************** */
+export const getExternalAttendances = async () => {
+  const { data } = await axios.get(domain + "external-attendances");
+  return data;
+};
+export const getExternalAttendanceById = async (id) => {
+  const { data } = await axios.get(domain + "external-attendances/" + id);
+  return data;
+};
+export const deleteExternalAttendance = async (id) => {
+  const { data } = await axios.delete(domain + "external-attendances/" + id);
+  return data;
+};
+export const updateExternalAttendance = async (infos) => {
+  const { data } = await axios.put(
+    domain +
+      "external-attendances/" +
+      infos.id +
+      "?" +
+      "NameSurname=" +
+      infos.NameSurname +
+      "&" +
+      "CompanyName= " +
+      infos.CompanyName +
+      "&" +
+      "TCID=" +
+      infos.TCID +
+      "&" +
+      "Phone=" +
+      infos.Phone +
+      "&" +
+      "NumberOfPeople=" +
+      infos.NumberOfPeople +
+      "&" +
+      "EntranceTime=" +
+      infos.EntranceTime +
+      "&" +
+      "ExitTime=" +
+      infos.ExitTime +
+      "&" +
+      "Occupancy=" +
+      infos.Occupancy +
+      "&" +
+      "EntranceDate=" +
+      infos.EntranceDate +
+      "&" +
+      "Description=" +
+      infos.Description
+  );
+  return data;
+};
+export const createExternalAttendance = async (infos) => {
+  console.log(
+    domain +
+      "external-attendances" +
+      "?" +
+      "NameSurname=" +
+      infos.NameSurname +
+      "&" +
+      "CompanyName=" +
+      infos.CompanyName +
+      "&" +
+      "TCID=" +
+      infos.TCID +
+      "&" +
+      "Phone=" +
+      infos.Phone +
+      "&" +
+      "NumberOfPeople=" +
+      infos.NumberOfPeople +
+      "&" +
+      "EntranceTime=" +
+      infos.EntranceTime +
+      "&" +
+      "ExitTime=" +
+      infos.ExitTime +
+      "&" +
+      "Occupancy=" +
+      infos.Occupancy +
+      "&" +
+      "EntranceDate=" +
+      infos.EntranceDate +
+      "&" +
+      "Description=" +
+      infos.Description
+  );
+  const { data } = await axios.post(
+    domain +
+      "external-attendances" +
+      "?" +
+      "NameSurname=" +
+      infos.NameSurname +
+      "&" +
+      "CompanyName=" +
+      infos.CompanyName +
+      "&" +
+      "TCID=" +
+      infos.TCID +
+      "&" +
+      "Phone=" +
+      infos.Phone +
+      "&" +
+      "NumberOfPeople=" +
+      infos.NumberOfPeople +
+      "&" +
+      "EntranceTime=" +
+      infos.EntranceTime +
+      "&" +
+      "ExitTime=" +
+      infos.ExitTime +
+      "&" +
+      "Occupancy=" +
+      infos.Occupancy +
+      "&" +
+      "EntranceDate=" +
+      infos.EntranceDate +
+      "&" +
+      "Description=" +
+      infos.Description
+  );
+  return data;
+};
+/********************* */
 export const notEnteredCompany = async () => {
   const { data } = await axios.get(domain + "companies/not-entered");
   return data;
@@ -190,7 +453,7 @@ export const updateAcc = async (params) => {
   var i = 1;
   if (params.secondGuest) i++;
   if (params.thirdGuest) i++;
-
+  console.log(params);
   const { data } = await axios.put(
     domain +
       "accommodations/" +

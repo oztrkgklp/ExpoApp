@@ -11,6 +11,7 @@ namespace ExpoAPI.Contracts.Requests
         public int? TCID { get; set; }
         public int? NumberOfPeople { get; set; }
         public string? Phone { get; set; }
+        public string? CompanyName { get; set; }
         public TimeSpan? EntranceTime { get; set; }
         public TimeSpan? ExitTime { get; set; }
         public TimeSpan? Occupancy { get; set; }
