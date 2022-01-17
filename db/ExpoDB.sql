@@ -71,4 +71,18 @@ CREATE TABLE ACCOMMODATION (
     _TRPLCHD varchar(50),
     Description varchar(2000)
 );
+
+
+CREATE TABLE EXTERNALATTENDANCE (
+    ExternalAttendanceID int IDENTITY(1,1) PRIMARY KEY,
+    NameSurname varchar(255),
+    TCID decimal(19,4),
+    NumberOfPeople int,
+	Phone varchar(255),
+	EntranceTime time,
+    ExitTime time,
+    Occupancy time,
+    EntranceDate date,
+    Description varchar(255)
+);
 GO

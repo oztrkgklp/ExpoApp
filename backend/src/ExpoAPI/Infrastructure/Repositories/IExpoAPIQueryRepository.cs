@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
 using ExpoAPI.UseCases.Accommodation;
+using ExpoAPI.UseCases.ExternalAttendance;
 
 namespace ExpoAPI.Infrastructure.Repositories
 {
@@ -51,6 +52,14 @@ namespace ExpoAPI.Infrastructure.Repositories
         Task<string?> GetCompanyNameByIdAsync(int companyID, CancellationToken cancellationToken);        
 
         Task<decimal?> GetTotalEndorsementAsync(CancellationToken cancellationToken);
+
+
+
+        Task<List<ExternalAttendanceContract?>?> GetExternalAttendancesAsync(CancellationToken cancellationToken);
+        Task<ExternalAttendanceContract?> GetExternalAttendanceByIdAsync(int externalAttendanceId, CancellationToken cancellationToken);
+        Task<object?> DeleteExternalAttendanceByIdAsync(int externalAttendanceId, CancellationToken cancellationToken);
+        Task<object?> UpdateExternalAttendanceByIdAsync(ExternalAttendanceContract? contract, CancellationToken cancellationToken);
+        Task<object?> CreateExternalAttendanceAsync(ExternalAttendanceContract? contract, CancellationToken cancellationToken);
 
     }
 }
