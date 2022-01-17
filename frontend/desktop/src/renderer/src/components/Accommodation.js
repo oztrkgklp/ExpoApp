@@ -10,6 +10,7 @@ import {
   updateAcc,
   deleteAccommodations,
   getOtelInformation,
+  updateExpenseById
 } from "./FetchData.js";
 import {
   dateFormat,
@@ -120,7 +121,7 @@ const Accommodation = () => {
     { TRPLCHD: 0 },
     { TRPLCHDCost: formatter.format(0) },
   ];
-  console.log(cost.sng);
+
   React.useEffect(() => {
     const getOtelInfo = async () => {
       const info = await getOtelInformation()
@@ -141,7 +142,7 @@ const Accommodation = () => {
       dblchd: parseInt(otelInfo.dblchd),
       trplchd: parseInt(otelInfo.trplchd),
     });
-    console.log(parseInt(otelInfo.sng))
+
   },[isCostChanged])
 
   React.useEffect(() => {
@@ -194,7 +195,6 @@ const Accommodation = () => {
   
   const accs = async () => {
     const acc = await accommodations();
-    console.log(otelInfo)
     var arr = acc.result.map((c) => {
       const {
         accommodationID,
@@ -401,6 +401,7 @@ const Accommodation = () => {
           break;
       }
     }
+    updateExpenseById({id:1,amount:total})
     return total;
   };
 
@@ -664,56 +665,73 @@ const Accommodation = () => {
         data={grid}
         valueRenderer={(cell) => cell.value}
         onCellsChanged={(changes) => {
-          setIsChanged(true);
+          const getOtelInfo = async () => {
+            const info = await getOtelInformation().then(res => res.result)
+            setOtelInfo(info.result)
+            return info
+          };
+          getOtelInfo().then((info) => {
+            console.log(info)
+            setCost({
+              sng: parseInt(info.sng),
+              dbl: parseInt(info.dbl),
+              trpl: parseInt(info.trpl),
+              quat: parseInt(info.quat),
+              sngchd: parseInt(info.sngchd),
+              dblchd: parseInt(info.dblchd),
+              trplchd: parseInt(info.trplchd),
+            });
+          });
           const grid_ = grid.map((row) => [...row]);
           changes.forEach(({ cell, row, col, value }) => {
             grid_[row][col] = { ...grid_[row][col], value };
+            console.log(cost)
             if (grid_[row][10].value !== "") {
               grid_[row][18].value = `${
                 parseInt(grid_[row][10].value) *
-                cost.sng *
+            (isNaN (cost.sng)?parseInt(otelInfo.cost): cost.sng) *
                 getTotalDay(grid_[row][4].value, grid_[row][17].value)
               } `;
             }
             if (grid_[row][11].value !== "") {
               grid_[row][19].value = `${
                 parseInt(grid_[row][11].value) *
-                cost.dbl *
+            (isNaN (cost.dbl) ? parseInt(otelInfo.cost): cost.dbl) *
                 getTotalDay(grid_[row][4].value, grid_[row][17].value)
               } `;
             }
             if (grid_[row][12].value !== "") {
               grid_[row][20].value = `${
                 parseInt(grid_[row][12].value) *
-                cost.trpl *
+                (isNaN(cost.trpl) ?parseInt(otelInfo.trpl): cost.trpl) *
                 getTotalDay(grid_[row][4].value, grid_[row][17].value)
               } `;
             }
             if (grid_[row][13].value !== "") {
               grid_[row][21].value = `${
                 parseInt(grid_[row][13].value) *
-                cost.quat *
+                (isNaN(cost.quat) ?parseInt(otelInfo.quat): cost.quat) *
                 getTotalDay(grid_[row][4].value, grid_[row][17].value)
               } `;
             }
             if (grid_[row][14].value !== "") {
               grid_[row][22].value = `${
                 parseInt(grid_[row][14].value) *
-                cost.sngchd *
+                (isNaN(cost.sngchd) ?parseInt(otelInfo.sngchd): cost.sngchd) *
                 getTotalDay(grid_[row][4].value, grid_[row][17].value)
               } `;
             }
             if (grid_[row][15].value !== "") {
               grid_[row][23].value = `${
                 parseInt(grid_[row][15].value) *
-                cost.dblchd *
+                (isNaN(cost.dblchd) ?parseInt(otelInfo.dblchd): cost.dblchd) *
                 getTotalDay(grid_[row][4].value, grid_[row][17].value)
               } `;
             }
             if (grid_[row][16].value !== "") {
               grid_[row][24].value = `${
                 parseInt(grid_[row][16].value) *
-                cost.trplchd *
+                (isNaN(cost.trplchd) ?parseInt(otelInfo.trplchd): cost.trplchd) *
                 getTotalDay(grid_[row][4].value, grid_[row][17].value)
               } `;
             }

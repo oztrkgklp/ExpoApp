@@ -114,6 +114,8 @@ CREATE TABLE EXPENSE (
     Amount decimal(19,4),
 );
 
+INSERT INTO EXPENSE (ExpenseID,Amount) VALUES (0);
+
 CREATE TABLE BALANCE (
 	BalanceID int,
     Amount decimal(19,4),
