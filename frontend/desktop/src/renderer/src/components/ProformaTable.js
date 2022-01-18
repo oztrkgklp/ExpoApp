@@ -23,21 +23,22 @@ import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
 
-import { accommodations, getAccommodationByOrderedDate } from "./FetchData";
+import {
+  accommodations,
+  getAccommodationByOrderedDate,
+  getExternalAttendances,
+  getCosts,
+  getExpenses,
+  updateCostById,
+  deleteCostById,
+  getCostById,
+  createCost,
+  updateExpenseById,
+} from "./FetchData";
 import Stack from "@mui/material/Stack";
-import { dateFormat, dateFormat2,strToDate } from "../assets/dateTime";
-const handleSuccessToast = (mes) => {
-  toast("🦄" + mes, {
-    position: "top-center",
-    autoClose: 1500,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
-};
+import { dateFormat, dateFormat2, strToDate } from "../assets/dateTime";
 
 const defaultTheme = createTheme();
 const useStylesAntDesign = makeStyles(
@@ -278,76 +279,69 @@ export const ProformaTable = () => {
 
     return result;
   };
-console.log(accommodation);
-  const newAcc = accommodation.map(
-    (item) =>{
-        var total = 0;
-        for (var i = 10; i <= 24; i++) {
-            const value = getTotalValues(item,i);
-            total += value;
-            switch (i) {
-              case 10:
-                item.sng = value;
-                break;
-              case 11:
-                item.dbl = value;
-                break;
-              case 12:
-                item.trpl = value;
-                break;
-              case 13:
-                item.quat = value;
-                break;
-              case 14:
-                item.sngchd = value;
-                break;
-              case 15:
-                item.dblchd = value;
-                break;
-              case 16:
-                item.trplchd = value;
-                break;
-              case 18:
-                item._SNG = value;
-                break;
-              case 19:
-                item._DBL = value;
-                break;
-              case 20:
-                item._TRPL = value;
-                break;
-              case 21:
-                item._QUAT = value;
-                break;
-              case 22:
-                item._SNGCHD = value;
-                break;
-              case 23:
-                item._DBLCHD = value;
-                break;
-              case 24:
-                item._TRPLCHD = value;
-                break;
-              default:
-                break;
-            }
-          }
-          return total;
-  
+  const newAcc = accommodation.map((item) => {
+    var total = 0;
+    for (var i = 10; i <= 24; i++) {
+      const value = getTotalValues(item, i);
+      total += value;
+      switch (i) {
+        case 10:
+          item.sng = value;
+          break;
+        case 11:
+          item.dbl = value;
+          break;
+        case 12:
+          item.trpl = value;
+          break;
+        case 13:
+          item.quat = value;
+          break;
+        case 14:
+          item.sngchd = value;
+          break;
+        case 15:
+          item.dblchd = value;
+          break;
+        case 16:
+          item.trplchd = value;
+          break;
+        case 18:
+          item._SNG = value;
+          break;
+        case 19:
+          item._DBL = value;
+          break;
+        case 20:
+          item._TRPL = value;
+          break;
+        case 21:
+          item._QUAT = value;
+          break;
+        case 22:
+          item._SNGCHD = value;
+          break;
+        case 23:
+          item._DBLCHD = value;
+          break;
+        case 24:
+          item._TRPLCHD = value;
+          break;
+        default:
+          break;
+      }
     }
-    
-  );
+    return total;
+  });
 
-  console.log(newAcc);
   const columns = [
-
     {
       field: "id",
       headerName: "",
       width: 50,
       editable: false,
     },
-    
+
     {
       field: "checkInDate",
       headerName: "Tarih",
@@ -355,7 +349,6 @@ console.log(accommodation);
       editable: false,
     },
 
-    
     {
       field: "SNG",
       headerName: "SNG",
@@ -469,46 +462,64 @@ console.log(accommodation);
       editable: false,
     },
   ];
-  console.log(accommodation);
-  var rows = _.uniqBy(accommodation, a => a[0].checkIn).sort((a,b) => strToDate(dateFormat2(a[0].checkIn)) - strToDate(dateFormat2(b[0].checkIn))).map((p,i) => {
-    const {
-      sng,
-      _SNG,
-      dbl,
-      _DBL,
-      trpl,
-      _TRPL,
-      quat,
-      _QUAT,
-      sngchd,
-      _SNGCHD,
-      dblchd,
-      _DBLCHD,
-      trplchd,
-      _TRPLCHD,
-    } = p;
-    console.log(p);
-    return {
-      id: i+1,
-      checkInDate: dateFormat2(p[0].checkIn),
-      SNG: sng,
-      DBL : dbl,
-      TRPL : trpl,
-      QUAT : quat,
-      SNGCHD : sngchd,
-      DBLCHD : dblchd,
-      TRPLCHD : trplchd,
-      _SNG : _SNG,
-      _DBL : _DBL,
-      _TRPL : _TRPL,
-      _QUAT : _QUAT,
-      _SNGCHD : _SNGCHD,
-      _DBLCHD : _DBLCHD,
-      _TRPLCHD : _TRPLCHD,
-      totalRoom : parseInt(sng) + parseInt(dbl) + parseInt(trpl) + parseInt(quat) + parseInt(sngchd) + parseInt(dblchd) + parseInt(trplchd),
-      totalCost : parseInt(_SNG) + parseInt(_DBL) + parseInt(_TRPL) + parseInt(_QUAT) + parseInt(_SNGCHD) + parseInt(_DBLCHD) + parseInt(_TRPLCHD),
-    };
-  });
+  var rows = _.uniqBy(accommodation, (a) => a[0].checkIn)
+    .sort(
+      (a, b) =>
+        strToDate(dateFormat2(a[0].checkIn)) -
+        strToDate(dateFormat2(b[0].checkIn))
+    )
+    .map((p, i) => {
+      const {
+        sng,
+        _SNG,
+        dbl,
+        _DBL,
+        trpl,
+        _TRPL,
+        quat,
+        _QUAT,
+        sngchd,
+        _SNGCHD,
+        dblchd,
+        _DBLCHD,
+        trplchd,
+        _TRPLCHD,
+      } = p;
+      return {
+        id: i + 1,
+        checkInDate: dateFormat2(p[0].checkIn),
+        SNG: sng,
+        DBL: dbl,
+        TRPL: trpl,
+        QUAT: quat,
+        SNGCHD: sngchd,
+        DBLCHD: dblchd,
+        TRPLCHD: trplchd,
+        _SNG: _SNG,
+        _DBL: _DBL,
+        _TRPL: _TRPL,
+        _QUAT: _QUAT,
+        _SNGCHD: _SNGCHD,
+        _DBLCHD: _DBLCHD,
+        _TRPLCHD: _TRPLCHD,
+        totalRoom:
+          parseInt(sng) +
+          parseInt(dbl) +
+          parseInt(trpl) +
+          parseInt(quat) +
+          parseInt(sngchd) +
+          parseInt(dblchd) +
+          parseInt(trplchd),
+        totalCost:
+          parseInt(_SNG) +
+          parseInt(_DBL) +
+          parseInt(_TRPL) +
+          parseInt(_QUAT) +
+          parseInt(_SNGCHD) +
+          parseInt(_DBLCHD) +
+          parseInt(_TRPLCHD),
+      };
+    });
   const [pagination, setPagination] = React.useState({
     pagination: false,
     autoPageSize: false,
@@ -556,7 +567,7 @@ console.log(accommodation);
       return newPaginationSettings;
     });
   };
-  
+
   return (
     <div className={classes.root}>
       <Stack
@@ -588,45 +599,420 @@ console.log(accommodation);
 };
 
 export const ExternalTable = () => {
+  const [externalRows, setExternalRows] = React.useState([]);
+  const [isChanged, setIsChanged] = React.useState(false)
   const [grid, setGrid] = React.useState([
+    [{ value: "DIŞ KATILIM", readOnly: true }],
     [
-      [
-        { readOnly: true, value: "" },
-        { value: "A", readOnly: true },
-        { value: "B", readOnly: true },
-        { value: "C", readOnly: true },
-        { value: "D", readOnly: true },
-      ],
-      [
-        { readOnly: true, value: 1 },
-        { value: 1 },
-        { value: 3 },
-        { value: 3 },
-        { value: 3 },
-      ],
-      [
-        { readOnly: true, value: 2 },
-        { value: 2 },
-        { value: 4 },
-        { value: 4 },
-        { value: 4 },
-      ],
-      [
-        { readOnly: true, value: 3 },
-        { value: 1 },
-        { value: 3 },
-        { value: 3 },
-        { value: 3 },
-      ],
-      [
-        { readOnly: true, value: 4 },
-        { value: 2 },
-        { value: 4 },
-        { value: 4 },
-        { value: 4 },
-      ],
+      { value: "", readOnly: true },
+      { readOnly: true, value: "" },
+      { value: "Tarih (GG.AA.YYYY)", readOnly: true },
+      { value: "Açıklama", readOnly: true },
+      { value: "PAX", readOnly: true },
+      { value: "Toplam Fiyat", readOnly: true },
     ],
   ]);
+  const handleDelete = async (costID) => {
+    const deleteCost = await deleteCostById(costID);
+    setTimeout(window.location.reload(), 500);
+  };
+  React.useEffect(() => {
+    const getExternal = async () => {
+      const external = await getCosts().then(async result => {
+        const grid_ = result.result.filter((p) => p.costType === 0);
+        console.log(grid_);
+        var total = 0.0;
+        grid_.forEach((p) => {
+          
+          total += parseFloat(p.totalCost);
+          if(isNaN(total) || total === null)
+            total = 0.0
+        })
+        const updateexpense = await updateExpenseById({
+          id: 2,
+          amount: total,
+        }).then(item => item)
+
+        return result
+      });
+      console.log(grid[grid.length - 1][0].value + 1);
+
+      
+
+      external.result
+        .filter((p) => p.costType === 0)
+        .forEach((p, i) => {
+          grid.push([
+            {
+              value: (
+                <CancelTwoToneIcon
+                  color="secondary"
+                  onClick={() => handleDelete(p.costID)}
+                />
+              ),
+              readOnly: true,
+            },
+            { readOnly: true, value: p.costID },
+            { value: dateFormat2(p.costDate), readOnly: false },
+            { value: p.description, readOnly: false },
+            { value: p.pax, readOnly: false },
+            { value: p.totalCost, readOnly: false },
+          ]);
+        });
+      grid.push([
+        { value: "", readOnly: true },
+        { value: parseInt(grid[grid.length - 1][1].value) + 1, readOnly: true },
+        { value: "" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
+      ]);
+    };
+
+    getExternal();
+  }, [isChanged]);
+
+  return (
+    <ReactDataSheet
+      data={grid}
+      valueRenderer={(cell) => cell.value}
+      onCellsChanged={(changes) => {
+        const grid_ = grid.map((row) => [...row]);
+        changes.forEach(({ cell, row, col, value }) => {
+          grid_[row][col] = { ...grid_[row][col], value };
+          const getCost = async () =>
+            await getCostById(grid_[row][1].value)
+              .then((response) => response.result)
+              .catch((e) => null);
+          getCost().then((cost) => {
+            if (cost !== null) {
+              const update = async () => {
+                const updateCost = await updateCostById({
+                  id: grid_[row][1].value,
+                  costDate: grid_[row][2].value,
+                  costType: 0,
+                  description: grid_[row][3].value,
+                  PAX: grid_[row][4].value === "" ? 0 : grid_[row][4].value,
+                  totalCost:
+                    grid_[row][5].value === "" ? 0 : grid_[row][5].value,
+                }).then((item) => item);
+              };
+              update();
+            } else {
+              const create = async () => {
+                const create_ = await createCost({
+                  costDate: grid_[row][2].value,
+                  costType: 0,
+                  description: grid_[row][3].value,
+                  PAX: grid_[row][4].value === "" ? 0 : grid_[row][4].value,
+                  totalCost:
+                    grid_[row][5].value === "" ? 0 : grid_[row][5].value,
+                }).then((item) => item);
+              };
+              create();
+              
+            }
+          });
+        });
+        setGrid(grid_);
+
+        setIsChanged(true);
+      }}
+    />
+  );
+};
+export const ExternalTable2 = () => {
+  const [externalRows, setExternalRows] = React.useState([]);
+  const [isChanged, setIsChanged] = React.useState(false);
+  const [grid, setGrid] = React.useState([
+    [{ value: "TRANSFER", readOnly: true }],
+    [
+      { value: "", readOnly: true },
+      { readOnly: true, value: "" },
+      { value: "Tarih (GG.AA.YYYY)", readOnly: true },
+      { value: "Açıklama", readOnly: true },
+      { value: "PAX", readOnly: true },
+      { value: "Toplam Fiyat", readOnly: true },
+    ],
+  ]);
+  const handleDelete = async (costID) => {
+    const deleteCost = await deleteCostById(costID);
+    setTimeout(window.location.reload(), 500);
+  };
+  React.useEffect(() => {
+    const getExternal = async () => {
+      const external = await getCosts().then(async result => {
+        const grid_ = result.result.filter((p) => p.costType === 1);
+        var total = 0.0;
+        grid_.forEach((p) => {
+          
+          total += parseFloat(p.totalCost);
+          if(isNaN(total) || total === null)
+            total = 0.0
+        })
+        const updateexpense = await updateExpenseById({
+          id: 3,
+          amount: total,
+        }).then(item => item)
+
+        return result
+      });
+      console.log(grid[grid.length - 1][0].value + 1);
+
+      
+
+      external.result
+        .filter((p) => p.costType === 1)
+        .forEach((p, i) => {
+          grid.push([
+            {
+              value: (
+                <CancelTwoToneIcon
+                  color="secondary"
+                  onClick={() => handleDelete(p.costID)}
+                />
+              ),
+              readOnly: true,
+            },
+            { readOnly: true, value: p.costID },
+            { value: dateFormat2(p.costDate), readOnly: false },
+            { value: p.description, readOnly: false },
+            { value: p.pax, readOnly: false },
+            { value: p.totalCost, readOnly: false },
+          ]);
+        });
+      grid.push([
+        { value: "", readOnly: true },
+        { value: parseInt(grid[grid.length - 1][1].value) + 1, readOnly: true },
+        { value: "" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
+      ]);
+    };
+
+    getExternal();
+  }, [isChanged]);
+
+  return (
+    <ReactDataSheet
+      data={grid}
+      valueRenderer={(cell) => cell.value}
+      onCellsChanged={(changes) => {
+        const grid_ = grid.map((row) => [...row]);
+        changes.forEach(({ cell, row, col, value }) => {
+          grid_[row][col] = { ...grid_[row][col], value };
+          const getCost = async () =>
+            await getCostById(grid_[row][1].value)
+              .then((response) => response.result)
+              .catch((e) => null);
+          getCost().then((cost) => {
+            if (cost !== null) {
+              const update = async () => {
+                const updateCost = await updateCostById({
+                  id: grid_[row][1].value,
+                  costDate: grid_[row][2].value,
+                  costType: 1,
+                  description: grid_[row][3].value,
+                  PAX: grid_[row][4].value === "" ? 0 : grid_[row][4].value,
+                  totalCost:
+                    grid_[row][5].value === "" ? 0 : grid_[row][5].value,
+                }).then((item) => item);
+              };
+              update();
+            } else {
+              const create = async () => {
+                const create_ = await createCost({
+                  costDate: grid_[row][2].value,
+                  costType: 1,
+                  description: grid_[row][3].value,
+                  PAX: grid_[row][4].value === "" ? 0 : grid_[row][4].value,
+                  totalCost:
+                    grid_[row][5].value === "" ? 0 : grid_[row][5].value,
+                }).then((item) => item);
+              };
+              create();
+            }
+          });
+        });
+        setGrid(grid_);
+
+        setIsChanged(true);
+      }}
+    />
+  );
+};
+
+export const ExternalTable3 = () => {
+  const [externalRows, setExternalRows] = React.useState([]);
+  const [isChanged, setIsChanged] = React.useState(false);
+
+  const [grid, setGrid] = React.useState([
+    [{ value: "DİĞER HARCAMALAR", readOnly: true }],
+    [
+      { value: "", readOnly: true },
+      { readOnly: true, value: "" },
+      { value: "Tarih (GG.AA.YYYY)", readOnly: true },
+      { value: "Açıklama", readOnly: true },
+      { value: "PAX", readOnly: true },
+      { value: "Toplam Fiyat", readOnly: true },
+    ],
+  ]);
+  const handleDelete = async (costID) => {
+    const deleteCost = await deleteCostById(costID);
+    setTimeout(window.location.reload(), 500);
+  };
+  React.useEffect(() => {
+    const getExternal = async () => {
+      const external = await getCosts().then(async result => {
+        const grid_ = result.result.filter((p) => p.costType === 2);
+        var total = 0.0;
+        grid_.forEach((p) => {
+          
+          total += parseFloat(p.totalCost);
+          if(isNaN(total) || total === null)
+            total = 0.0
+        })
+        const updateexpense = await updateExpenseById({
+          id: 4,
+          amount: total,
+        }).then(item => item)
+
+        return result
+      });
+      console.log(grid[grid.length - 1][0].value + 1);
+
+      
+
+      external.result
+        .filter((p) => p.costType === 2)
+        .forEach((p, i) => {
+          grid.push([
+            {
+              value: (
+                <CancelTwoToneIcon
+                  color="secondary"
+                  onClick={() => handleDelete(p.costID)}
+                />
+              ),
+              readOnly: true,
+            },
+            { readOnly: true, value: p.costID },
+            { value: dateFormat2(p.costDate), readOnly: false },
+            { value: p.description, readOnly: false },
+            { value: p.pax, readOnly: false },
+            { value: p.totalCost, readOnly: false },
+          ]);
+        });
+      grid.push([
+        { value: "", readOnly: true },
+        { value: parseInt(grid[grid.length - 1][1].value) + 1, readOnly: true },
+        { value: "" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
+      ]);
+    };
+
+    getExternal();
+  }, [isChanged]);
+
+  return (
+    <ReactDataSheet
+      data={grid}
+      valueRenderer={(cell) => cell.value}
+      onCellsChanged={(changes) => {
+        const grid_ = grid.map((row) => [...row]);
+        changes.forEach(({ cell, row, col, value }) => {
+          grid_[row][col] = { ...grid_[row][col], value };
+          const getCost = async () =>
+            await getCostById(grid_[row][1].value)
+              .then((response) => response.result)
+              .catch((e) => null);
+          getCost().then((cost) => {
+            if (cost !== null) {
+              const update = async () => {
+                const updateCost = await updateCostById({
+                  id: grid_[row][1].value,
+                  costDate: grid_[row][2].value,
+                  costType: 2,
+                  description: grid_[row][3].value,
+                  PAX: grid_[row][4].value === "" ? 0 : grid_[row][4].value,
+                  totalCost:
+                    grid_[row][5].value === "" ? 0 : grid_[row][5].value,
+                }).then((item) => item);
+              };
+              update();
+            } else {
+              const create = async () => {
+                const create_ = await createCost({
+                  costDate: grid_[row][2].value,
+                  costType: 4,
+                  description: grid_[row][3].value,
+                  PAX: grid_[row][4].value === "" ? 0 : grid_[row][4].value,
+                  totalCost:
+                    grid_[row][5].value === "" ? 0 : grid_[row][5].value,
+                }).then((item) => item);
+              };
+              create();
+            }
+          });
+        });
+        setGrid(grid_);
+
+        setIsChanged(true);
+      }}
+    />
+  );
+};
+export const ExternalTable4 = () => {
+  const [isChanged, setIsChanged] = React.useState(false);
+  const [grid, setGrid] = React.useState([
+    [{ value: "GENEL TOPLAM", readOnly: true }],
+    [
+      { value: "", readOnly: true },
+      {  value: "Toplam" ,readOnly: true },
+    ],
+  ]);
+
+  React.useEffect(() => {
+    const getExpense = async () => {
+      const expense = await getExpenses();
+      var total = 0.0;
+      expense.result.forEach((p) => { 
+        total += parseFloat(p.amount);
+      })
+      grid.push([
+        { value: "Konaklama Toplam", readOnly: true },
+        { value: expense.result[0].amount, readOnly: true },
+        
+      ])
+      grid.push([
+        { value: "Dış Katılım Toplam", readOnly: true },
+        { value: expense.result[1].amount, readOnly: true },
+        
+      ])
+      grid.push([
+        { value: "Transfer Toplam", readOnly: true },
+        { value: expense.result[2].amount, readOnly: true },
+        
+      ])
+      grid.push([
+        { value: "Diğer Harcamalar Toplam", readOnly: true },
+        { value: expense.result[3].amount, readOnly: true },
+        
+      ])
+      grid.push([
+        { value: "", readOnly: true },  
+        { value: "Genel Toplam", readOnly: true },
+        { value: total, readOnly: true },
+      ])
+      
+    };
+
+    getExpense();
+  }, [isChanged]);
+
   return (
     <ReactDataSheet
       data={grid}
@@ -636,7 +1022,48 @@ export const ExternalTable = () => {
         changes.forEach(({ cell, row, col, value }) => {
           grid_[row][col] = { ...grid_[row][col], value };
         });
-        setGrid(grid_ );
+        setGrid(grid_);
+
+        setIsChanged(true);
+      }}
+    />
+  );
+};
+
+export const GrandTotalTable = () => {
+  const [externalRows, setExternalRows] = React.useState([]);
+  const [grid, setGrid] = React.useState([
+    [
+      { readOnly: true, value: "" },
+      { value: "Genel Toplam", readOnly: true },
+      { value: "Açıklama", readOnly: true },
+      { value: "Topolam Fiyat", readOnly: true },
+    ],
+  ]);
+  React.useEffect(() => {
+    const getBalance = async () => {
+      const external = await getBalance();
+      external.result.map((item) => {
+        grid.push([
+          { readOnly: true, value: item.externalAttendanceID },
+          { value: dateFormat2(item.entranceDate), readOnly: true },
+          { value: item.description, readOnly: true },
+          { value: "Topolam Fiyat", readOnly: true },
+        ]);
+      });
+    };
+    getExternal();
+  }, []);
+  return (
+    <ReactDataSheet
+      data={grid}
+      valueRenderer={(cell) => cell.value}
+      onCellsChanged={(changes) => {
+        const grid_ = grid.map((row) => [...row]);
+        changes.forEach(({ cell, row, col, value }) => {
+          grid_[row][col] = { ...grid_[row][col], value };
+        });
+        setGrid(grid_);
       }}
     />
   );

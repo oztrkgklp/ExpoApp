@@ -4,7 +4,7 @@ import SimpleBar from 'simplebar-react';
 import { useLocation } from "react-router-dom";
 import { CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faBed, faChartPie, faCog, faFileAlt, faHandHoldingUsd, faSignOutAlt, faTable, faTimes, faCalendarAlt, faMapPin, faInbox, faRocket } from "@fortawesome/free-solid-svg-icons";
+import { faUsers, faBed, faChartPie, faCog, faFileAlt, faHandHoldingUsd, faSignOutAlt, faTable, faTimes, faCalendarAlt, faMapPin, faInbox, faRocket,faInfoCircle,faMoneyCheckAlt, faCreditCard, faExternalLinkSquareAlt } from "@fortawesome/free-solid-svg-icons";
 import { Card,Col,Nav, Badge, Image, Button, Dropdown, Accordion, Navbar } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 
@@ -100,20 +100,15 @@ export default (props = {}) => {
            
               {/* <NavItem title="Garanti Kongre" link={Routes.Presentation.path} image={ReactHero} /> */}
               <NavItem title="Gösterge Paneli" link={Routes.DashboardOverview.path} icon={faChartPie} />
-              <NavItem title="Satışlar" link={Routes.SellTaable.path} icon={faUsers} />
-              <NavItem title="Tüm Katılımcılar" icon={faCog} link={Routes.CompanyTable.path} />
+              <NavItem title="Satışlar" link={Routes.SellTaable.path} icon={faMoneyCheckAlt} />
+              <NavItem title="Tüm Katılımcılar" icon={faUsers} link={Routes.CompanyTable.path} />
               <NavItem title="Tüm Misafirler" link={Routes.GuestTable.path} icon={faUsers} />
               <NavItem title="Harcama Yapmayanlar" link={Routes.NoAttendTable.path} icon={faUsers} />
              
 
               {/* <NavItem title="Tüm Misafirler" link={Routes.NewCompany.path} icon={faUsers} /> */}
 
-
-
-              
               <NavItem title="Konaklama" link={Routes.Acconmodation.path} icon={faBed} />
-
-              
 
               {/* 
               <CollapsableNavItem eventKey="tables/" title="Tablolar" icon={faTable}>
@@ -128,9 +123,9 @@ export default (props = {}) => {
                 <NavItem title="404 Not Found" link={Routes.NotFound.path} />
                 <NavItem title="500 Server Error" link={Routes.ServerError.path} />
               </CollapsableNavItem> */}
-              <NavItem title = "Konaklama Detay" link={Routes.DailyAccommodations.path} icon={faBed}/> 
-              <NavItem title = "Proforma" link={Routes.Proforma.path} icon={faBed}></NavItem>
-              <NavItem title = "Dış Katılım " link={Routes.ExternalDetail.path} icon={faBed}></NavItem>
+              <NavItem title = "Konaklama Detay" link={Routes.DailyAccommodations.path} icon={faInfoCircle}/> 
+              <NavItem title = "Proforma" link={Routes.Proforma.path} icon={faCreditCard}></NavItem>
+              <NavItem title = "Dış Katılım " link={Routes.ExternalDetail.path} icon={faExternalLinkSquareAlt}></NavItem>
               <NavItem></NavItem>
               <NavItem></NavItem>
               <NavItem></NavItem>

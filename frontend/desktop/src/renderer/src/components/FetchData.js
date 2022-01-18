@@ -164,7 +164,7 @@ export const updateCostById = async (infos) => {
 };
 export const createCost = async (infos) => {
   const { data } = await axios.post(
-    domain +
+    domain + "costs"+
       "?costType=" +
       infos.costType +
       "&description=" +
