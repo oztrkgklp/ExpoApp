@@ -36,6 +36,8 @@ import {
   getCostById,
   createCost,
   updateExpenseById,
+  getBalance,
+  updateBalance,
 } from "./FetchData";
 import Stack from "@mui/material/Stack";
 import { dateFormat, dateFormat2, strToDate } from "../assets/dateTime";
@@ -968,16 +970,20 @@ export const ExternalTable3 = () => {
 export const ExternalTable4 = () => {
   const [isChanged, setIsChanged] = React.useState(false);
   const [grid, setGrid] = React.useState([
-    [{ value: "GENEL TOPLAM", readOnly: true }],
+    [{ value: "BÜTÇE", readOnly: true }, { value: 0, readOnly: false }],
+    ,
     [
       { value: "", readOnly: true },
       {  value: "Toplam" ,readOnly: true },
+
     ],
   ]);
 
   React.useEffect(() => {
     const getExpense = async () => {
       const expense = await getExpenses();
+      const balance = await getBalance().then(res => res.result);
+      grid[0][1].value = balance.amount;
       var total = 0.0;
       expense.result.forEach((p) => { 
         total += parseFloat(p.amount);
@@ -1007,6 +1013,11 @@ export const ExternalTable4 = () => {
         { value: "Genel Toplam", readOnly: true },
         { value: total, readOnly: true },
       ])
+      grid.push([
+        { value: "", readOnly: true },  
+        { value: "Kalan Bakiye", readOnly: true },
+        { value: balance.amount - total, readOnly: true },
+      ])
       
     };
 
@@ -1020,6 +1031,17 @@ export const ExternalTable4 = () => {
       onCellsChanged={(changes) => {
         const grid_ = grid.map((row) => [...row]);
         changes.forEach(({ cell, row, col, value }) => {
+          if(row === 0 && col === 1)
+          {
+            console.log(value)
+            const update = async () => {
+              const updateCost = await updateBalance(
+                parseFloat(value),
+              ).then((item) => setIsChanged(true));
+            };
+            update();
+          }
+
           grid_[row][col] = { ...grid_[row][col], value };
         });
         setGrid(grid_);

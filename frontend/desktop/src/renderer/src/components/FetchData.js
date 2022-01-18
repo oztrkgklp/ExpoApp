@@ -44,7 +44,7 @@ export const getBalance = async () => {
   return data;
 };
 export const updateBalance = async (amount) => {
-  const { data } = await axios.put(domain + "balance?amount=" + amount);
+  const { data } = await axios.put(domain + "balance?balanceID=1&amount=" + amount);
   return data;
 };
 /**********OtelInformation************ */
