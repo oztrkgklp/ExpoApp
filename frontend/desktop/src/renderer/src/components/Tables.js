@@ -441,7 +441,7 @@ export const PageVisitsTable = () => {
       const company = await deletePurchase(deletedPurchaseId);
       window.setTimeout(function () {
         window.location.reload();
-      }, 1000);
+      }, 100);
     };
 
     if (deletedPurchaseId) {
@@ -748,7 +748,7 @@ export const PageVisitsTable = () => {
 
                   window.setTimeout(function () {
                     window.location.reload();
-                  }, 1000);
+                  }, 100);
                 }
               }}
               color="primary"
@@ -1153,7 +1153,7 @@ export const CompanyTable = () => {
     setCompany([...company, newCustomer]);
     window.setTimeout(function () {
       window.location.reload();
-    }, 1500);
+    }, 100);
   };
   const handleDelete = (clickedUser) => {
     setDeletedCompanyId(clickedUser.id);
@@ -1179,7 +1179,7 @@ export const CompanyTable = () => {
       console.log(company.result);
       window.setTimeout(function () {
         location.reload();
-      }, 1000);
+      }, 100);
     };
 
     if (deletedCompanyId) {

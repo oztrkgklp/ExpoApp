@@ -103,7 +103,8 @@ const CostTable = (props) => {
         dblchd: grid[1][5].value ,
         trplchd: grid[1][6].value ,
       })
-      props.setCreated(true);
+    
+    props.setCreated(true);
   }, [isSet]);
 
   return (
@@ -117,6 +118,7 @@ const CostTable = (props) => {
         });
         setGrid(grid_);
         setIsChanged(true);
+        window.location.reload();
       }}
     />
   );

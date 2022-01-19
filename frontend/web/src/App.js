@@ -226,7 +226,7 @@ export default function App() {
     [isSubmit]
   );
 
-  var search = guest.map((guest) => guest.companyName).includes(purchaserName);
+  var search = (guest.map((guest) => guest.companyName).includes(purchaserName))
   console.log(search);
   return (
     <ThemeProvider theme={theme}>
@@ -351,7 +351,8 @@ export default function App() {
                   </Select>
                 </FormControl>
               </Box> */}
-              <Autocomplete
+              <Autocomplete 
+              style={{ marginTop: "3%" }}
                 freeSolo
                 id="combo-box-demo"
                 options={guest.map((option) => option.companyName)}
@@ -362,6 +363,7 @@ export default function App() {
                     label="Alım Yapan Misafir"
                     onChange={(e) => {
                       setpurchaserName(e.target.value);
+                      search = (guest.map((guest) => guest.companyName).includes(e.target.value));
                     }}
                   />
                 )}

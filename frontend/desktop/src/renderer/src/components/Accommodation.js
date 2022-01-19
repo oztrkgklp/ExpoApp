@@ -30,6 +30,7 @@ const Accommodation = () => {
   const [cost, setCost] = React.useState({});
   const [grid, setGrid] = React.useState([
     [
+      {value: "", readOnly: true},
       { value: "ID", readOnly: true },
       { value: "Şirket Adı ", readOnly: true },
       { value: "Hotel", readOnly: true },
@@ -57,6 +58,15 @@ const Accommodation = () => {
       { value: "Açıklama", readOnly: true },
     ],
     [
+      {
+        value: (
+          <CancelTwoToneIcon
+            color="secondary"
+            onClick={() => window.location.reload()}
+          />
+        ),
+        readOnly: true,
+      },
       { readOnly: true, value: 1 },
       { value: "" },
       { value: "" },
@@ -157,7 +167,7 @@ const Accommodation = () => {
       const company = await deleteAccommodations(deletedAccommodation);
       window.setTimeout(function () {
         window.location.reload();
-      }, 1000);
+      }, 300);
     };
     if (deletedAccommodation) deleteAcc();
   }, [deletedAccommodation]);
@@ -223,7 +233,7 @@ const Accommodation = () => {
         _TRPLCHD,
         description,
       } = c;
-
+      const day = getTotalDay(dateFormat2(checkIn),dateFormat2(checkOut))
       const row = [
         {
           value: (
@@ -255,13 +265,13 @@ const Accommodation = () => {
             dateFormat2(checkOut) === "11.11.1111" ? "" : dateFormat2(checkOut),
           readOnly: false,
         },
-        { value: _SNG, readOnly: true },
-        { value: _DBL, readOnly: true },
-        { value: _TRPL, readOnly: true },
-        { value: _QUAT, readOnly: true },
-        { value: _SNGCHD, readOnly: true },
-        { value: _DBLCHD, readOnly: true },
-        { value: _TRPLCHD, readOnly: true },
+        { value: day*sng*cost.sng, readOnly: true },
+        { value: day*dbl*cost.dbl , readOnly: true },
+        { value: day*trpl*cost.trpl , readOnly: true },
+        { value: day*quat*cost.quat , readOnly: true },
+        { value: day*sngchd*cost.sngchd , readOnly: true },
+        { value: day*dblchd*cost.dblchd , readOnly: true },
+        { value: day*trplchd*cost.trplchd , readOnly: true },
         { value: description, readOnly: false },
       ];
       header.push(row);
@@ -683,7 +693,11 @@ const Accommodation = () => {
             });
           });
           const grid_ = grid.map((row) => [...row]);
+          var row_ = 0;
+          var col_ = 0;
           changes.forEach(({ cell, row, col, value }) => {
+            row_ = row;
+            col_ = col;
             grid_[row][col] = { ...grid_[row][col], value };
             console.log(cost)
             if (grid_[row][10].value !== "") {
@@ -809,9 +823,11 @@ const Accommodation = () => {
                       ? grid[row][16].value
                       : grid_[row][16].value,
                   checkOutDate:
-                    grid_[row][17].value === grid[row][17].value
+                    (grid_[row][17].value === grid[row][17].value
                       ? dateFormat3(grid[row][17].value)
-                      : dateFormat3(grid_[row][17].value),
+                      : dateFormat3(grid_[row][17].value) === "11.11.1111" ? "": grid_[row][17].value === grid[row][17].value
+                      ? dateFormat3(grid[row][17].value)
+                      : dateFormat3(grid_[row][17].value)),
                   _SNG:
                     grid_[row][10].value === grid[row][10].value
                       ? `${
@@ -823,7 +839,7 @@ const Accommodation = () => {
                                 grid_[row][17].value
                               )
                           )
-                            ? ""
+                            ? 0
                             : parseInt(grid[row][10].value) *
                               cost.sng *
                               getTotalDay(
@@ -840,7 +856,7 @@ const Accommodation = () => {
                                 grid_[row][17].value
                               )
                           )
-                            ? ""
+                            ? 0
                             : parseInt(grid_[row][10].value) *
                               cost.sng *
                               getTotalDay(
@@ -859,7 +875,7 @@ const Accommodation = () => {
                                 grid_[row][17].value
                               )
                           )
-                            ? ""
+                            ? 0
                             : parseInt(grid[row][11].value) *
                               cost.dbl *
                               getTotalDay(
@@ -876,7 +892,7 @@ const Accommodation = () => {
                                 grid_[row][17].value
                               )
                           )
-                            ? ""
+                            ? 0
                             : parseInt(grid_[row][11].value) *
                               cost.dbl *
                               getTotalDay(
@@ -895,7 +911,7 @@ const Accommodation = () => {
                                 grid_[row][17].value
                               )
                           )
-                            ? ""
+                            ? 0
                             : parseInt(grid[row][12].value) *
                               cost.trpl *
                               getTotalDay(
@@ -912,7 +928,7 @@ const Accommodation = () => {
                                 grid_[row][17].value
                               )
                           )
-                            ? ""
+                            ? 0
                             : parseInt(grid_[row][12].value) *
                               cost.trpl *
                               getTotalDay(
@@ -931,7 +947,7 @@ const Accommodation = () => {
                                 grid_[row][17].value
                               )
                           )
-                            ? ""
+                            ? 0
                             : parseInt(grid[row][13].value) *
                               cost.quat *
                               getTotalDay(
@@ -948,7 +964,7 @@ const Accommodation = () => {
                                 grid_[row][17].value
                               )
                           )
-                            ? ""
+                            ? 0
                             : parseInt(grid_[row][13].value) *
                               cost.quat *
                               getTotalDay(
@@ -967,7 +983,7 @@ const Accommodation = () => {
                                 grid_[row][17].value
                               )
                           )
-                            ? ""
+                            ? 0
                             : parseInt(grid[row][14].value) *
                               cost.sngchd *
                               getTotalDay(
@@ -984,7 +1000,7 @@ const Accommodation = () => {
                                 grid_[row][17].value
                               )
                           )
-                            ? ""
+                            ? 0
                             : parseInt(grid_[row][14].value) *
                               cost.sngchd *
                               getTotalDay(
@@ -1003,7 +1019,7 @@ const Accommodation = () => {
                                 grid_[row][17].value
                               )
                           )
-                            ? ""
+                            ? 0
                             : parseInt(grid[row][15].value) *
                               cost.dblchd *
                               getTotalDay(
@@ -1020,7 +1036,7 @@ const Accommodation = () => {
                                 grid_[row][17].value
                               )
                           )
-                            ? ""
+                            ? 0
                             : parseInt(grid_[row][15].value) *
                               cost.dblchd *
                               getTotalDay(
@@ -1104,33 +1120,47 @@ const Accommodation = () => {
                         ? "11.11.1111"
                         : dateFormat3(grid_[row][17].value),
                     _SNG:
-                      grid_[row][18].value *
+                      (grid_[row][18].value *
                       cost.sng *
-                      getTotalDay(grid_[row][4].value, grid_[row][17].value),
+                      getTotalDay(grid_[row][4].value, grid_[row][17].value) === NaN ? 0 : grid_[row][18].value *
+                      cost.sng *
+                      getTotalDay(grid_[row][4].value, grid_[row][17].value)),
                     _DBL:
-                      grid_[row][19].value *
+                      (grid_[row][19].value *
                       cost.dbl *
-                      getTotalDay(grid_[row][4].value, grid_[row][17].value),
+                      getTotalDay(grid_[row][4].value, grid_[row][17].value) === NaN ? 0 : grid_[row][19].value *
+                      cost.dbl *
+                      getTotalDay(grid_[row][4].value, grid_[row][17].value)),
                     _TRPL:
-                      grid_[row][20].value *
+                      (grid_[row][20].value *
                       cost.trpl *
-                      getTotalDay(grid_[row][4].value, grid_[row][17].value),
+                      getTotalDay(grid_[row][4].value, grid_[row][17].value) === NaN ? 0 : grid_[row][20].value *
+                      cost.trpl *
+                      getTotalDay(grid_[row][4].value, grid_[row][17].value)),
                     _QUAT:
-                      grid_[row][21].value *
+                      (grid_[row][21].value *
                       cost.quat *
-                      getTotalDay(grid_[row][4].value, grid_[row][17].value),
+                      getTotalDay(grid_[row][4].value, grid_[row][17].value) === NaN ? 0 : grid_[row][21].value *
+                      cost.quat *
+                      getTotalDay(grid_[row][4].value, grid_[row][17].value)),
                     _SNGCHD:
-                      grid_[row][22].value *
+                      (grid_[row][22].value *
                       cost.sngchd *
-                      getTotalDay(grid_[row][4].value, grid_[row][17].value),
+                      getTotalDay(grid_[row][4].value, grid_[row][17].value) === NaN ? 0 : grid_[row][22].value *
+                      cost.sngchd *
+                      getTotalDay(grid_[row][4].value, grid_[row][17].value)),
                     _DBLCHD:
-                      grid_[row][23].value *
+                      (grid_[row][23].value *
                       cost.dblchd *
-                      getTotalDay(grid_[row][4].value, grid_[row][17].value),
+                      getTotalDay(grid_[row][4].value, grid_[row][17].value) === NaN ? 0 : grid_[row][23].value *
+                      cost.dblchd *
+                      getTotalDay(grid_[row][4].value, grid_[row][17].value)),
                     _TRPLCHD:
-                      grid_[row][24].value *
+                      (grid_[row][24].value *
                       cost.trplchd *
-                      getTotalDay(grid_[row][4].value, grid_[row][17].value),
+                      getTotalDay(grid_[row][4].value, grid_[row][17].value) === NaN ? 0 : grid_[row][24].value *
+                      cost.trplchd *
+                      getTotalDay(grid_[row][4].value, grid_[row][17].value)),
                     description: grid_[row][25].value,
                   });
                   setCreated(true);
@@ -1183,6 +1213,16 @@ const Accommodation = () => {
                 ]);
             }
           });
+
+            grid_[row_][17].value = grid_[row_][17].value === "11.11.1111" ? "" : grid_[row_][17].value;
+            grid_[row_][18].value = isNaN(parseInt(grid_[row_][18].value )) ? 0 : parseInt(grid_[row_][18].value);
+            grid_[row_][19].value = isNaN(parseInt(grid_[row_][19].value )) ? 0 : parseInt(grid_[row_][19].value);
+            grid_[row_][20].value = isNaN(parseInt(grid_[row_][20].value )) ? 0 : parseInt(grid_[row_][20].value);
+            grid_[row_][21].value = isNaN(parseInt(grid_[row_][21].value )) ? 0 : parseInt(grid_[row_][21].value);
+            grid_[row_][22].value = isNaN(parseInt(grid_[row_][22].value )) ? 0 : parseInt(grid_[row_][22].value);
+            grid_[row_][23].value = isNaN(parseInt(grid_[row_][23].value )) ? 0 : parseInt(grid_[row_][23].value);
+            grid_[row_][24].value = isNaN(parseInt(grid_[row_][24].value )) ? 0 : parseInt(grid_[row_][24].value);
+
           setGrid(grid_);
         }}
       />

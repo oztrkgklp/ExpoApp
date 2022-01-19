@@ -23,15 +23,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { getCompanies } from './Data';
 
-function createData(name, calories, fat, carbs, protein) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-  };
-}
+
 
 var rows = [
   
@@ -54,8 +46,7 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// This method is created for cross-browser compatibility, if you don't
-// need to support IE11, you can use Array.prototype.sort() directly
+
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -213,14 +204,13 @@ export default function EnhancedTable() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [company,setCompany]=React.useState([])
   React.useEffect(() => {
     const companiesData = async () => {
       const company = await getCompanies();
       console.log(company.result)
       result = (company.result);
       rows = result.map((c) =>{
-          const {companyID, companyName, eMail, phone, endorsement, isGuest, isEntered} = c 
+          const {companyID, companyName, eMail, phone} = c 
           return {companyID,companyName,eMail,phone}
       })
     };

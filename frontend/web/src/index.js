@@ -5,9 +5,7 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import {
   BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 ReactDOM.render(
   <Router>

@@ -255,6 +255,7 @@ SettingsPanel.propTypes = {
 };
 
 export const ProformaTable = () => {
+  
   const classes = useStyles();
   const antDesignClasses = useStylesAntDesign();
   const [isAntDesign, setIsAntDesign] = React.useState(false);
@@ -613,6 +614,14 @@ export const ExternalTable = () => {
       { value: "PAX", readOnly: true },
       { value: "Toplam Fiyat", readOnly: true },
     ],
+    [
+      { value: "", readOnly: true },
+      { readOnly: true, value: "" },
+      { value: "", readOnly: false },
+      { value: "", readOnly: false },
+      { value: "", readOnly: false },
+      { value: "", readOnly: false },
+    ],
   ]);
   const handleDelete = async (costID) => {
     const deleteCost = await deleteCostById(costID);
@@ -735,6 +744,14 @@ export const ExternalTable2 = () => {
       { value: "Açıklama", readOnly: true },
       { value: "PAX", readOnly: true },
       { value: "Toplam Fiyat", readOnly: true },
+    ],
+    [
+      { value: "", readOnly: true },
+      { readOnly: true, value: "" },
+      { value: "", readOnly: false },
+      { value: "", readOnly: false },
+      { value: "", readOnly: false },
+      { value: "", readOnly: false },
     ],
   ]);
   const handleDelete = async (costID) => {
@@ -859,6 +876,14 @@ export const ExternalTable3 = () => {
       { value: "PAX", readOnly: true },
       { value: "Toplam Fiyat", readOnly: true },
     ],
+    [
+      { value: "", readOnly: true },
+      { readOnly: true, value: "" },
+      { value: "", readOnly: false },
+      { value: "", readOnly: false },
+      { value: "", readOnly: false },
+      { value: "", readOnly: false },
+    ],
   ]);
   const handleDelete = async (costID) => {
     const deleteCost = await deleteCostById(costID);
@@ -977,6 +1002,7 @@ export const ExternalTable4 = () => {
       {  value: "Toplam" ,readOnly: true },
 
     ],
+   
   ]);
 
   React.useEffect(() => {
