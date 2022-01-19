@@ -24,10 +24,10 @@ const ExternalTableDetail = () => {
       { value: "Kişi Sayısı", readOnly: true },
       { value: "Firma Adı / Şehir", readOnly: true },
       { value: "Tel.No", readOnly: true },
-      { value: "Giriş Saati", readOnly: true },
-      { value: "Çıkış Saati", readOnly: true },
-      { value: "Kullanım Süresi", readOnly: true },
-      { value: "Giriş Tarihi", readOnly: true },
+      { value: "Giriş Saati (sa:dk)", readOnly: true },
+      { value: "Çıkış Saati (sa:dk)", readOnly: true },
+      { value: "Kullanım Süresi (sa:dk)", readOnly: true },
+      { value: "Giriş Tarihi (GG.AA.YYYY)", readOnly: true },
       { value: "Açıklama", readOnly: true },
     ],
     [
@@ -200,11 +200,11 @@ const ExternalTableDetail = () => {
                 CompanyName: grid_[row][5].value,
                 Phone: grid_[row][6].value,
                 EntranceTime:
-                  grid_[row][7].value === "" ? "00:00:00" : grid_[row][7].value,
+                  grid_[row][7].value === "" ? "00:00:00" : grid_[row][7].value + ":00",
                 ExitTime:
-                  grid_[row][8].value === "" ? "00:00:00" : grid_[row][8].value,
+                  grid_[row][8].value === "" ? "00:00:00" : grid_[row][8].value + ":00",
                 Occupancy:
-                  grid_[row][9].value === "" ? "00:00:00" : grid_[row][9].value,
+                  grid_[row][9].value === "" ? "00:00:00" : grid_[row][9].value + ":00",
                 EntranceDate:
                   grid_[row][10].value === ""
                     ? "11.11.1111"
@@ -222,15 +222,15 @@ const ExternalTableDetail = () => {
                   EntranceTime:
                     grid_[row][7].value === ""
                       ? "00:00:00"
-                      : grid_[row][7].value,
+                      : grid_[row][7].value+ ":00",
                   ExitTime:
                     grid_[row][8].value === ""
                       ? "00:00:00"
-                      : grid_[row][8].value,
+                      : grid_[row][8].value+ ":00",
                   Occupancy:
                     grid_[row][9].value === ""
                       ? "00:00:00"
-                      : grid_[row][9].value,
+                      : grid_[row][9].value+ ":00",
                   EntranceDate:
                     grid_[row][10].value === ""
                       ? "11.11.1111"
