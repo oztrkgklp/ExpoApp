@@ -171,7 +171,7 @@ export default () => {
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
             category="Toplam Satın Alma"
-            title={formatter.format(-guests)}
+            title={formatter.format(guests)}
             period="5 Ekim - 8 Ekim"
             percentage={28.4}
             icon={faCoins}
