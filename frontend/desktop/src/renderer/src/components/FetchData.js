@@ -402,83 +402,60 @@ export const createAccommodation = async (params) => {
   var i = 1;
   if (params.secondGuest.length > 1) i++;
   if (params.thirdGuest.length > 1) i++;
-
   const { data } = await axios.post(
     domain +
-      "accommodations?CompanyName='" +
-      params.companyName +
-      "'" +
-      "&Hotel='" +
-      params.hotel +
-      "'" +
-      "&CheckIn=" +
-      params.checkInDate +
-      " 00:00:00" +
-      "&FirstGuest='" +
-      params.firstGuest +
-      "'" +
-      "&SecondGuest='" +
-      params.secondGuest +
-      "'" +
-      "&ThirdGuest='" +
-      params.thirdGuest +
-      "'" +
-      "&NumberOfGuests=" +
-      i +
-      "&GuestCompanyName='" +
-      params.guestCompanyName +
-      "'" +
-      "&Phone='" +
-      params.phone +
-      "'" +
-      "&SNG='" +
-      params.SNG +
-      "'" +
-      "&DBL='" +
-      params.DBL +
-      "'" +
-      "&TRPL='" +
-      params.TRPL +
-      "'" +
-      "&QUAT='" +
-      params.QUAT +
-      "'" +
-      "&SNGCHD='" +
-      params.SNGCHD +
-      "'" +
-      "&DBLCHD='" +
-      params.DBLCHD +
-      "'" +
-      "&TRPLCHD='" +
-      params.TRPLCHD +
-      "'" +
-      "&CheckOut=" +
-      params.checkOutDate +
-      " 00:00:00" +
-      "&SNG_='" +
-      params._SNG +
-      "'" +
-      "&DBL_='" +
-      params._DBL +
-      "'" +
-      "&TRPL_='" +
-      params._TRPL +
-      "'" +
-      "&QUAT_='" +
-      params._QUAT +
-      "'" +
-      "&SNG_CHD='" +
-      params._SNGCHD +
-      "'" +
-      "&DBL_CHD='" +
-      params._DBLCHD +
-      "'" +
-      "&TRPL_CHD='" +
-      params._TRPLCHD +
-      "'" +
-      "&Description='" +
-      params.description +
-      "'"
+    "accommodations?CompanyName=" +
+    params.companyName +
+    "&Hotel=" +
+    params.hotel +
+    "&CheckIn=" +
+    params.checkInDate +
+    " 00:00:00" +
+    "&FirstGuest=" +
+    params.firstGuest +
+    "&SecondGuest=" +
+    params.secondGuest +
+    "&ThirdGuest=" +
+    params.thirdGuest +
+    "&NumberOfGuests=" +
+    i +
+    "&GuestCompanyName=" +
+    params.guestCompanyName +
+    "&Phone=" +
+    params.phone +
+    "&SNG=" +
+    params.SNG +
+    "&DBL=" +
+    params.DBL +
+    "&TRPL=" +
+    params.TRPL +
+    "&QUAT=" +
+    params.QUAT +
+    "&SNGCHD=" +
+    params.SNGCHD +
+    "&DBLCHD=" +
+    params.DBLCHD +
+    "&TRPLCHD=" +
+    params.TRPLCHD +
+    "&CheckOut=" +
+    params.checkOutDate +
+    " 00:00:00" +
+    "&SNG_=" +
+    (isNaN(params._SNG) ? "0" : params._SNG)+
+    "&DBL_=" +
+    (isNaN(params._DBL) ? "0" : params._DBL)+
+    "&TRPL_=" +
+    (isNaN(params._TRPL) ? "0" : params._TRPL)+
+    "&QUAT_=" +
+    (isNaN(params._QUAT) ? "0" : params._QUAT)+
+    "&SNG_CHD=" +
+    (isNaN(params._SNGCHD) ? "0" : params._SNGCHD)+
+    "&DBL_CHD=" +
+    (isNaN(params._DBLCHD) ? "0" : params._DBLCHD)+
+    "&TRPL_CHD=" +
+    (isNaN(params._TRPLCHD) ? "0" : params._TRPLCHD)+
+    "&Description=" +
+    params.description  
   );
   return data;
 };
