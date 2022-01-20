@@ -630,7 +630,7 @@ export const ExternalTable = () => {
   ]);
   var total = 0.0;
   const handleDelete = async (costID) => {
-    const cost = await getCost(costID);
+    const cost = await getCostById(costID);
     const deleteCost = await deleteCostById(costID);
     const updateexpense = await updateExpenseById({
       id: 2,
