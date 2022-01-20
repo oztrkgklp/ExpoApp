@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDataSheet from "react-datasheet";
 import "react-datasheet/lib/react-datasheet.css";
-import { dateFormat2 } from "../assets/dateTime";
+import { dateFormat2, dateFormat3 } from "../assets/dateTime";
 import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
 
 import {
@@ -31,7 +31,7 @@ const ExternalTableDetail = () => {
       { value: "Açıklama", readOnly: true },
     ],
     [
-      { value: "", readOnly: true },
+      { value: " ", readOnly: true },
       { readOnly: true, value: 1 },
 
       { value: "", readOnly: false },
@@ -75,21 +75,15 @@ const ExternalTableDetail = () => {
           grid[index + 1][7].value =
             item.entranceTime.hours.toString() +
             ":" +
-            item.entranceTime.minutes.toString() +
-            ":" +
-            item.entranceTime.seconds.toString();
+            item.entranceTime.minutes.toString();
           grid[index + 1][8].value =
             item.exitTime.hours.toString() +
             ":" +
-            item.exitTime.minutes.toString() +
-            ":" +
-            item.exitTime.seconds.toString();
+            item.exitTime.minutes.toString();
           grid[index + 1][9].value =
             item.occupancy.hours.toString() +
             ":" +
-            item.occupancy.minutes.toString() +
-            ":" +
-            item.occupancy.seconds.toString();
+            item.occupancy.minutes.toString();
           grid[index + 1][10].value =
             dateFormat2(item.entranceDate) === "11.11.1111"
               ? ""
@@ -115,27 +109,21 @@ const ExternalTableDetail = () => {
             value:
               item.entranceTime.hours.toString() +
               ":" +
-              item.entranceTime.minutes.toString() +
-              ":" +
-              item.entranceTime.seconds.toString(),
+              item.entranceTime.minutes.toString(),
             readOnly: false,
           });
           arr.push({
             value:
               item.exitTime.hours.toString() +
               ":" +
-              item.exitTime.minutes.toString() +
-              ":" +
-              item.exitTime.seconds.toString(),
+              item.exitTime.minutes.toString(),
             readOnly: false,
           });
           arr.push({
             value:
               item.occupancy.hours.toString() +
               ":" +
-              item.occupancy.minutes.toString() +
-              ":" +
-              item.occupancy.seconds.toString(),
+              item.occupancy.minutes.toString(),
             readOnly: false,
           });
           arr.push({
@@ -208,11 +196,11 @@ const ExternalTableDetail = () => {
                 EntranceDate:
                   grid_[row][10].value === ""
                     ? "11.11.1111"
-                    : grid_[row][10].value,
+                    : dateFormat3(grid_[row][10].value),
                 Description: grid_[row][11].value,
               }).then((item) => item);
             } else {
-              if (grid_[row][2].value !== "" ) {
+              if (grid_[row][2].value !== "" && grid_[row][4].value !== "" && grid_[row][10].value !== "") {
                 createExternalAttendance({
                   NameSurname: grid_[row][2].value,
                   TCID: grid_[row][3].value,
@@ -234,12 +222,30 @@ const ExternalTableDetail = () => {
                   EntranceDate:
                     grid_[row][10].value === ""
                       ? "11.11.1111"
-                      : grid_[row][10].value,
+                      : dateFormat3(grid_[row][10].value),
                   Description: grid_[row][11].value,
                 }).then((item) => item);
               }
             }
           });
+
+          if(row === grid_.length-1){
+            grid_.push([
+              { value: "", readOnly: true },
+              { readOnly: true, value: grid_[grid_.length - 1][1].value + 1 },
+              { value: "", readOnly: false },
+              { value: "", readOnly: false },
+              { value: "", readOnly: false },
+              { value: "", readOnly: false },
+              { value: "", readOnly: false },
+              { value: "", readOnly: false },
+              { value: "", readOnly: false },
+              { value: "", readOnly: false },
+              { value: "", readOnly: false },
+              { value: "", readOnly: false },
+              { value: "", readOnly: false },
+            ]);
+          }
         });
         setGrid(grid_);
       }}

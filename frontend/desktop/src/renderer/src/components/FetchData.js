@@ -192,6 +192,39 @@ export const deleteExternalAttendance = async (id) => {
   return data;
 };
 export const updateExternalAttendance = async (infos) => {
+  console.log(domain +
+    "external-attendances/" +
+    infos.id +
+    "?" +
+    "NameSurname=" +
+    infos.NameSurname +
+    "&" +
+    "CompanyName=" +
+    infos.CompanyName +
+    "&" +
+    "TCID=" +
+    infos.TCID +
+    "&" +
+    "Phone=" +
+    infos.Phone +
+    "&" +
+    "NumberOfPeople=" +
+    infos.NumberOfPeople +
+    "&" +
+    "EntranceTime=" +
+    infos.EntranceTime +
+    "&" +
+    "ExitTime=" +
+    infos.ExitTime +
+    "&" +
+    "Occupancy=" +
+    infos.Occupancy +
+    "&" +
+    "EntranceDate=" +
+    infos.EntranceDate +
+    "&" +
+    "Description=" +
+    infos.Description)
   const { data } = await axios.put(
     domain +
       "external-attendances/" +

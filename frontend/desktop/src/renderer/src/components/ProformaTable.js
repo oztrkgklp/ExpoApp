@@ -40,7 +40,12 @@ import {
   updateBalance,
 } from "./FetchData";
 import Stack from "@mui/material/Stack";
-import { dateFormat, dateFormat2, strToDate } from "../assets/dateTime";
+import {
+  dateFormat,
+  dateFormat2,
+  dateFormat3,
+  strToDate,
+} from "../assets/dateTime";
 
 const defaultTheme = createTheme();
 const useStylesAntDesign = makeStyles(
@@ -255,7 +260,6 @@ SettingsPanel.propTypes = {
 };
 
 export const ProformaTable = () => {
-  
   const classes = useStyles();
   const antDesignClasses = useStylesAntDesign();
   const [isAntDesign, setIsAntDesign] = React.useState(false);
@@ -601,9 +605,10 @@ export const ProformaTable = () => {
   );
 };
 
+
 export const ExternalTable = () => {
   const [externalRows, setExternalRows] = React.useState([]);
-  const [isChanged, setIsChanged] = React.useState(false)
+  const [isChanged, setIsChanged] = React.useState(false);
   const [grid, setGrid] = React.useState([
     [{ value: "DIŞ KATILIM", readOnly: true }],
     [
@@ -616,45 +621,50 @@ export const ExternalTable = () => {
     ],
     [
       { value: "", readOnly: true },
-      { readOnly: true, value: "" },
+      { readOnly: true, value: 1 },
       { value: "", readOnly: false },
       { value: "", readOnly: false },
       { value: "", readOnly: false },
       { value: "", readOnly: false },
     ],
   ]);
+  var total = 0.0;
   const handleDelete = async (costID) => {
+    const cost = await getCost(costID);
     const deleteCost = await deleteCostById(costID);
-    setTimeout(window.location.reload(), 500);
+    const updateexpense = await updateExpenseById({
+      id: 2,
+      amount: total - parseFloat(cost.result.totalCost),
+    }).then((item) => item);
+    setTimeout(window.location.reload(), 100);
   };
   React.useEffect(() => {
     const getExternal = async () => {
-      const external = await getCosts().then(async result => {
+      const external_ = await getCosts().then(async (result) => {
         const grid_ = result.result.filter((p) => p.costType === 0);
-        console.log(grid_);
-        var total = 0.0;
-        grid_.forEach((p) => {
-          
-          total += parseFloat(p.totalCost);
-          if(isNaN(total) || total === null)
-            total = 0.0
-        })
+        
+        if(grid_.length > 0)
+        {
+          grid_.forEach((p) => {
+            total += parseFloat(p.totalCost);
+            if (isNaN(total) || total === null) total = 0.0;
+          });
+        }
         const updateexpense = await updateExpenseById({
           id: 2,
           amount: total,
-        }).then(item => item)
-
-        return result
+        }).then((item) => item);
+        
+        return result;
       });
-      console.log(grid[grid.length - 1][0].value + 1);
 
-      
-
-      external.result
+      if(external_.result.filter((p) => p.costType === 0).length > 0)
+      {
+        external_.result
         .filter((p) => p.costType === 0)
         .forEach((p, i) => {
-          grid.push([
-            {
+          if (i === 0) {
+            grid[i + 2][0] = {
               value: (
                 <CancelTwoToneIcon
                   color="secondary"
@@ -662,14 +672,36 @@ export const ExternalTable = () => {
                 />
               ),
               readOnly: true,
-            },
-            { readOnly: true, value: p.costID },
-            { value: dateFormat2(p.costDate), readOnly: false },
-            { value: p.description, readOnly: false },
-            { value: p.pax, readOnly: false },
-            { value: p.totalCost, readOnly: false },
-          ]);
+            };
+            grid[i + 2][1] = { readOnly: true, value: p.costID };
+            grid[i + 2][2] = {
+              value: dateFormat2(p.costDate),
+              readOnly: false,
+            };
+            grid[i + 2][3] = { value: p.description, readOnly: false };
+            grid[i + 2][4] = { value: p.pax, readOnly: false };
+            grid[i + 2][5] = { value: p.totalCost, readOnly: false };
+          } else {
+            var array = [
+              {
+                value: (
+                  <CancelTwoToneIcon
+                    color="secondary"
+                    onClick={() => handleDelete(p.costID)}
+                  />
+                ),
+                readOnly: true,
+              },
+              { readOnly: true, value: p.costID },
+              { value: dateFormat2(p.costDate), readOnly: false },
+              { value: p.description, readOnly: false },
+              { value: p.pax, readOnly: false },
+              { value: p.totalCost, readOnly: false },
+            ];
+            grid[i + 2] = array;
+          }
         });
+
       grid.push([
         { value: "", readOnly: true },
         { value: parseInt(grid[grid.length - 1][1].value) + 1, readOnly: true },
@@ -678,6 +710,8 @@ export const ExternalTable = () => {
         { value: "" },
         { value: "" },
       ]);
+      }
+      
     };
 
     getExternal();
@@ -700,7 +734,7 @@ export const ExternalTable = () => {
               const update = async () => {
                 const updateCost = await updateCostById({
                   id: grid_[row][1].value,
-                  costDate: grid_[row][2].value,
+                  costDate: dateFormat3(grid_[row][2].value),
                   costType: 0,
                   description: grid_[row][3].value,
                   PAX: grid_[row][4].value === "" ? 0 : grid_[row][4].value,
@@ -710,21 +744,39 @@ export const ExternalTable = () => {
               };
               update();
             } else {
-              const create = async () => {
-                const create_ = await createCost({
-                  costDate: grid_[row][2].value,
-                  costType: 0,
-                  description: grid_[row][3].value,
-                  PAX: grid_[row][4].value === "" ? 0 : grid_[row][4].value,
-                  totalCost:
-                    grid_[row][5].value === "" ? 0 : grid_[row][5].value,
-                }).then((item) => item);
-              };
-              create();
-              
+              if (grid_[row][2].value !== "" && grid_[row][5].value !== "") {
+                const create = async () => {
+                  const create_ = await createCost({
+                    costDate: dateFormat3(grid_[row][2].value),
+                    costType: 0,
+                    description: grid_[row][3].value,
+                    PAX: grid_[row][4].value === "" ? 0 : grid_[row][4].value,
+                    totalCost:
+                      grid_[row][5].value === "" ? 0 : grid_[row][5].value,
+                  }).then((item) => item);
+                  window.location.reload();
+                };
+                create();
+              }
+            }
+          
+            if (row === grid_.length - 1 && col === 5) 
+            {
+              grid_.push([
+                { value: "", readOnly: true },
+                {
+                  value: parseInt(grid_[grid_.length - 1][1].value) + 1,
+                  readOnly: true,
+                },
+                { value: "" },
+                { value: "" },
+                { value: "" },
+                { value: "" },
+              ]);
             }
           });
         });
+
         setGrid(grid_);
 
         setIsChanged(true);
@@ -747,44 +799,50 @@ export const ExternalTable2 = () => {
     ],
     [
       { value: "", readOnly: true },
-      { readOnly: true, value: "" },
+      { readOnly: true, value: 1 },
       { value: "", readOnly: false },
       { value: "", readOnly: false },
       { value: "", readOnly: false },
       { value: "", readOnly: false },
     ],
   ]);
+  var total = 0.0;
   const handleDelete = async (costID) => {
+    const cost = await getCostById(costID);
     const deleteCost = await deleteCostById(costID);
-    setTimeout(window.location.reload(), 500);
+    const updateexpense = await updateExpenseById({
+      id: 3,
+      amount: total - parseFloat(cost.result.totalCost),
+    }).then((item) => item);
+    setTimeout(window.location.reload(), 100);
   };
   React.useEffect(() => {
     const getExternal = async () => {
-      const external = await getCosts().then(async result => {
+      const external = await getCosts().then(async (result) => {
         const grid_ = result.result.filter((p) => p.costType === 1);
-        var total = 0.0;
-        grid_.forEach((p) => {
-          
-          total += parseFloat(p.totalCost);
-          if(isNaN(total) || total === null)
-            total = 0.0
-        })
+        
+        if(grid_.length > 0)
+        {
+          grid_.forEach((p) => {
+            total += parseFloat(p.totalCost);
+            if (isNaN(total) || total === null) total = 0.0;
+          });
+        }
         const updateexpense = await updateExpenseById({
           id: 3,
           amount: total,
-        }).then(item => item)
-
-        return result
+        }).then((item) => item);
+    
+        return result;
       });
-      console.log(grid[grid.length - 1][0].value + 1);
 
-      
-
-      external.result
+      if(external.result.filter((p) => p.costType === 1).length > 0)
+      {
+        external.result
         .filter((p) => p.costType === 1)
         .forEach((p, i) => {
-          grid.push([
-            {
+          if (i === 0) {
+            grid[i + 2][0] = {
               value: (
                 <CancelTwoToneIcon
                   color="secondary"
@@ -792,14 +850,36 @@ export const ExternalTable2 = () => {
                 />
               ),
               readOnly: true,
-            },
-            { readOnly: true, value: p.costID },
-            { value: dateFormat2(p.costDate), readOnly: false },
-            { value: p.description, readOnly: false },
-            { value: p.pax, readOnly: false },
-            { value: p.totalCost, readOnly: false },
-          ]);
+            };
+            grid[i + 2][1] = { readOnly: true, value: p.costID };
+            grid[i + 2][2] = {
+              value: dateFormat2(p.costDate),
+              readOnly: false,
+            };
+            grid[i + 2][3] = { value: p.description, readOnly: false };
+            grid[i + 2][4] = { value: p.pax, readOnly: false };
+            grid[i + 2][5] = { value: p.totalCost, readOnly: false };
+          } else {
+            var array = [
+              {
+                value: (
+                  <CancelTwoToneIcon
+                    color="secondary"
+                    onClick={() => handleDelete(p.costID)}
+                  />
+                ),
+                readOnly: true,
+              },
+              { readOnly: true, value: p.costID },
+              { value: dateFormat2(p.costDate), readOnly: false },
+              { value: p.description, readOnly: false },
+              { value: p.pax, readOnly: false },
+              { value: p.totalCost, readOnly: false },
+            ];
+            grid[i + 2] = array;
+          }
         });
+
       grid.push([
         { value: "", readOnly: true },
         { value: parseInt(grid[grid.length - 1][1].value) + 1, readOnly: true },
@@ -808,6 +888,8 @@ export const ExternalTable2 = () => {
         { value: "" },
         { value: "" },
       ]);
+      }
+      
     };
 
     getExternal();
@@ -830,7 +912,7 @@ export const ExternalTable2 = () => {
               const update = async () => {
                 const updateCost = await updateCostById({
                   id: grid_[row][1].value,
-                  costDate: grid_[row][2].value,
+                  costDate: dateFormat3(grid_[row][2].value),
                   costType: 1,
                   description: grid_[row][3].value,
                   PAX: grid_[row][4].value === "" ? 0 : grid_[row][4].value,
@@ -840,20 +922,39 @@ export const ExternalTable2 = () => {
               };
               update();
             } else {
-              const create = async () => {
-                const create_ = await createCost({
-                  costDate: grid_[row][2].value,
-                  costType: 1,
-                  description: grid_[row][3].value,
-                  PAX: grid_[row][4].value === "" ? 0 : grid_[row][4].value,
-                  totalCost:
-                    grid_[row][5].value === "" ? 0 : grid_[row][5].value,
-                }).then((item) => item);
-              };
-              create();
+              if (grid_[row][2].value !== "" && grid_[row][5].value !== "") {
+                const create = async () => {
+                  const create_ = await createCost({
+                    costDate: dateFormat3(grid_[row][2].value),
+                    costType: 1,
+                    description: grid_[row][3].value,
+                    PAX: grid_[row][4].value === "" ? 0 : grid_[row][4].value,
+                    totalCost:
+                      grid_[row][5].value === "" ? 0 : grid_[row][5].value,
+                  }).then((item) => item);
+                  window.location.reload();
+                };
+                create();
+              }
+            }
+          
+            if (row === grid_.length - 1 && col === 5) 
+            {
+              grid_.push([
+                { value: "", readOnly: true },
+                {
+                  value: parseInt(grid_[grid_.length - 1][1].value) + 1,
+                  readOnly: true,
+                },
+                { value: "" },
+                { value: "" },
+                { value: "" },
+                { value: "" },
+              ]);
             }
           });
         });
+
         setGrid(grid_);
 
         setIsChanged(true);
@@ -861,11 +962,9 @@ export const ExternalTable2 = () => {
     />
   );
 };
-
 export const ExternalTable3 = () => {
   const [externalRows, setExternalRows] = React.useState([]);
   const [isChanged, setIsChanged] = React.useState(false);
-
   const [grid, setGrid] = React.useState([
     [{ value: "DİĞER HARCAMALAR", readOnly: true }],
     [
@@ -878,44 +977,50 @@ export const ExternalTable3 = () => {
     ],
     [
       { value: "", readOnly: true },
-      { readOnly: true, value: "" },
+      { readOnly: true, value: 1 },
       { value: "", readOnly: false },
       { value: "", readOnly: false },
       { value: "", readOnly: false },
       { value: "", readOnly: false },
     ],
   ]);
+  var total = 0.0;
   const handleDelete = async (costID) => {
+    const cost = await getCostById(costID)
     const deleteCost = await deleteCostById(costID);
-    setTimeout(window.location.reload(), 500);
+    const updateexpense = await updateExpenseById({
+      id: 4,
+      amount: total - parseFloat(cost.result.totalCost),
+    }).then((item) => item);
+    setTimeout(window.location.reload(), 100);
   };
   React.useEffect(() => {
     const getExternal = async () => {
-      const external = await getCosts().then(async result => {
+      const external = await getCosts().then(async (result) => {
         const grid_ = result.result.filter((p) => p.costType === 2);
-        var total = 0.0;
-        grid_.forEach((p) => {
-          
-          total += parseFloat(p.totalCost);
-          if(isNaN(total) || total === null)
-            total = 0.0
-        })
+        
+        if(grid_.length > 0)
+        {
+          grid_.forEach((p) => {
+            total += parseFloat(p.totalCost);
+            if (isNaN(total) || total === null) total = 0.0;
+          });
+        }
         const updateexpense = await updateExpenseById({
           id: 4,
           amount: total,
-        }).then(item => item)
-
-        return result
+        }).then((item) => item);
+        ;
+        return result;
       });
-      console.log(grid[grid.length - 1][0].value + 1);
 
-      
-
-      external.result
+      if(external.result.filter((p) => p.costType === 2).length > 0)
+      {
+        external.result
         .filter((p) => p.costType === 2)
         .forEach((p, i) => {
-          grid.push([
-            {
+          if (i === 0) {
+            grid[i + 2][0] = {
               value: (
                 <CancelTwoToneIcon
                   color="secondary"
@@ -923,14 +1028,36 @@ export const ExternalTable3 = () => {
                 />
               ),
               readOnly: true,
-            },
-            { readOnly: true, value: p.costID },
-            { value: dateFormat2(p.costDate), readOnly: false },
-            { value: p.description, readOnly: false },
-            { value: p.pax, readOnly: false },
-            { value: p.totalCost, readOnly: false },
-          ]);
+            };
+            grid[i + 2][1] = { readOnly: true, value: p.costID };
+            grid[i + 2][2] = {
+              value: dateFormat2(p.costDate),
+              readOnly: false,
+            };
+            grid[i + 2][3] = { value: p.description, readOnly: false };
+            grid[i + 2][4] = { value: p.pax, readOnly: false };
+            grid[i + 2][5] = { value: p.totalCost, readOnly: false };
+          } else {
+            var array = [
+              {
+                value: (
+                  <CancelTwoToneIcon
+                    color="secondary"
+                    onClick={() => handleDelete(p.costID)}
+                  />
+                ),
+                readOnly: true,
+              },
+              { readOnly: true, value: p.costID },
+              { value: dateFormat2(p.costDate), readOnly: false },
+              { value: p.description, readOnly: false },
+              { value: p.pax, readOnly: false },
+              { value: p.totalCost, readOnly: false },
+            ];
+            grid[i + 2] = array;
+          }
         });
+
       grid.push([
         { value: "", readOnly: true },
         { value: parseInt(grid[grid.length - 1][1].value) + 1, readOnly: true },
@@ -939,6 +1066,8 @@ export const ExternalTable3 = () => {
         { value: "" },
         { value: "" },
       ]);
+      }
+      
     };
 
     getExternal();
@@ -961,7 +1090,7 @@ export const ExternalTable3 = () => {
               const update = async () => {
                 const updateCost = await updateCostById({
                   id: grid_[row][1].value,
-                  costDate: grid_[row][2].value,
+                  costDate: dateFormat3(grid_[row][2].value),
                   costType: 2,
                   description: grid_[row][3].value,
                   PAX: grid_[row][4].value === "" ? 0 : grid_[row][4].value,
@@ -971,20 +1100,41 @@ export const ExternalTable3 = () => {
               };
               update();
             } else {
-              const create = async () => {
-                const create_ = await createCost({
-                  costDate: grid_[row][2].value,
-                  costType: 4,
-                  description: grid_[row][3].value,
-                  PAX: grid_[row][4].value === "" ? 0 : grid_[row][4].value,
-                  totalCost:
-                    grid_[row][5].value === "" ? 0 : grid_[row][5].value,
-                }).then((item) => item);
-              };
-              create();
+              if (grid_[row][2].value !== "" && grid_[row][5].value !== "") {
+                const create = async () => {
+                  const create_ = await createCost({
+                    costDate: dateFormat3(grid_[row][2].value),
+                    costType: 2,
+                    description: grid_[row][3].value,
+                    PAX: grid_[row][4].value === "" ? 0 : grid_[row][4].value,
+                    totalCost:
+                      grid_[row][5].value === "" ? 0 : grid_[row][5].value,
+                  }).then((item) => item);
+                  
+                  window.setTimeout(() => {window.location.reload()}, 50)
+                  
+                };
+                create();
+              }
+            }
+          
+            if (row === grid_.length - 1 && col === 5) 
+            {
+              grid_.push([
+                { value: "", readOnly: true },
+                {
+                  value: parseInt(grid_[grid_.length - 1][1].value) + 1,
+                  readOnly: true,
+                },
+                { value: "" },
+                { value: "" },
+                { value: "" },
+                { value: "" },
+              ]);
             }
           });
         });
+
         setGrid(grid_);
 
         setIsChanged(true);
@@ -995,56 +1145,53 @@ export const ExternalTable3 = () => {
 export const ExternalTable4 = () => {
   const [isChanged, setIsChanged] = React.useState(false);
   const [grid, setGrid] = React.useState([
-    [{ value: "BÜTÇE", readOnly: true }, { value: 0, readOnly: false }],
+    [
+      { value: "BÜTÇE", readOnly: true },
+      { value: 0, readOnly: false },
+    ],
     ,
     [
       { value: "", readOnly: true },
-      {  value: "Toplam" ,readOnly: true },
-
+      { value: "Toplam", readOnly: true },
     ],
-   
   ]);
-
   React.useEffect(() => {
+
     const getExpense = async () => {
       const expense = await getExpenses();
-      const balance = await getBalance().then(res => res.result);
+      const balance = await getBalance().then((res) => res.result);
       grid[0][1].value = balance.amount;
       var total = 0.0;
-      expense.result.forEach((p) => { 
+      expense.result.forEach((p) => {
         total += parseFloat(p.amount);
-      })
+      });
+      
       grid.push([
         { value: "Konaklama Toplam", readOnly: true },
         { value: expense.result[0].amount, readOnly: true },
-        
-      ])
+      ]);
       grid.push([
         { value: "Dış Katılım Toplam", readOnly: true },
         { value: expense.result[1].amount, readOnly: true },
-        
-      ])
+      ]);
       grid.push([
         { value: "Transfer Toplam", readOnly: true },
         { value: expense.result[2].amount, readOnly: true },
-        
-      ])
+      ]);
       grid.push([
         { value: "Diğer Harcamalar Toplam", readOnly: true },
         { value: expense.result[3].amount, readOnly: true },
-        
-      ])
+      ]);
       grid.push([
-        { value: "", readOnly: true },  
+        { value: "", readOnly: true },
         { value: "Genel Toplam", readOnly: true },
         { value: total, readOnly: true },
-      ])
+      ]);
       grid.push([
-        { value: "", readOnly: true },  
+        { value: "", readOnly: true },
         { value: "Kalan Bakiye", readOnly: true },
         { value: balance.amount - total, readOnly: true },
-      ])
-      
+      ]);
     };
 
     getExpense();
@@ -1057,13 +1204,15 @@ export const ExternalTable4 = () => {
       onCellsChanged={(changes) => {
         const grid_ = grid.map((row) => [...row]);
         changes.forEach(({ cell, row, col, value }) => {
-          if(row === 0 && col === 1)
-          {
-            console.log(value)
+          if (row === 0 && col === 1) {
+            console.log(value);
             const update = async () => {
-              const updateCost = await updateBalance(
-                parseFloat(value),
-              ).then((item) => setIsChanged(true));
+              const updateCost = await updateBalance(parseFloat(value)).then(
+                (item) => {
+                  setIsChanged(true)
+                  window.setTimeout(() => {window.location.reload()}, 50)
+                }
+              );
             };
             update();
           }

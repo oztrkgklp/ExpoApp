@@ -46,11 +46,7 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link
-        color="inherit"
-        href="#"
-        target="_blank"
-      >
+      <Link color="inherit" href="#" target="_blank">
         CSoft All rights reserved.
       </Link>{" "}
       {new Date().getFullYear()}
@@ -75,6 +71,7 @@ export default function App() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [companyNames, setCompanyNames] = React.useState([]);
   const [companies, setCompanies] = React.useState([]);
+  const [search, setSearch] = React.useState(true);
   const [value, setValue] = React.useState(null);
 
   const handleFailedToast = () => {
@@ -133,7 +130,6 @@ export default function App() {
   React.useEffect(() => {
     const purchaser = async () => {
       const companyName = await getCompanyName();
-      console.log(companyName.result);
       setCompanyNames(companyName.result);
     };
     purchaser();
@@ -226,8 +222,6 @@ export default function App() {
     [isSubmit]
   );
 
-  var search = (guest.map((guest) => guest.companyName).includes(purchaserName))
-  console.log(search);
   return (
     <ThemeProvider theme={theme}>
       <Grid
@@ -329,41 +323,34 @@ export default function App() {
                   </Select>
                 </FormControl>
               </Box>
-              {/* <Box sx={{ maxWidth: 200, minWidth: 200, marginTop: 4 }}>
-                <FormControl fullWidth>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={purchaserName}
-                    displayEmpty
-                    sx={{ maxWidth: 200, minWidth: 200 }}
-                    onChange={(e) => {
-                      setpurchaserName(e.target.value);
-                    }}
-                  >
-                    <MenuItem disabled value="">
-                      <em>Alım Yapan Misafir</em>
-                    </MenuItem>
-                    {guest.map((purchaser) => {
-                      return <MenuItem value={purchaser.companyName}>{purchaser.companyName}</MenuItem>;
-                    })}
 
-                  </Select>
-                </FormControl>
-              </Box> */}
-              <Autocomplete 
-              style={{ marginTop: "3%" }}
+              <Autocomplete
+                style={{ marginTop: "3%" }}
                 freeSolo
                 id="combo-box-demo"
+                onChange={(e) => {
+                  setSearch(
+                    guest
+                      .map((guest) => guest.companyName)
+                      .includes(e.target.innerHTML)
+                  );
+                  setpurchaserName(e.target.innerHTML);
+                }}
                 options={guest.map((option) => option.companyName)}
                 sx={{ width: 300 }}
                 renderInput={(params) => (
                   <TextField
                     {...params}
+                    value={purchaserName}
                     label="Alım Yapan Misafir"
                     onChange={(e) => {
+                      setSearch(
+                        guest
+                          .map((guest) => guest.companyName)
+                          .includes(e.target.value)
+                      );
+
                       setpurchaserName(e.target.value);
-                      search = (guest.map((guest) => guest.companyName).includes(e.target.value));
                     }}
                   />
                 )}
@@ -428,7 +415,6 @@ export default function App() {
                   e.target.value = e.target.value
                     .replace(",", "")
                     .replace(".", "");
-                  console.log(e.target.value.replace(",", "").replace(".", ""));
                   setcount(e.target.value.replace(",", "").replace(".", ""));
                 }}
                 name="count"
@@ -443,7 +429,6 @@ export default function App() {
                 sx={{ mt: 3, mb: 2 }}
                 onClick={(e) => {
                   e.preventDefault();
-                  console.log("count:" + count);
                   if (sellerName == "" || count == 0 || product == "")
                     swal(
                       "Satış Başarısız",

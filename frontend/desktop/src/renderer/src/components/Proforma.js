@@ -23,7 +23,7 @@ const Proforma = () => {
           <ExternalTable3 />
         </Col>
       </Row>
-      <Row>
+      <Row style={{marginTop:"2%"}}>
         <Col></Col>
         <Col>
           <ExternalTable4 />
