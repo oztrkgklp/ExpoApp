@@ -1,1 +1,1 @@
-export const domain = "http://localhost:5009/api/v1/"
+export const domain = "https://idealorganizasyon.org/api/v1/"

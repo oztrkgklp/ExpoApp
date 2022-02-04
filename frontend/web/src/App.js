@@ -10,7 +10,7 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Background from "./image/logo.png";
+import Background from "./image/logo.jpeg";
 import useSWR from "swr";
 import InputLabel from "@mui/material/InputLabel";
 import Menu from "@mui/material/Menu";
@@ -229,8 +229,12 @@ export default function App() {
         component="main"
         sx={{
           height: "100vh",
+          width: "100vw",
           backgroundImage: `url("${Background}")`,
           backgroundRepeat: "no-repeat",
+        }}
+        style= {{
+          backgroundSize: "50vw",
         }}
       >
         <CssBaseline />
@@ -398,7 +402,6 @@ export default function App() {
 
               <TextField
                 margin="normal"
-                required
                 fullWidth
                 onChange={(e) => {
                   setProduct(e.target.value);
