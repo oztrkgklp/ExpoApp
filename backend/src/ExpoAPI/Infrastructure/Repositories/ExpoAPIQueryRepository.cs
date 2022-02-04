@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -566,8 +567,14 @@ namespace ExpoAPI.Infrastructure.Repositories
             queryBuilder.Append(@"UPDATE ACCOMMODATION SET ")
                                     .Append("CompanyName").Append("=").Append(contract.CompanyName == null ? "\'\'" : contract.CompanyName).Append(", ")
                                     .Append("Hotel").Append("=").Append(contract.Hotel == null ? "\'\'" : contract.Hotel).Append(", ")
-                                    .Append("CheckInDate").Append("=").Append("CAST(\'").Append(contract.CheckIn.Value.ToShortDateString() == null ? "\'\'" : contract.CheckIn.Value.ToShortDateString()).Append("\' AS DATE)").Append(", ")
-                                    .Append("CheckInTime").Append("=").Append("CAST(\'").Append(contract.CheckIn.Value.ToShortTimeString() == null ? "\'\'" : contract.CheckIn.Value.ToShortTimeString()).Append("\' AS TIME)").Append(", ")
+                                    .Append("CheckInDate").Append("=").Append("CAST(\'").Append(contract.CheckIn.Value.ToShortDateString() == null ? "\'\'" : 
+                                        DateTime.ParseExact(contract.CheckIn.Value.ToShortDateString(), "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                                                .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) + " 00:00:00 AM"
+                                    ).Append("\' AS DATE)").Append(", ")
+                                    .Append("CheckInTime").Append("=").Append("CAST(\'").Append(contract.CheckIn.Value.ToShortTimeString() == null ? "\'\'" : 
+                                        DateTime.ParseExact(contract.CheckIn.Value.ToShortDateString(), "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                                                .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) + " 00:00:00 AM"
+                                    ).Append("\' AS TIME)").Append(", ")
                                     .Append("FirstGuest").Append("=").Append(contract.FirstGuest == null ? "\'\'" : contract.FirstGuest).Append(", ")
                                     .Append("SecondGuest").Append("=").Append(contract.SecondGuest == null ? "\'\'" : contract.SecondGuest).Append(", ")
                                     .Append("ThirdGuest").Append("=").Append(contract.ThirdGuest == null ? "\'\'" : contract.ThirdGuest).Append(", ")
@@ -581,8 +588,14 @@ namespace ExpoAPI.Infrastructure.Repositories
                                     .Append("SNGCHD").Append("=").Append(contract.SNGCHD == null ? "\'\'" : contract.SNGCHD).Append(", ")
                                     .Append("DBLCHD").Append("=").Append(contract.DBLCHD == null ? "\'\'" : contract.DBLCHD).Append(", ")
                                     .Append("TRPLCHD").Append("=").Append(contract.TRPLCHD == null ? "\'\'" : contract.TRPLCHD).Append(", ")
-                                    .Append("CheckOutDate").Append("=").Append("CAST(\'").Append(contract.CheckOut.Value.ToShortDateString() == null ? "\'\'" : contract.CheckOut.Value.ToShortDateString()).Append("\' AS DATE)").Append(", ")
-                                    .Append("CheckOutTime").Append("=").Append("CAST(\'").Append(contract.CheckOut.Value.ToShortTimeString() == null ? "\'\'" : contract.CheckOut.Value.ToShortTimeString()).Append("\' AS TIME)").Append(", ")
+                                    .Append("CheckOutDate").Append("=").Append("CAST(\'").Append(contract.CheckOut.Value.ToShortDateString() == null ? "\'\'" : 
+                                        DateTime.ParseExact(contract.CheckOut.Value.ToShortDateString(), "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                                                .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) + " 00:00:00 AM"
+                                    ).Append("\' AS DATE)").Append(", ")
+                                    .Append("CheckOutTime").Append("=").Append("CAST(\'").Append(contract.CheckOut.Value.ToShortTimeString() == null ? "\'\'" : 
+                                        DateTime.ParseExact(contract.CheckOut.Value.ToShortDateString(), "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                                                .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) + " 00:00:00 AM"
+                                    ).Append("\' AS TIME)").Append(", ")
                                     .Append("_SNG").Append("=").Append(contract._SNG == null ? "\'\'" : contract._SNG).Append(", ")
                                     .Append("_DBL").Append("=").Append(contract._DBL == null ? "\'\'" : contract._DBL).Append(", ")
                                     .Append("_TRPL").Append("=").Append(contract._TRPL == null ? "\'\'" : contract._TRPL).Append(", ")
@@ -651,8 +664,14 @@ namespace ExpoAPI.Infrastructure.Repositories
                                     .Append("Description").Append(") VALUES (")
                                     .Append(contract.CompanyName == null ? "\'\'" : "\'"+contract.CompanyName+"\'").Append(",")
                                     .Append(contract.Hotel == null ? "\'\'" : "\'"+contract.Hotel+"\'").Append(",")
-                                    .Append("CAST(\'").Append(contract.CheckIn.Value.ToShortDateString() == null ? "\'\'" : contract.CheckIn).Append("\' AS DATE)").Append(",")
-                                    .Append("CAST(\'").Append(contract.CheckIn.Value.ToShortTimeString() == null ? "\'\'" : contract.CheckIn).Append("\' AS TIME)").Append(",")
+                                    .Append("CAST(\'").Append(contract.CheckIn.Value.ToShortDateString() == null ? "\'\'" : 
+                                        DateTime.ParseExact(contract.CheckIn.Value.ToShortDateString(), "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                                                .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) + " 00:00:00 AM"
+                                    ).Append("\' AS DATE)").Append(",")
+                                    .Append("CAST(\'").Append(contract.CheckIn.Value.ToShortTimeString() == null ? "\'\'" : 
+                                        DateTime.ParseExact(contract.CheckIn.Value.ToShortDateString(), "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                                                .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) + " 00:00:00 AM"
+                                    ).Append("\' AS TIME)").Append(",")
                                     .Append(contract.FirstGuest == null ? "\'\'" : "\'"+contract.FirstGuest+"\'").Append(",")
                                     .Append(contract.SecondGuest == null ? "\'\'" : "\'"+contract.SecondGuest+"\'").Append(",")
                                     .Append(contract.ThirdGuest == null ? "\'\'" : "\'"+contract.ThirdGuest+"\'").Append(",")
@@ -666,8 +685,14 @@ namespace ExpoAPI.Infrastructure.Repositories
                                     .Append(contract.SNGCHD == null ? "\'\'" : "\'"+contract.SNGCHD+"\'").Append(",")
                                     .Append(contract.DBLCHD == null ? "\'\'" : "\'"+contract.DBLCHD+"\'").Append(",")
                                     .Append(contract.TRPLCHD == null ? "\'\'" : "\'"+contract.TRPLCHD+"\'").Append(",")
-                                    .Append("CAST(\'").Append(contract.CheckOut.Value.ToShortDateString() == null ? "\'\'" : contract.CheckOut).Append("\' AS DATE)").Append(",")
-                                    .Append("CAST(\'").Append(contract.CheckOut.Value.ToShortTimeString() == null ? "\'\'" : contract.CheckOut).Append("\' AS TIME)").Append(",")
+                                    .Append("CAST(\'").Append(contract.CheckOut.Value.ToShortDateString() == null ? "\'\'" : 
+                                        DateTime.ParseExact(contract.CheckOut.Value.ToShortDateString(), "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                                                .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) + " 00:00:00 AM"
+                                    ).Append("\' AS DATE)").Append(",")
+                                    .Append("CAST(\'").Append(contract.CheckOut.Value.ToShortTimeString() == null ? "\'\'" : 
+                                        DateTime.ParseExact(contract.CheckOut.Value.ToShortDateString(), "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                                                .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) + " 00:00:00 AM"
+                                    ).Append("\' AS TIME)").Append(",")
                                     .Append(contract._SNG == null ? "\'\'" : "\'"+contract._SNG+"\'").Append(",")
                                     .Append(contract._DBL == null ? "\'\'" : "\'"+contract._DBL+"\'").Append(",")
                                     .Append(contract._TRPL == null ? "\'\'" : "\'"+contract._TRPL+"\'").Append(",")
@@ -676,7 +701,7 @@ namespace ExpoAPI.Infrastructure.Repositories
                                     .Append(contract._DBLCHD == null ? "\'\'" : "\'"+contract._DBLCHD+"\'").Append(",")
                                     .Append(contract._TRPLCHD == null ? "\'\'" : "\'"+contract._TRPLCHD+"\'").Append(",")
                                     .Append(contract.Description == null ? "\'\'" : "\'"+contract.Description+"\'").Append(")");
-            Console.WriteLine(queryBuilder);
+            
             using(Database)
             {
                 var createCompany = await _dapperPolly.QueryAsyncWithRetry<object>(Database, queryBuilder.ToString());
@@ -749,7 +774,9 @@ namespace ExpoAPI.Infrastructure.Repositories
                                     .Append("EntranceTime=\'").Append(contract.EntranceTime.ToString()).Append("\',")
                                     .Append("ExitTime=\'").Append(contract.ExitTime.ToString()).Append("\',")
                                     .Append("Occupancy=\'").Append(contract.Occupancy.ToString()).Append("\',")
-                                    .Append("EntranceDate=").Append("CAST(\'").Append(contract.EntranceDate.Value.ToShortDateString() == null ? "\'\'" : contract.EntranceDate).Append("\' AS DATE)").Append(",")
+                                    .Append("EntranceDate=").Append("CAST(\'").Append(contract.EntranceDate.Value.ToShortDateString() == null ? "\'\'" : 
+                                            DateTime.ParseExact(contract.EntranceDate.Value.ToShortDateString(), "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                                                .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) + " 00:00:00 AM").Append("\' AS DATE)").Append(",")
                                     .Append("Description=\'").Append(contract.Description).Append("\'").Append(" WHERE ExternalAttendanceID =").Append(contract.ExternalAttendanceID);
             Console.WriteLine(queryBuilder.ToString());
             using(Database)
@@ -776,7 +803,9 @@ namespace ExpoAPI.Infrastructure.Repositories
                                     .Append("\'").Append(contract.EntranceTime.ToString()).Append("\',")
                                     .Append("\'").Append(contract.ExitTime.ToString()).Append("\',")
                                     .Append("\'").Append(contract.Occupancy.ToString()).Append("\',")
-                                    .Append("CAST(\'").Append(contract.EntranceDate.Value.ToShortDateString() == null ? "\'\'" : contract.EntranceDate).Append("\' AS DATE)").Append(",")
+                                    .Append("CAST(\'").Append(contract.EntranceDate.Value.ToShortDateString() == null ? "\'\'" :
+                                    DateTime.ParseExact(contract.EntranceDate.Value.ToShortDateString(), "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                                                .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) + " 00:00:00 AM").Append("\' AS DATE)").Append(",")
                                     .Append("\'").Append(contract.Description).Append("\')");
             
             using(Database)
@@ -917,7 +946,10 @@ namespace ExpoAPI.Infrastructure.Repositories
             StringBuilder queryBuilder = new StringBuilder();
             queryBuilder.Append(@"UPDATE COST SET ")
                                     .Append("CostType=").Append(contract.CostType).Append(",")
-                                    .Append("CostDate=").Append("CAST(\'").Append(contract.CostDate.ToShortDateString() == null ? "\'\'" : contract.CostDate).Append("\' AS DATE)").Append(",")
+                                    .Append("CostDate=").Append("CAST(\'").Append(contract.CostDate.ToShortDateString() == null ? "\'\'" : 
+                                        DateTime.ParseExact(contract.CostDate.ToShortDateString(), "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                                                .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) + " 00:00:00 AM"
+                                    ).Append("\' AS DATE)").Append(",")
                                     .Append("Description=\'").Append(contract.Description).Append("\',")
                                     .Append("PAX=").Append(contract.PAX).Append(",")
                                     .Append("TotalCost=").Append(contract.TotalCost).Append(" WHERE CostID = ").Append(contract.CostID);
@@ -939,7 +971,10 @@ namespace ExpoAPI.Infrastructure.Repositories
             StringBuilder queryBuilder = new StringBuilder();
             queryBuilder.Append(@"INSERT INTO COST (CostType,CostDate,Description,PAX,TotalCost) VALUES (")
                                     .Append(contract.CostType).Append(",")
-                                    .Append("CAST(\'").Append(contract.CostDate.ToShortDateString() == null ? "\'\'" : contract.CostDate).Append("\' AS DATE)").Append(",")
+                                    .Append("CAST(\'").Append(contract.CostDate.ToShortDateString() == null ? "\'\'" : 
+                                        DateTime.ParseExact(contract.CostDate.ToShortDateString(), "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                                                .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) + " 00:00:00 AM"
+                                    ).Append("\' AS DATE)").Append(",")
                                     .Append("\'").Append(contract.Description).Append("\',")
                                     .Append(contract.PAX).Append(",")
                                     .Append(contract.TotalCost).Append(")");

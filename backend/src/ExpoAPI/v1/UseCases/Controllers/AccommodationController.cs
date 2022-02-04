@@ -203,6 +203,7 @@ namespace ExpoAPI.Controllers
                 return BadRequest(new CreateAccommodationApiResponseContract()
                 {
                     Instance = Guid.NewGuid().ToString(),
+                    Result = createAccommodation.Query,
                     ReturnPath = createAccommodation.ReturnPath,
                     Messages = createAccommodation.Messages?.ToList(),
                 });
