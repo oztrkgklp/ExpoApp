@@ -10,7 +10,7 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Background from "./image/logo.png";
+import Background from "./image/logo.jpeg";
 import useSWR from "swr";
 import InputLabel from "@mui/material/InputLabel";
 import Menu from "@mui/material/Menu";
@@ -229,8 +229,12 @@ export default function App() {
         component="main"
         sx={{
           height: "100vh",
+          width: "100vw",
           backgroundImage: `url("${Background}")`,
           backgroundRepeat: "no-repeat",
+        }}
+        style= {{
+          backgroundSize: "50vw",
         }}
       >
         <CssBaseline />
@@ -369,7 +373,6 @@ export default function App() {
                   />
                   <TextField
                     margin="normal"
-                    // required
                     fullWidth
                     onChange={(e) => {
                       setphone(e.target.value);
@@ -383,22 +386,8 @@ export default function App() {
                 console.log("")
               )}
 
-              {/* <TextField
-                margin="normal"
-                required
-                fullWidth
-                onChange={(e) => {
-                  setpurchaserName(e.target.value);
-                }}
-                id="purchaserName"
-                label="Alım Yapan Misafir Adı"
-                name="purchaserName"
-                autoFocus
-              /> */}
-
               <TextField
                 margin="normal"
-                required
                 fullWidth
                 onChange={(e) => {
                   setProduct(e.target.value);
@@ -429,7 +418,7 @@ export default function App() {
                 sx={{ mt: 3, mb: 2 }}
                 onClick={(e) => {
                   e.preventDefault();
-                  if (sellerName == "" || count == 0 || product == "")
+                  if (sellerName == "" || count == 0)
                     swal(
                       "Satış Başarısız",
                       "Gerekli Alanları Doldurunuz!",
