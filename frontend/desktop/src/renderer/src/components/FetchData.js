@@ -360,10 +360,7 @@ export const createCompany = async (
   endorsement,
   isGuest
 ) => {
-  console.log(typeof isEntered);
-  console.log(typeof isGuest);
-  console.log(isGuest);
-  console.log(isEntered);
+  
   const url =
     domain +
     "companies?CompanyName='" +

@@ -78,10 +78,18 @@ import {
   getCompanies,
 } from "./FetchData";
 
-var formatter = new Intl.NumberFormat("tr-TR", {
+var format = new Intl.NumberFormat("tr-TR", {
   style: "currency",
   currency: "TRY",
 });
+const formatter = {
+  format: (value) => {
+    return  parseFloat(value);
+  }
+  
+}
+
+
 const defaultTheme = createTheme();
 const useStylesAntDesign = makeStyles(
   (theme) => ({
@@ -514,7 +522,7 @@ export const PageVisitsTable = () => {
     },
     {
       field: "amount",
-      headerName: "Satış Fiyatı",
+      headerName: "Satış Fiyatı(₺)",
       width: 150,
       sortable: true,
     },
@@ -562,7 +570,7 @@ export const PageVisitsTable = () => {
       sellerName: sellerName,
       purchaserName: purchaserName,
       purchaseDate: timeFormat(purchaseDate),
-      amount: formatter.format(amount),
+      amount: formatter.format(amount) ,
       product: product,
     };
   });
@@ -1225,7 +1233,7 @@ export const CompanyTable = () => {
     },
     {
       field: "endorsement",
-      headerName: "Ciro",
+      headerName: "Ciro(₺)",
       width: 250,
       sortable: true,
     },

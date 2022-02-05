@@ -247,7 +247,7 @@ const Accommodation = () => {
         { value: accommodationID, readOnly: true },
         { value: companyName, readOnly: false },
         { value: hotel, readOnly: false },
-        { value: dateFormat2(checkIn), readOnly: false },
+        { value: dateFormat2(checkIn) === "11.11.1111" ? "" : dateFormat2(checkIn), readOnly: false },
         { value: firstGuest, readOnly: false },
         { value: secondGuest, readOnly: false },
         { value: thirdGuest, readOnly: false },
@@ -756,6 +756,11 @@ const Accommodation = () => {
 
             getAcc().then((status) => {
               if (status === 200) {
+                grid_[row][4].value =
+                  grid_[row][4].value === ""
+                    ? "11.11.1111"
+                    : grid_[row][4].value;
+
                 grid_[row][17].value =
                   grid_[row][17].value === ""
                     ? "11.11.1111"
@@ -771,9 +776,11 @@ const Accommodation = () => {
                       ? grid[row][3].value
                       : grid_[row][3].value,
                   checkInDate:
-                    grid_[row][4].value === grid[row][4].value
-                      ? dateFormat3(grid[row][4].value)
-                      : dateFormat3(grid_[row][4].value),
+                  (grid_[row][4].value === grid[row][4].value
+                    ? dateFormat3(grid[row][4].value)
+                    : dateFormat3(grid_[row][4].value) === "11.11.1111" ? "": grid_[row][4].value === grid[row][4].value
+                    ? dateFormat3(grid[row][4].value)
+                    : dateFormat3(grid_[row][4].value)),
                   firstGuest:
                     grid_[row][5].value === grid[row][5].value
                       ? grid[row][5].value
@@ -1087,10 +1094,10 @@ const Accommodation = () => {
                 });
               } else {
                 if (
-                  grid_[row][2].value !== "" &&
-                  grid_[row][3].value !== "" &&
-                  grid_[row][4].value !== "" &&
-                  grid_[row][5].value !== "" &&
+                  grid_[row][2].value !== "" ||
+                  grid_[row][3].value !== "" ||
+                  grid_[row][4].value !== "" ||
+                  grid_[row][5].value !== "" ||
                   (grid_[row][10].value !== "" ||
                     grid_[row][11].value !== "" ||
                     grid_[row][12].value !== "" ||
@@ -1102,7 +1109,10 @@ const Accommodation = () => {
                   createAccommodation({
                     companyName: grid_[row][2].value,
                     hotel: grid_[row][3].value,
-                    checkInDate: dateFormat3(grid_[row][4].value),
+                    checkInDate: 
+                    grid_[row][4].value === ""
+                        ? "11.11.1111"
+                        : dateFormat3(grid_[row][4].value),
                     firstGuest: grid_[row][5].value,
                     secondGuest: grid_[row][6].value,
                     thirdGuest: grid_[row][7].value,
@@ -1214,6 +1224,8 @@ const Accommodation = () => {
             }
           });
 
+
+            grid_[row_][4].value = grid_[row_][4].value === "11.11.1111" ? "" : grid_[row_][4].value;
             grid_[row_][17].value = grid_[row_][17].value === "11.11.1111" ? "" : grid_[row_][17].value;
             grid_[row_][18].value = isNaN(parseInt(grid_[row_][18].value )) ? 0 : parseInt(grid_[row_][18].value);
             grid_[row_][19].value = isNaN(parseInt(grid_[row_][19].value )) ? 0 : parseInt(grid_[row_][19].value);

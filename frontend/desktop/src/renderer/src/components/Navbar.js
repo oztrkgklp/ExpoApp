@@ -17,7 +17,7 @@ import {
 } from "@themesberg/react-bootstrap";
 import { Link } from "react-router-dom";
 import NOTIFICATIONS_DATA from "../data/notifications";
-import Profile3 from "../assets/img/technologies/logo.jpg";
+import Profile3 from "../assets/img/technologies/logo.jpeg";
 import { Routes } from "../routes";
 import IconButton from '@mui/material/IconButton';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -60,7 +60,7 @@ export default (props) => {
       </ListGroup.Item>
     );
   };
-  const userName = "İDEAL";
+  const userName = "GARANTİ KONGRE";
   
   return (
     <Navbar variant="dark" expanded className="ps-0 pe-2 pb-0">

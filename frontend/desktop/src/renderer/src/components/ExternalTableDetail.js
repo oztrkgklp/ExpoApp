@@ -19,15 +19,15 @@ const ExternalTableDetail = () => {
     [
       { readOnly: true, value: "" },
       { value: "", readOnly: true },
-      { value: "Ad Soyad", readOnly: true },
+      { value: "Ad Soyad *", readOnly: true },
       { value: "TC No", readOnly: true },
-      { value: "Kişi Sayısı", readOnly: true },
+      { value: "Kişi Sayısı *", readOnly: true },
       { value: "Firma Adı / Şehir", readOnly: true },
       { value: "Tel.No", readOnly: true },
       { value: "Giriş Saati (sa:dk)", readOnly: true },
       { value: "Çıkış Saati (sa:dk)", readOnly: true },
       { value: "Kullanım Süresi (sa:dk)", readOnly: true },
-      { value: "Giriş Tarihi (GG.AA.YYYY)", readOnly: true },
+      { value: "Giriş Tarihi (GG.AA.YYYY) *", readOnly: true },
       { value: "Açıklama", readOnly: true },
     ],
     [
