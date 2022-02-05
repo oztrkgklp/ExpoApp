@@ -1,7 +1,7 @@
 import axios from "axios";
 import domain from "./Domain";
 
-export const createGuest = async (companyName, phone, eMail) => {
+export const createGuest = async (companyName, phone, eMail,endorsement) => {
   
   const url =
     domain +
@@ -11,7 +11,7 @@ export const createGuest = async (companyName, phone, eMail) => {
     phone +
     "'&EMail='" +
     eMail +
-    "'&Endorsement=0&IsEntered=true&IsGuest=true";
+    "'&Endorsement=" + endorsement+"&IsEntered=true&IsGuest=true";
   const { data } = await axios.post(url);
   return data;
 };

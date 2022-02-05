@@ -10,7 +10,7 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Background from "./image/logo.png";
+import Background from "./image/logo.jpeg";
 import useSWR from "swr";
 import InputLabel from "@mui/material/InputLabel";
 import Menu from "@mui/material/Menu";
@@ -35,6 +35,8 @@ import {
 } from "./Data";
 import SellerTable from "./SellerTable";
 import PurchaseTable from "./PurchaseTable";
+import Autocomplete from "@mui/material/Autocomplete";
+
 function Copyright(props) {
   return (
     <Typography
@@ -44,12 +46,8 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link
-        color="inherit"
-        href="http://idealorganizasyon.org/"
-        target="_blank"
-      >
-        İdeal Organizasyon
+      <Link color="inherit" href="#" target="_blank">
+        CSoft All rights reserved.
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -65,6 +63,7 @@ export default function App() {
   const [purchaserName, setpurchaserName] = React.useState("");
   const [purchaserId, setpurchaserId] = React.useState(0);
   const [eMail, setemail] = React.useState("");
+  const [guest, setGuests] = React.useState([]);
   const [phone, setphone] = React.useState("");
   const [count, setcount] = React.useState(0);
   const [product, setProduct] = React.useState("");
@@ -72,6 +71,9 @@ export default function App() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [companyNames, setCompanyNames] = React.useState([]);
   const [companies, setCompanies] = React.useState([]);
+  const [search, setSearch] = React.useState(true);
+  const [value, setValue] = React.useState(null);
+
   const handleFailedToast = () => {
     toast.error("🦄 Eksik/Hatalı Satıcı Firma Adı ", {
       position: "top-center",
@@ -94,7 +96,6 @@ export default function App() {
       progress: undefined,
     });
   };
-
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -121,8 +122,8 @@ export default function App() {
   React.useEffect(() => {
     const purchaser = async () => {
       const id = await getIdByName(purchaserName);
+
       setpurchaserId(id.result);
-      console.log(id.result);
     };
     purchaser();
   }, [purchaserName]);
@@ -141,9 +142,16 @@ export default function App() {
         return companyName;
       });
       setCompanies(arr);
-      console.log(arr);
     };
     companies();
+  }, []);
+  React.useEffect(() => {
+    const guests = async () => {
+      const id = await getGuests();
+
+      setGuests(id.result);
+    };
+    guests();
   }, []);
   React.useEffect(
     (e) => {
@@ -156,7 +164,8 @@ export default function App() {
           const Purchaser = await createGuest(
             purchaserName,
             phone === null || phone === "" ? " " : phone.substring(1),
-            eMail === null || eMail === "" ? " " : eMail
+            eMail === null || eMail === "" ? " " : eMail,
+            -parseFloat(count)
           );
           var id = await getIdByName(purchaserName);
           const purchase = await createPurchase(
@@ -185,6 +194,16 @@ export default function App() {
               product
             );
             const cmp = await getCompanyById(sellerId);
+            const prc = await getCompanyById(purchaserId);
+            const update1 = await updateEndorsement(
+              purchaserId,
+              purchaserName,
+              prc.result.phone,
+              prc.result.eMail,
+              parseFloat(prc.result.endorsement) - parseFloat(count),
+              prc.result.isEntered,
+              prc.result.isGuest
+            );
             const update = await updateEndorsement(
               sellerId,
               sellerName,
@@ -210,8 +229,12 @@ export default function App() {
         component="main"
         sx={{
           height: "100vh",
+          width: "100vw",
           backgroundImage: `url("${Background}")`,
           backgroundRepeat: "no-repeat",
+        }}
+        style= {{
+          backgroundSize: "50vw",
         }}
       >
         <CssBaseline />
@@ -283,7 +306,7 @@ export default function App() {
               </Menu>
             </Stack>
             <Box component="form" noValidate sx={{ mt: 1 }}>
-              <Box sx={{ maxWidth: 200, minWidth: 200 ,marginTop:4}}>
+              <Box sx={{ maxWidth: 200, minWidth: 200, marginTop: 4 }}>
                 <FormControl fullWidth>
                   <Select
                     labelId="demo-simple-select-label"
@@ -301,60 +324,70 @@ export default function App() {
                     {companies.map((company) => {
                       return <MenuItem value={company}>{company}</MenuItem>;
                     })}
-                    {/* <MenuItem disabled value="">
-                      <em>Satış Yapan Firma</em>
-                    </MenuItem>
-                    <MenuItem value={"aaaa"}>aaaa</MenuItem>
-                    <MenuItem value={"AA"}>AA</MenuItem>
-                    <MenuItem value={"b"}>b</MenuItem> */}
                   </Select>
                 </FormControl>
               </Box>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                onChange={(e) => {
-                  setpurchaserName(e.target.value);
-                }}
-                id="purchaserName"
-                label="Alım Yapan Misafir Adı"
-                name="purchaserName"
-                autoFocus
-              />
-              <TextField
-                margin="normal"
-                // required
-                fullWidth
-                onChange={(e) => {
-                  setemail(e.target.value);
-                }}
-                name="email"
-                label="Alıcı Email Adresi"
-                id="email"
-              />
-              <PhoneInput
-                country={"tr"}
-                onChange={(e) => {
-                  setphone(e)}}
-                variant="outlined"
-                fullWidth
-              />
 
-              {/* <TextField
-                margin="normal"
-                // required
-                fullWidth
+              <Autocomplete
+                style={{ marginTop: "3%" }}
+                freeSolo
+                id="combo-box-demo"
                 onChange={(e) => {
-                  setphone(e.target.value);
+                  setSearch(
+                    guest
+                      .map((guest) => guest.companyName)
+                      .includes(e.target.innerHTML)
+                  );
+                  setpurchaserName(e.target.innerHTML);
                 }}
-                name="phone"
-                label="Alıcı Telefon Numarası"
-                id="phone"
-              /> */}
+                options={guest.map((option) => option.companyName)}
+                sx={{ width: 300 }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    value={purchaserName}
+                    label="Alım Yapan Misafir"
+                    onChange={(e) => {
+                      setSearch(
+                        guest
+                          .map((guest) => guest.companyName)
+                          .includes(e.target.value)
+                      );
+
+                      setpurchaserName(e.target.value);
+                    }}
+                  />
+                )}
+              />
+              {!search ? (
+                <div>
+                  <TextField
+                    margin="normal"
+                    fullWidth
+                    onChange={(e) => {
+                      setemail(e.target.value);
+                    }}
+                    name="email"
+                    label="Alıcı Email Adresi"
+                    id="email"
+                  />
+                  <TextField
+                    margin="normal"
+                    fullWidth
+                    onChange={(e) => {
+                      setphone(e.target.value);
+                    }}
+                    name="phone"
+                    label="Alıcı Telefon Numarası"
+                    id="phone"
+                  />
+                </div>
+              ) : (
+                console.log("")
+              )}
+
               <TextField
                 margin="normal"
-                required
                 fullWidth
                 onChange={(e) => {
                   setProduct(e.target.value);
@@ -371,7 +404,6 @@ export default function App() {
                   e.target.value = e.target.value
                     .replace(",", "")
                     .replace(".", "");
-                  console.log(e.target.value.replace(",", "").replace(".", ""));
                   setcount(e.target.value.replace(",", "").replace(".", ""));
                 }}
                 name="count"
@@ -386,15 +418,18 @@ export default function App() {
                 sx={{ mt: 3, mb: 2 }}
                 onClick={(e) => {
                   e.preventDefault();
-                  console.log("count:" +count)
-                  if(sellerName=="" || count==0 || product =="")
-                  swal("Satış Başarısız", "Gerekli Alanları Doldurunuz!", "error");
-                  else{
-                  swal("Satış", "Başarıyla Kaydedildi!", "success");
-                  setSubmit(true);
-                  window.setTimeout(function () {
-                    window.location.reload();
-                  }, 2500);
+                  if (sellerName == "" || count == 0)
+                    swal(
+                      "Satış Başarısız",
+                      "Gerekli Alanları Doldurunuz!",
+                      "error"
+                    );
+                  else {
+                    swal("Satış", "Başarıyla Kaydedildi!", "success");
+                    setSubmit(true);
+                    window.setTimeout(function () {
+                      window.location.reload();
+                    }, 2500);
                   }
                 }}
               >

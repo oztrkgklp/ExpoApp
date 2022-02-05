@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
@@ -25,7 +25,16 @@ import { pageTraffic, pageRanking } from "../data/tables";
 import transactions from "../data/transactions";
 import commands from "../data/commands";
 import PropTypes from "prop-types";
-import { DataGrid, GridToolbar, trTR } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridToolbar,
+  trTR,
+  GridToolbarContainer,
+  GridToolbarExport,
+  gridClasses,
+  GridPrintExportOptions,
+  GridCsvExportOptions,
+} from "@mui/x-data-grid";
 import { makeStyles } from "@material-ui/styles";
 import { createTheme } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
@@ -38,17 +47,18 @@ import Stack from "@mui/material/Stack";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
-import alertify from "alertifyjs";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import { timeFormat } from "../assets/dateTime";
-import { ToastContainer, toast, Zoom } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import swal from "sweetalert";
 import "react-toastify/dist/ReactToastify.css";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import {
   purchases,
   companies,
@@ -65,7 +75,20 @@ import {
   createGuest,
   getGuests,
   updateEndorsement,
+  getCompanies,
 } from "./FetchData";
+
+var format = new Intl.NumberFormat("tr-TR", {
+  style: "currency",
+  currency: "TRY",
+});
+const formatter = {
+  format: (value) => {
+    return  parseFloat(value);
+  }
+  
+}
+
 
 const defaultTheme = createTheme();
 const useStylesAntDesign = makeStyles(
@@ -215,6 +238,9 @@ const useStyles = makeStyles(
         },
       },
     },
+    block: {
+      display: "block",
+    },
   }),
   { defaultTheme }
 );
@@ -279,26 +305,10 @@ SettingsPanel.propTypes = {
   type: PropTypes.oneOf(["Commodity", "Employee"]).isRequired,
 };
 const handleSuccessToast = (mes) => {
-  toast("🦄" + mes, {
-    position: "top-center",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
+  swal("Başarılı", mes, "success");
 };
 const handleFailedToast = (mes) => {
-  toast.error("🦄" + mes, {
-    position: "top-center",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  });
+  swal("Başarısız", mes, "error");
 };
 
 export const PageVisitsTable = () => {
@@ -318,56 +328,86 @@ export const PageVisitsTable = () => {
   const [deletedPurchaseId, setDeletedPurchaseId] = React.useState();
   const [isSubmit, setSubmit] = React.useState(false);
   const [product, setProduct] = React.useState([]);
-  const [error, setError] = React.useState(false);
-
+  const [eMail, setemail] = React.useState("");
+  const [phone, setphone] = React.useState("");
+  const [companies, setCompanies] = React.useState([]);
   React.useEffect(() => {
-    const createPrc = async () => {
-      console.log(sellerId);
-      console.log(purchaserId);
-
-      if (sellerId === null || sellerId === 0) {
-        handleFailedToast("YANLIŞ SATICI/ALICI ADI");
-        window.setTimeout(function () {
-          location.reload();
-        }, 2000);
-        return null;
-      }
-      if (purchaserId === null || purchaserId === 0) {
-        handleFailedToast("YANLIŞ SATICI/ALICI ADI");
-        window.setTimeout(function () {
-          location.reload();
-        }, 2000);
-        return null;
-      } else {
-        setsellerName(sellerName);
-        setpurchaserName(purchaserName);
-        const purchase = await createPurchases({
-          sellerId,
-          purchaserId,
-          amount,
-          product,
-        });
-        const cmp = await getCompanyById(sellerId);
-        const update = await updateEndorsement(
-          sellerId,
-          sellerName,
-          cmp.result.phone,
-          cmp.result.eMail,
-          parseFloat(cmp.result.endorsement) + parseFloat(amount),
-          cmp.result.isEntered,
-          cmp.result.isGuest
-        );
-        handleSuccessToast("GİRİŞ BAŞARILI");
-        window.setTimeout(function () {
-          location.reload();
-        }, 2000);
-      }
+    const companies = async () => {
+      const id = await getCompanies();
+      var arr = id.result.map((c) => {
+        const { companyName } = c;
+        return companyName;
+      });
+      setCompanies(arr);
+      console.log(arr);
     };
-    if (isSubmit) {
-      createPrc();
-    }
-  }, [isSubmit]);
+    companies();
+  }, []);
+  React.useEffect(
+    (e) => {
+      const createPurchase_ = async () => {
+        if (sellerId === 0 || sellerId === null) {
+          if (sellerName !== "") handleFailedToast();
+          return null;
+        }
+        if (purchaserId === null || purchaserId === 0) {
+          const Purchaser = await createGuest(
+            purchaserName,
+            phone === null || phone === "" ? " " : phone.substring(1),
+            eMail === null || eMail === "" ? " " : eMail,
+            -parseFloat(amount)
+          );
+          var id = await getCompanyIdByName(purchaserName);
+          const purchase = await createPurchases({
+            sellerId,
+            purchaserId: id.result,
+            amount: amount,
+            product,
+          });
+          const cmp = await getCompanyById(sellerId);
+          const update = await updateEndorsement(
+            sellerId,
+            sellerName,
+            cmp.result.phone,
+            cmp.result.eMail,
+            parseFloat(cmp.result.endorsement) + parseFloat(amount),
+            cmp.result.isEntered,
+            cmp.result.isGuest
+          );
+        } else {
+          const purchase = await createPurchases({
+            sellerId,
+            purchaserId,
+            amount: amount,
+            product,
+          });
+          const cmp = await getCompanyById(sellerId);
+          const prc = await getCompanyById(purchaserId);
+          const update1 = await updateEndorsement(
+            purchaserId,
+            purchaserName,
+            prc.result.phone,
+            prc.result.eMail,
+            parseFloat(prc.result.endorsement) - parseFloat(amount),
+            prc.result.isEntered,
+            prc.result.isGuest
+          );
+          const update = await updateEndorsement(
+            sellerId,
+            sellerName,
+            cmp.result.phone,
+            cmp.result.eMail,
+            parseFloat(cmp.result.endorsement) + parseFloat(amount),
+            cmp.result.isEntered,
+            cmp.result.isGuest
+          );
+        }
+      };
 
+      createPurchase_();
+    },
+    [isSubmit]
+  );
   React.useEffect(() => {
     const getSellerId = async () => {
       const seller = await getCompanyIdByName(sellerName);
@@ -409,7 +449,7 @@ export const PageVisitsTable = () => {
       const company = await deletePurchase(deletedPurchaseId);
       window.setTimeout(function () {
         window.location.reload();
-      }, 1000);
+      }, 100);
     };
 
     if (deletedPurchaseId) {
@@ -465,13 +505,13 @@ export const PageVisitsTable = () => {
     {
       field: "sellerName",
       headerName: "Satıcı Firma ",
-      width: 160,
+      width: 300,
       editable: false,
     },
     {
       field: "purchaserName",
       headerName: "Alan Misafir ",
-      width: 160,
+      width: 300,
       editable: false,
     },
     {
@@ -482,14 +522,14 @@ export const PageVisitsTable = () => {
     },
     {
       field: "amount",
-      headerName: "Satış Fiyatı",
+      headerName: "Satış Fiyatı(₺)",
       width: 150,
       sortable: true,
     },
     {
       field: "product",
       headerName: "Ürün",
-      width: 150,
+      width: 200,
       sortable: true,
     },
     {
@@ -530,7 +570,7 @@ export const PageVisitsTable = () => {
       sellerName: sellerName,
       purchaserName: purchaserName,
       purchaseDate: timeFormat(purchaseDate),
-      amount: amount,
+      amount: formatter.format(amount) ,
       product: product,
     };
   });
@@ -586,6 +626,14 @@ export const PageVisitsTable = () => {
     setDeletedPurchaseId(clickedUser.id);
     setPurchase(purchase.filter((user) => user.purchaseID !== clickedUser.id));
   };
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbar />
+      </GridToolbarContainer>
+    );
+  }
+  console.log(trTR);
   return (
     <div className={classes.root}>
       <Stack
@@ -595,6 +643,7 @@ export const PageVisitsTable = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          padding: "30px",
         }}
       >
         <Button style={{ backgroundColor: "#7389F7" }}>SATIŞ LİSTESİ</Button>
@@ -617,29 +666,61 @@ export const PageVisitsTable = () => {
         <DialogTitle id="form-dialog-title">Yeni Satış Ekleme</DialogTitle>
         <form noValidate>
           <DialogContent>
+            <FormControl fullWidth>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={sellerName}
+                displayEmpty
+                sx={{ maxWidth: 200, minWidth: 200 }}
+                onChange={(e) => {
+                  setsellerName(e.target.value);
+                }}
+              >
+                <MenuItem disabled value="">
+                  <em>Satış Yapan Firma</em>
+                </MenuItem>
+                {companies.map((company) => {
+                  return <MenuItem value={company}>{company}</MenuItem>;
+                })}
+              </Select>
+            </FormControl>
+
             <TextField
-              value={sellerName}
-              onChange={(event) => setsellerName(event.target.value)}
-              autoFocus
-              margin="dense"
-              id="sellerName"
-              label="Satıcı"
-              type="text"
+              margin="normal"
+              required
               fullWidth
+              onChange={(e) => {
+                setpurchaserName(e.target.value.toUpperCase());
+              }}
+              id="purchaserName"
+              label="Alım Yapan Misafir Adı"
+              name="purchaserName"
+              autoFocus
             />
             <TextField
-              value={purchaserName}
-              onChange={(event) => setpurchaserName(event.target.value)}
-              margin="dense"
-              id="purchaserName"
-              label="Alıcı"
-              type="text"
+              margin="normal"
+              fullWidth
+              onChange={(e) => {
+                setemail(e.target.value);
+              }}
+              name="email"
+              label="Alıcı Email Adresi"
+              id="email"
+            />
+            <PhoneInput
+              country={"tr"}
+              onChange={(e) => {
+                setphone(e);
+              }}
+              variant="outlined"
               fullWidth
             />
             <TextField
               value={amount}
               onChange={(event) => setamount(event.target.value)}
               margin="dense"
+              required
               id="amount"
               label="Satış Miktarı"
               type="text"
@@ -649,6 +730,7 @@ export const PageVisitsTable = () => {
               value={product}
               onChange={(event) => setProduct(event.target.value)}
               margin="dense"
+              required
               id="product"
               label="Ürün"
               type="text"
@@ -659,7 +741,27 @@ export const PageVisitsTable = () => {
             <Button onClick={handleClose} color="primary">
               Vazgeç
             </Button>
-            <Button onClick={(e)=>{e.preventDefault();handleClose()}} color="primary" type="submit">
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                if (sellerName == "" || amount == 0 || product == "")
+                  swal(
+                    "Satış Başarısız",
+                    "Gerekli Alanları Doldurunuz!",
+                    "error"
+                  );
+                else {
+                  swal("Satış", "Başarıyla Kaydedildi!", "success");
+                  setSubmit(true);
+
+                  window.setTimeout(function () {
+                    window.location.reload();
+                  }, 100);
+                }
+              }}
+              color="primary"
+              type="submit"
+            >
               Ekle
             </Button>
           </DialogActions>
@@ -671,19 +773,20 @@ export const PageVisitsTable = () => {
         type={type}
         theme={getActiveTheme()}
       />
-
       <DataGrid
         className={isAntDesign ? antDesignClasses.root : undefined}
         components={{
-          Toolbar: GridToolbar,
+          Toolbar: CustomToolbar,
         }}
+        style={{ minHeight: "725px", marginTop: "115px", width: "100%" }}
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
+        utf8WithBom
         rows={rows.reverse()}
         columns={columns}
         rowLength={10}
-        localeText={trTR.props.MuiDataGrid.localeText}
+        localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
       />
       <ToastContainer />
     </div>
@@ -1051,26 +1154,22 @@ export const CompanyTable = () => {
       eMail: eMail,
       endorsement: endorsement,
       isEntered: isEntered,
-      isGuest: isGuest
+      isGuest: isGuest,
     };
-    console.log(newCustomer)
-    window.setTimeout(function () {
-      window.location.reload();
-    }, 10000);
+    handleSuccessToast("KATILIMCI BAŞARIYLA EKLENDİ !");
     setSubmit(true);
     setCompany([...company, newCustomer]);
     window.setTimeout(function () {
       window.location.reload();
-    }, 1000);
+    }, 100);
   };
   const handleDelete = (clickedUser) => {
     setDeletedCompanyId(clickedUser.id);
     setCompany(company.filter((user) => user.companyID !== clickedUser.id));
-    console.log(clickedUser);
   };
   React.useEffect(() => {
     const createCmp = async () => {
-      console.log(isGuest)
+      console.log(isGuest);
       const company = await createCompany(
         companyName,
         phone,
@@ -1088,7 +1187,7 @@ export const CompanyTable = () => {
       console.log(company.result);
       window.setTimeout(function () {
         location.reload();
-      }, 1000);
+      }, 100);
     };
 
     if (deletedCompanyId) {
@@ -1104,7 +1203,6 @@ export const CompanyTable = () => {
     companiesData();
   }, []);
 
-
   const columns = [
     {
       field: "id",
@@ -1116,13 +1214,13 @@ export const CompanyTable = () => {
     {
       field: "companyName",
       headerName: "Katılımcı Adı",
-      width: 150,
+      width: 350,
       editable: true,
     },
     {
       field: "phone",
       headerName: "Tel No",
-      width: 140,
+      width: 150,
       editable: false,
     },
     {
@@ -1130,13 +1228,13 @@ export const CompanyTable = () => {
       headerName: "E-Mail",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 180,
+      width: 270,
       editable: false,
     },
     {
       field: "endorsement",
-      headerName: "Ciro",
-      width: 110,
+      headerName: "Ciro(₺)",
+      width: 250,
       sortable: true,
     },
     {
@@ -1154,7 +1252,7 @@ export const CompanyTable = () => {
     {
       field: "event",
       headerName: " ",
-      width: 190,
+      width: 120,
       sortable: false,
       renderCell: (id) => (
         <>
@@ -1190,7 +1288,7 @@ export const CompanyTable = () => {
       companyName,
       phone,
       eMail,
-      endorsement,
+      endorsement: formatter.format(endorsement),
       isEntered: isEntered === true ? "Katıldı" : "Katılmadı",
       isGuest: isGuest === true ? "Misafir" : "Firma",
     };
@@ -1260,7 +1358,7 @@ export const CompanyTable = () => {
     } else if (val === "0") {
       // setIsGuest(true)
       globalIsGuest = true;
-      console.log("klsakasldjaksjkasd")
+      console.log("klsakasldjaksjkasd");
     }
   };
 
@@ -1373,31 +1471,39 @@ export const CompanyTable = () => {
               <Button onClick={handleClose} color="primary">
                 Vazgeç
               </Button>
-              <Button onClick={(e)=>{handleClose()}} color="primary" type="submit">
+              <Button
+                onClick={(e) => {
+                  handleClose();
+                }}
+                color="primary"
+                type="submit"
+              >
                 Ekle
               </Button>
             </DialogActions>
           </form>
         </Dialog>
       </Stack>
-      <SettingsPanel
+      {/* <SettingsPanel
         onApply={handleApplyClick}
         size={size}
         type={type}
         theme={getActiveTheme()}
-      />
+      /> */}
       <DataGrid
         className={isAntDesign ? antDesignClasses.root : undefined}
         components={{
           Toolbar: GridToolbar,
         }}
+        style={{ minHeight: "900px", marginTop: "20px" }}
         checkboxSelection
         disableSelectionOnClick
+        utf8WithBom
         {...pagination}
         rows={rows.reverse()}
         columns={columns}
         rowLength={10}
-        localeText={trTR.props.MuiDataGrid.localeText}
+        localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
       />
     </div>
   );
@@ -1467,7 +1573,7 @@ export const AttendTable = () => {
       companyName,
       phone,
       eMail,
-      endorsement,
+      endorsement: formatter.format(endorsement),
       isEntered: isEntered === true ? "Katıldı" : "Katılmadı",
     };
   });
@@ -1548,10 +1654,11 @@ export const AttendTable = () => {
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
+        utf8WithBom
         rows={rows.reverse()}
         columns={columns}
         rowLength={10}
-        localeText={trTR.props.MuiDataGrid.localeText}
+        localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
       />
     </div>
   );
@@ -1582,7 +1689,7 @@ export const NoPurchaseCompany = () => {
     {
       field: "companyName",
       headerName: "Misafir Adı",
-      width: 150,
+      width: 400,
       editable: false,
     },
     {
@@ -1596,7 +1703,7 @@ export const NoPurchaseCompany = () => {
       headerName: "E-Mail",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 130,
+      width: 400,
       editable: false,
     },
     {
@@ -1694,10 +1801,11 @@ export const NoPurchaseCompany = () => {
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
+        utf8WithBom
         rows={rows.reverse()}
         columns={columns}
         rowLength={10}
-        localeText={trTR.props.MuiDataGrid.localeText}
+        localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
       />
     </div>
   );
@@ -1797,7 +1905,7 @@ export const NotAttendTable = () => {
       sellerName: sellerName,
       purchaserName: purchaserName,
       purchaseDate: purchaseDate,
-      amount: amount,
+      amount: formatter.format(amount),
     };
   });
   const [pagination, setPagination] = React.useState({
@@ -1941,8 +2049,9 @@ export const NotAttendTable = () => {
         {...pagination}
         rows={rows.reverse()}
         columns={columns}
+        utf8WithBom
         rowLength={10}
-        localeText={trTR.props.MuiDataGrid.localeText}
+        localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
       />
     </div>
   );
@@ -1991,7 +2100,7 @@ export const GuestsTable = () => {
       companyName: companyName,
       phone: phone,
       eMail: eMail,
-      endorsement: endorsement,
+      endorsement: formatter.format(endorsement),
       isEntered: isEntered,
     };
     setSubmit(true);
@@ -2162,7 +2271,7 @@ export const GuestsTable = () => {
     {
       field: "companyName",
       headerName: "Misafir Adı",
-      width: 150,
+      width: 350,
       editable: false,
     },
     {
@@ -2176,7 +2285,7 @@ export const GuestsTable = () => {
       headerName: "E-Mail",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
-      width: 130,
+      width: 300,
       editable: false,
     },
 
@@ -2259,13 +2368,14 @@ export const GuestsTable = () => {
       >
         <Button style={{ backgroundColor: "#7389F7" }}>TÜM MİSAFİRLER</Button>
       </Stack>
-      <SettingsPanel
+      {/* <SettingsPanel
         onApply={handleApplyClick}
         size={size}
         type={type}
         theme={getActiveTheme()}
-      />
+      /> */}
       <DataGrid
+        style={{ minHeight: "900px", marginTop: "20px" }}
         className={isAntDesign ? antDesignClasses.root : undefined}
         components={{
           Toolbar: GridToolbar,
@@ -2273,10 +2383,11 @@ export const GuestsTable = () => {
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
+        utf8WithBom
         rows={rows.reverse()}
         columns={columns}
         rowLength={10}
-        localeText={trTR.props.MuiDataGrid.localeText}
+        localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
       />
     </div>
   );
@@ -2420,10 +2531,11 @@ export const AccTable = () => {
         checkboxSelection
         disableSelectionOnClick
         {...pagination}
+        utf8WithBom
         rows={rows.reverse()}
         columns={columns}
         rowLength={10}
-        localeText={trTR.props.MuiDataGrid.localeText}
+        localeText={trTR.components.MuiDataGrid.defaultProps.localeText}
       />
     </div>
   );

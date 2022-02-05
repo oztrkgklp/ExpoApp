@@ -9,6 +9,7 @@ using System.Threading;
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace ExpoAPI.Controllers
 {
@@ -45,6 +46,43 @@ namespace ExpoAPI.Controllers
                 Instance = Guid.NewGuid().ToString(),
                 Messages = getAccommodations.Messages?.ToList(),
                 Result = getAccommodations.AccommodationContracts,
+                ReturnPath = getAccommodations.ReturnPath
+            });
+        }
+
+        [HttpGet("accommodations/ordered-by-date")]
+        [ProducesResponseType(typeof(GetAccommodationsOrderedByDateApiResponseContract), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetAccommodationsOrderedByDateApiResponseContract), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GetAccommodationsOrderedByDateApiResponseContract>> GetAccommodationsORderedByDate( [FromQuery] GetAccommodationsOrderedByDateApiRequestContract contract, CancellationToken cancellationToken)
+        {
+            var getAccommodations = await _mediator.Send(new GetAccommodationsCommand(), cancellationToken);
+
+            var Accommodations = new List<List<AccommodationContract>>();
+            if(getAccommodations.AccommodationContracts != null) 
+            {
+                var dates = getAccommodations.AccommodationContracts.Select(acc => acc.CheckIn).ToList();
+                dates.ForEach(date => {
+                    var subArray = getAccommodations.AccommodationContracts.Where(acc => acc.CheckIn == date).ToList();
+                    Accommodations.Add(subArray);
+                });
+            }
+                
+
+            if (!getAccommodations.Success)
+            {
+                return BadRequest(new GetAccommodationsOrderedByDateApiResponseContract()
+                {
+                    Instance = Guid.NewGuid().ToString(),
+                    ReturnPath = getAccommodations.ReturnPath,
+                    Messages = getAccommodations.Messages?.ToList(),
+                });
+            }
+
+            return Ok(new GetAccommodationsOrderedByDateApiResponseContract
+            {
+                Instance = Guid.NewGuid().ToString(),
+                Messages = getAccommodations.Messages?.ToList(),
+                Result = Accommodations,
                 ReturnPath = getAccommodations.ReturnPath
             });
         }
@@ -165,6 +203,7 @@ namespace ExpoAPI.Controllers
                 return BadRequest(new CreateAccommodationApiResponseContract()
                 {
                     Instance = Guid.NewGuid().ToString(),
+                    Result = createAccommodation.Query,
                     ReturnPath = createAccommodation.ReturnPath,
                     Messages = createAccommodation.Messages?.ToList(),
                 });

@@ -71,4 +71,56 @@ CREATE TABLE ACCOMMODATION (
     _TRPLCHD varchar(50),
     Description varchar(2000)
 );
+
+
+CREATE TABLE EXTERNALATTENDANCE (
+    ExternalAttendanceID int IDENTITY(1,1) PRIMARY KEY,
+    NameSurname varchar(255),
+    TCID decimal(19,4),
+    CompanyName varchar(255),   
+    NumberOfPeople int,
+	Phone varchar(255),
+	EntranceTime time,
+    ExitTime time,
+    Occupancy time,
+    EntranceDate date,
+    Description varchar(255)
+);
+
+CREATE TABLE OTELINFORMATION (
+	OtelInformationID int,
+    SNG varchar(255),
+    DBL varchar(255),
+    TRPL varchar(255),
+    QUAT varchar(255),
+	SNGCHD varchar(255),
+	DBLCHD varchar(255),
+    TRPLCHD varchar(255),
+);
+
+INSERT INTO OTELINFORMATION (OtelInformationID,SNG,DBL,TRPL,QUAT,SNGCHD,DBLCHD,TRPLCHD) VALUES (1,'100','200','300','400','500','600','700');
+
+CREATE TABLE COST (
+	CostID int IDENTITY(1,1) PRIMARY KEY,
+    CostType int,
+    CostDate date,
+    Description varchar(255),
+    PAX int,
+    TotalCost decimal(19,4)
+);
+
+CREATE TABLE EXPENSE (
+	ExpenseID int IDENTITY(1,1) PRIMARY KEY,
+    Amount decimal(19,4),
+);
+
+INSERT INTO EXPENSE (ExpenseID,Amount) VALUES (0);
+
+CREATE TABLE BALANCE (
+	BalanceID int,
+    Amount decimal(19,4),
+);
+
+INSERT INTO BALANCE (BalanceID, Amount) VALUES (1,0);
+
 GO

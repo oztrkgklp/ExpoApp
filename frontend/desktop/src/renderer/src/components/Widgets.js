@@ -34,6 +34,13 @@ import { Link } from "react-router-dom";
 import { Routes } from "../routes";
 import { getCompanies } from "./FetchData";
 
+var formatter = new Intl.NumberFormat('tr-TR', {
+  style: 'currency',
+  currency: 'TRY',
+
+  
+});
+
 export const ProfileCardWidget = () => {
   return (
     <Card border="light" className="text-center p-0 mb-4">
@@ -72,7 +79,7 @@ export const CounterWidget = (props) => {
       <Card.Body>
         <Row className="d-block d-xl-flex align-items-center">
           <Col
-            xl={5}
+            xl={2}
             className="text-xl-center d-flex align-items-center justify-content-xl-center mb-3 mb-xl-0"
           >
             <div
@@ -81,14 +88,14 @@ export const CounterWidget = (props) => {
               <FontAwesomeIcon icon={icon} />
             </div>
             <div className="d-sm-none">
-              <h5>{category}</h5>
-              <h3 className="mb-1">{title}</h3>
+              <h6>{category}</h6>
+              <h6 className="mb-1">{title}</h6>
             </div>
           </Col>
           <Col xs={12} xl={7} className="px-xl-0">
             <div className="d-none d-sm-block">
-              <h5>{category}</h5>
-              <h3 className="mb-1">{title}</h3>
+              <h6>{category}</h6>
+              <h6 className="mb-1">{title}</h6>
             </div>
           </Col>
         </Row>
@@ -256,7 +263,7 @@ export const ProgressTrackWidget = () => {
             <div className="progress-info">
               <h6 className="mb-0">{title}</h6>
               <small className="fw-bold text-dark">
-                <span>{percentage} ₺</span>
+                <span>{percentage}</span>
               </small>
             </div>
             <ProgressBar variant={color} now={percentage} min={0} max={100} />
@@ -269,15 +276,15 @@ export const ProgressTrackWidget = () => {
   return (
     <Card border="light" className="shadow-sm">
       <Card.Header className="border-bottom border-light">
-        <h5 className="mb-0">Şirket Karları</h5>
+        <h5 className="mb-0">En Yüksek Cirolar</h5>
       </Card.Header>
       <Card.Body>
-        {companies.sort((a,b)=>{return parseFloat(b.endorsement)-parseFloat(a.endorsement)}).slice(0,5).map((r, i) => (
+        {companies.sort((a,b)=>{return parseFloat(b.endorsement)-parseFloat(a.endorsement)}).slice(0,10).map((r, i) => (
           <Progress
             title={r.companyName}
             color="blue"
             icon={faBuilding}
-            percentage={r.endorsement}
+            percentage={ formatter.format(r.endorsement)}
           />
           
         ))}

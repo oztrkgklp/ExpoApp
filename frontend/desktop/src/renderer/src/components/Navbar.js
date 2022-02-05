@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSignOutAlt,
+  faTrash,
+  faSave
 } from "@fortawesome/free-solid-svg-icons";
-import { faUserCircle } from "@fortawesome/free-regular-svg-icons";
 import {
   Row,
   Col,
   Nav,
-  Form,
   Image,
   Navbar,
   Dropdown,
@@ -17,9 +17,10 @@ import {
 } from "@themesberg/react-bootstrap";
 import { Link } from "react-router-dom";
 import NOTIFICATIONS_DATA from "../data/notifications";
-import Profile3 from "../assets/img/technologies/logo.jpg";
+import Profile3 from "../assets/img/technologies/logo.jpeg";
 import { Routes } from "../routes";
-import Signin from "../pages/examples/Signin"
+import IconButton from '@mui/material/IconButton';
+import RefreshIcon from '@mui/icons-material/Refresh';
 export default (props) => {
   const [notifications, setNotifications] = useState(NOTIFICATIONS_DATA);
   const areNotificationsRead = notifications.reduce(
@@ -59,12 +60,15 @@ export default (props) => {
       </ListGroup.Item>
     );
   };
-  const userName = "TEST";
+  const userName = "GARANTİ KONGRE";
   
   return (
     <Navbar variant="dark" expanded className="ps-0 pe-2 pb-0">
       <Container fluid className="px-0">
         <div className="d-flex justify-content-between w-100">
+        <IconButton aria-label="refresh" onClick={()=>window.location.reload()}>
+        <RefreshIcon />
+      </IconButton>
           <div className="d-flex align-items-center"></div>
           <Nav className="align-items-center">
             <Dropdown as={Nav.Item}>
@@ -107,6 +111,26 @@ export default (props) => {
                     className="text-danger me-2"
                   />{" "}
                   Çıkış Yap
+                </Dropdown.Item>
+                <Dropdown.Item
+                  className="fw-bold"
+                  as={Link} to={Routes.Presentation.path}
+                >
+                  <FontAwesomeIcon
+                    icon={faSave}
+                    className="text-danger me-2"
+                  />{" "}
+                  Fuarı Bitir (Tabloları Kaydet)
+                </Dropdown.Item>
+                <Dropdown.Item
+                  className="fw-bold"
+                  as={Link} to={Routes.Presentation.path}
+                >
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    className="text-danger me-2"
+                  />{" "}
+                  Verileri Sıfırla
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
