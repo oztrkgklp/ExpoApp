@@ -288,7 +288,7 @@ export const ProgressTrackWidget = () => {
           />
           
         ))}
-        <Button as={Link} to={Routes.NewCompany.path} style={{backgroundColor:"blue"}}>Daha Fazla</Button>
+        <Button as={Link} to={Routes.CompanyTable.path} style={{backgroundColor:"blue"}}>Daha Fazla</Button>
       </Card.Body>
     </Card>
   );
