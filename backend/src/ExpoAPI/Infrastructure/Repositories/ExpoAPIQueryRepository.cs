@@ -66,13 +66,11 @@ namespace ExpoAPI.Infrastructure.Repositories
             queryBuilder.Append(@"INSERT INTO PURCHASE (SellerID,PurchaserID,Product,PurchaseDate,Amount) VALUES (")
                                     .Append(contract.SellerID).Append(",")
                                     .Append(contract.PurchaserID).Append(",")
-                                    .Append(contract.Product).Append(",'")
-                                    .Append(contract.PurchaseDate).Append("',")
+                                    .Append(contract.Product).Append(",getdate(),")
                                     .Append(contract.Amount).Append(")");
             using(Database)
             {
                 var createPurchase = await _dapperPolly.QueryAsyncWithRetry<object>(Database, queryBuilder.ToString());
-
                 if (createPurchase.Any())
                 {
                     return createPurchase.FirstOrDefault();
